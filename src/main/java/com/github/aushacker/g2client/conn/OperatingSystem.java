@@ -15,7 +15,7 @@ public enum OperatingSystem {
 			ArrayList<SerialPort> result = new ArrayList<SerialPort>();
 			
 			for (SerialPort port : ports) {
-				if (port.getSystemPortName().startsWith("cu")) {
+				if (port.getSystemPortName().startsWith("cu.u")) {
 					result.add(port);
 				}
 			}

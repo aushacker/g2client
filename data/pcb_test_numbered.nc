@@ -1,0 +1,34 @@
+(meandering path for cutter depth)
+N0 G21 G90
+N1 G1 Z1
+N2 S8000 M3
+(cut 1)
+N3 G0 Z0
+N4 G0 X20 Y0
+N5 G0 X20 Y2
+(cut 2)
+N6 G0 Z-0.1
+N7 G0 X0 Y2
+N8 G0 X0 Y4
+(cut 3)
+N9 G0 Z-0.2
+N10 G0 X20 Y4
+N11 G0 X20 Y6
+(cut 4)
+N12 G0 Z-0.3
+N13 G0 X0 Y6
+N14 G0 X0 Y8
+(cut 5)
+N15 G0 Z-0.4
+N16 G0 X20 Y8
+N17 G0 X20 Y10
+(cut 6)
+N18 G0 Z-0.5
+N19 G0 X0 Y10
+N20 G0 X0 Y12
+(cut 7)
+N21 G0 Z-0.6
+N22 G0 X20 Y12
+N23 G1 Z1
+N24 M5
+N25 M30
