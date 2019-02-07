@@ -20,6 +20,8 @@
 package com.github.aushacker.g2client.protocol;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -42,7 +44,12 @@ public class DataCommandTest {
 
 	@Test
 	public void testEquals() {
-		throw new IllegalArgumentException();
+		assertFalse(cmd.equals(null));
+		assertFalse(cmd.equals("abc"));
+		assertTrue(cmd.equals(cmd));
+		DataCommand other = new DataCommand("G0 X10 Y20");
+		assertFalse(cmd.equals(other));
+		assertFalse(other.equals(cmd));
 	}
 
 	@Test
