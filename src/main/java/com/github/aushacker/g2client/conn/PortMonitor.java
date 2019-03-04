@@ -25,7 +25,6 @@ import java.io.InputStream;
 import java.io.PrintStream;
 import java.io.StringReader;
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.PriorityBlockingQueue;
 
 import javax.json.Json;
@@ -71,12 +70,12 @@ public class PortMonitor {
 	private PriorityBlockingQueue<Command> in;
 	private BlockingQueue<JsonValue> out;
 
-	public PortMonitor(SerialPort port) {
+	public PortMonitor(SerialPort port, BlockingQueue<JsonValue> out) {
 		this.port = port;
 		this.state = State.RESET;
 		this.lineCount = 3;
 		this.in = new PriorityBlockingQueue<>();
-		this.out = new LinkedBlockingQueue<>();
+		this.out = out;
 	}
 
 	public void enqueue(String data) {

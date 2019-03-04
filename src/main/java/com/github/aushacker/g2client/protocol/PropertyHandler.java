@@ -24,6 +24,7 @@ import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.math.BigDecimal;
 
 import javax.json.JsonNumber;
 import javax.json.JsonString;
@@ -88,6 +89,9 @@ public class PropertyHandler extends Handler {
 			} else if ((value.getValueType() == ValueType.NUMBER) && (type == int.class)) {
 				JsonNumber n = (JsonNumber) value;
 				setter.invoke(target, n.intValue());
+			} else if ((value.getValueType() == ValueType.NUMBER) && (type == BigDecimal.class)) {
+				JsonNumber n = (JsonNumber) value;
+				setter.invoke(target, n.bigDecimalValue());
 			}
 		}
 		catch (IllegalAccessException | InvocationTargetException e) {

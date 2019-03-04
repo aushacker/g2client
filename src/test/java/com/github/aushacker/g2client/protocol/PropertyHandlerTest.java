@@ -21,6 +21,8 @@ package com.github.aushacker.g2client.protocol;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
+import java.math.BigDecimal;
+
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonValue;
@@ -50,7 +52,7 @@ public class PropertyHandlerTest {
 	}
 
 	@Test
-	public void testNormalStringOperation() {
+	public void testStringOperation() {
 		MachineState ms = new MachineState();
 		handler = new PropertyHandler(ms, "firmwareBuild");
 
@@ -60,12 +62,22 @@ public class PropertyHandlerTest {
 	}
 
 	@Test
-	public void testNormalIntOperation() {
+	public void testIntOperation() {
 		handler = new PropertyHandler(motor, "axis");
 
 		assertEquals(0, motor.getAxis());
 		handler.handle(create(2));
 		assertEquals(2, motor.getAxis());
+	}
+
+	@Test
+	public void testBigDecimalOperation() {
+		MachineState ms = new MachineState();
+		handler = new PropertyHandler(ms, "x");
+
+		assertEquals(new BigDecimal(0), ms.getX());
+		handler.handle(create(new BigDecimal(2)));
+		assertEquals(new BigDecimal(2), ms.getX());
 	}
 
 	/**
@@ -90,11 +102,11 @@ public class PropertyHandlerTest {
 	}
 
 	/**
-	 * Utility method to create a JsonString.
+	 * Utility method to create a JsonBigDecimal.
 	 */
-	private JsonValue create(String s) {
+	private JsonValue create(BigDecimal d) {
 		JsonArray a = Json.createArrayBuilder()
-			     .add(s)
+			     .add(d)
 			     .build();
 		return a.get(0);
 	}
@@ -105,6 +117,16 @@ public class PropertyHandlerTest {
 	private JsonValue create(int i) {
 		JsonArray a = Json.createArrayBuilder()
 			     .add(i)
+			     .build();
+		return a.get(0);
+	}
+
+	/**
+	 * Utility method to create a JsonString.
+	 */
+	private JsonValue create(String s) {
+		JsonArray a = Json.createArrayBuilder()
+			     .add(s)
 			     .build();
 		return a.get(0);
 	}

@@ -18,6 +18,8 @@
  */
 package com.github.aushacker.g2client.conn;
 
+import java.util.concurrent.LinkedBlockingQueue;
+
 /**
  * @author Stephen Davies
  * @since October 2018
@@ -25,7 +27,8 @@ package com.github.aushacker.g2client.conn;
 public class PortMonitorTest {
 
 	public static void main(String[] args) {
-		PortMonitor monitor = new PortMonitor(OperatingSystem.current().getFilteredPorts().get(0));
+		PortMonitor monitor = new PortMonitor(OperatingSystem.current().getFilteredPorts().get(0),
+				new LinkedBlockingQueue<>());
 
 		try {
 			monitor.start();

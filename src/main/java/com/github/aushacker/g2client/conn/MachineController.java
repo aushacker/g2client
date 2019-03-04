@@ -21,6 +21,7 @@ package com.github.aushacker.g2client.conn;
 import static com.github.aushacker.g2client.protocol.Constants.*;
 
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
 import javax.json.JsonValue;
@@ -32,6 +33,7 @@ import com.fazecast.jSerialComm.SerialPort;
 import com.github.aushacker.g2client.protocol.Handler;
 import com.github.aushacker.g2client.protocol.NoOpHandler;
 import com.github.aushacker.g2client.protocol.PropertyHandler;
+import com.github.aushacker.g2client.state.Axis;
 import com.github.aushacker.g2client.state.MachineState;
 import com.github.aushacker.g2client.state.Motor;
 
@@ -39,7 +41,7 @@ import com.github.aushacker.g2client.state.Motor;
  * @author Stephen Davies
  * @since March 2019
  */
-public class Controller {
+public class MachineController {
 
 	private final Logger logger;
 
@@ -51,22 +53,61 @@ public class Controller {
 
 	private volatile boolean shutdown;
 
-	public Controller(SerialPort port) {
-		logger = LoggerFactory.getLogger(Controller.class);
+	private BlockingQueue<JsonValue> in;
+
+	public MachineController() {
+		logger = LoggerFactory.getLogger(MachineController.class);
 		machineState = new MachineState();
-		monitor = new PortMonitor(port);
 		shutdown = false;
+		in = new LinkedBlockingQueue<>();
 
 		registerHandlers();
 
-		Thread t = new Thread(new ReceiveProcess(monitor.getOut()), "ctl-rx");
+		Thread t = new Thread(new ReceiveProcess(in), "ctl-rx");
 		t.start();
+	}
 
+	public void connect(SerialPort port) {
+		if (monitor != null) {
+			monitor.shutdown();
+			in.clear();
+		}
+
+		monitor = new PortMonitor(port, in);
 		monitor.start();
+		
+		try {
+			Thread.sleep(500);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		
+		queryMachineState();
 	}
 
 	public void enqueue(String data) {
-		monitor.enqueue(data);
+		if (monitor != null) {
+			monitor.enqueue(data);
+		}
+	}
+
+	public MachineState getMachineState() {
+		return machineState;
+	}
+
+	public void goToMachineZero(Axis axis) {
+		enqueue("G53 G0 " + axis + "0");
+	}
+
+	public void homeMachine(Axis axis) {
+		enqueue("G28.2 " + axis + "0");
+	}
+
+	private void queryMachineState() {
+		// Motors 1-6
+		for (int i = 1; i <= MachineState.MOTOR_COUNT; i++) {
+			enqueue("{\"" + i + "\":n}");
+		}
 	}
 
 	public void registerHandlers() {
@@ -86,14 +127,16 @@ public class Controller {
 		handler.register(FOOTER, new NoOpHandler());
 
 		registerMotors(hResponse);
+
+		// Register for asynchronous status responses
+		registerStatusHandler(handler);
+		// Register for client requested status
+		registerStatusHandler(hResponse);
 	}
 
-	private void registerMotors(Handler parent) {
-		for (int i = 0; i < MachineState.MOTOR_COUNT; i++) {
-			registerMotor(parent, i);
-		}
-	}
-
+	/**
+	 * Configure handlers for a single motor axis.
+	 */
 	private void registerMotor(Handler parent, int index) {
 		Handler mHandler = new Handler();
 		Motor motor = machineState.getMotors(index);
@@ -110,8 +153,33 @@ public class Controller {
 		parent.register("" + ((char)('1' + index)), mHandler);
 	}
 
+	private void registerMotors(Handler parent) {
+		for (int i = 0; i < MachineState.MOTOR_COUNT; i++) {
+			registerMotor(parent, i);
+		}
+	}
+
+	private void registerStatusHandler(Handler parent) {
+		Handler sHandler = new Handler();
+
+		sHandler.register("posx", new PropertyHandler(machineState, "x"));
+		sHandler.register("posy", new PropertyHandler(machineState, "y"));
+		sHandler.register("posz", new PropertyHandler(machineState, "z"));
+		sHandler.register("vel", new PropertyHandler(machineState, "velocity"));
+		sHandler.register("stat", new PropertyHandler(machineState, "status"));
+
+		parent.register(STATUS, sHandler);
+	}
+
 	public void shutdown() {
-		monitor.shutdown();
+		shutdown = true;
+		if (monitor != null) {
+			monitor.shutdown();
+		}
+	}
+
+	public void zeroMachine(Axis axis) {
+		enqueue("G28.3 " + axis + "0");
 	}
 
 	private class ReceiveProcess implements Runnable {
@@ -137,7 +205,7 @@ public class Controller {
 				}
 			}
 
-			logger.info("Controller receive process teminating");
+			logger.info("Receive process teminated");
 		}
 	}
 }

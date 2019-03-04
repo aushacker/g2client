@@ -18,6 +18,10 @@
  */
 package com.github.aushacker.g2client.state;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
+import java.math.BigDecimal;
+
 /**
  * @author Stephen Davies
  * @since March 2019
@@ -38,11 +42,34 @@ public class MachineState {
 	 */
 	private Motor[] motors;
 
+	private PropertyChangeSupport pcs;
+
+	private int status;
+
+	private BigDecimal velocity;
+
+	private BigDecimal x;
+
+	private BigDecimal y;
+
+	private BigDecimal z;
+
 	public MachineState() {
 		motors = new Motor[MOTOR_COUNT];
 		for (int i = 0; i < MOTOR_COUNT; i++) {
 			motors[i] = new Motor(i + 1);
 		}
+
+		pcs = new PropertyChangeSupport(this);
+
+		velocity = new BigDecimal(0);
+		x = new BigDecimal(0);
+		y = new BigDecimal(0);
+		z = new BigDecimal(0);
+	}
+
+	public void addPropertyChangeListener(PropertyChangeListener listener) {
+		pcs.addPropertyChangeListener(listener);
 	}
 
 	public String getFirmwareBuild() {
@@ -57,11 +84,70 @@ public class MachineState {
 		return motors[index];
 	}
 
+	public int getStatus() {
+		return status;
+	}
+
+	public BigDecimal getVelocity() {
+		return velocity;
+	}
+
+	public BigDecimal getX() {
+		return x;
+	}
+
+	public BigDecimal getY() {
+		return y;
+	}
+
+	public BigDecimal getZ() {
+		return z;
+	}
+
+	public void removePropertyChangeListener(PropertyChangeListener listener) {
+		pcs.removePropertyChangeListener(listener);
+	}
+
 	public void setFirmwareBuild(String fb) {
 		firmwareBuild = fb;
 	}
 
 	public void setFirmwareVersion(String fv) {
 		firmwareVersion = fv;
+	}
+
+	public void setStatus(int status) {
+		int old = this.status;
+		this.status = status;
+		
+		pcs.firePropertyChange("status", old, status);
+	}
+
+	public void setVelocity(BigDecimal velocity) {
+		BigDecimal old = this.velocity;
+		this.velocity = velocity;
+		
+		pcs.firePropertyChange("velocity", old, velocity);
+	}
+
+	public void setX(BigDecimal x) {
+		BigDecimal old = this.x;
+		this.x = x;
+		
+		pcs.firePropertyChange("x", old, x);
+	}
+
+	public void setY(BigDecimal y) {
+		BigDecimal old = this.y;
+		this.y = y;
+		
+		pcs.firePropertyChange("y", old, y);
+	}
+
+	public void setZ(BigDecimal z) {
+		BigDecimal old = this.z;
+		this.z = z;
+		
+		pcs.firePropertyChange("z", old, z);
 	}
 }
