@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Stephen Davies
+ * Copyright 2019 Stephen Davies
  *
  * This file is part of g2client.
  *
@@ -20,37 +20,34 @@ package com.github.aushacker.g2client.conn;
 
 /**
  * @author Stephen Davies
- * @since October 2018
+ * @since October 2019
  */
-public class PortMonitorTest {
+public class ControllerTest {
 
 	public static void main(String[] args) {
-		PortMonitor monitor = new PortMonitor(OperatingSystem.current().getFilteredPorts().get(0));
+		Controller controller = new Controller(OperatingSystem.current().getFilteredPorts().get(0));
 
 		try {
-			monitor.start();
-			Thread.sleep(5000);
-//			monitor.reset();
-//			Thread.sleep(5000);
-			monitor.enqueue("{\"1\":n}");
-			monitor.enqueue("{\"2\":n}");
-			monitor.enqueue("{\"3\":n}");
-			monitor.enqueue("{\"4\":n}");
-			monitor.enqueue("{\"5\":n}");
-			monitor.enqueue("{\"xam\":1}");
-			monitor.enqueue("{\"yam\":1}");
-			monitor.enqueue("{\"di1\":{\"mo\":0,\"ac\":2,\"fn\":1}}");
-			monitor.enqueue("{\"di2\":{\"mo\":0,\"ac\":2,\"fn\":1}}");
-			monitor.enqueue("{\"di3\":{\"mo\":0,\"ac\":2,\"fn\":1}}");
-			monitor.enqueue("{\"di4\":{\"mo\":0,\"ac\":2,\"fn\":1}}");
-			monitor.enqueue("G0 X20 Y20");
-			monitor.enqueue("G0 X0 Y0");
-			//monitor.feedhold();
+			Thread.sleep(2000);
+			controller.enqueue("{\"1\":n}");
+			controller.enqueue("{\"2\":n}");
+			controller.enqueue("{\"3\":n}");
+			controller.enqueue("{\"4\":n}");
+//			controller.enqueue("{\"5\":n}");
+//			controller.enqueue("{\"xam\":1}");
+//			controller.enqueue("{\"yam\":1}");
+//			controller.enqueue("{\"di1\":{\"mo\":0,\"ac\":2,\"fn\":1}}");
+//			controller.enqueue("{\"di2\":{\"mo\":0,\"ac\":2,\"fn\":1}}");
+//			controller.enqueue("{\"di3\":{\"mo\":0,\"ac\":2,\"fn\":1}}");
+//			controller.enqueue("{\"di4\":{\"mo\":0,\"ac\":2,\"fn\":1}}");
+//			controller.enqueue("G0 X20 Y20");
+//			controller.enqueue("G0 X0 Y0");
+			//controller.feedhold();
 			//Thread.sleep(1000);
-			//monitor.resume();
+			//controller.resume();
 			Thread.sleep(10000);
 
-			monitor.shutdown();
+			controller.shutdown();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}

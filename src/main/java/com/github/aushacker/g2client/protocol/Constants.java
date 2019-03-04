@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Stephen Davies
+ * Copyright 2019 Stephen Davies
  *
  * This file is part of g2client.
  *
@@ -18,39 +18,31 @@
  */
 package com.github.aushacker.g2client.protocol;
 
-import java.io.PrintStream;
-
 /**
  * @author Stephen Davies
- * @since October 2018
+ * @since March 2019
  */
-public class SingleCharacterCommand extends Command {
+public class Constants {
 
-	private SingleCharacterType type;
+	private Constants() {} // Prevent instantiation
+
+	/**
+	 * G2 boards with Marlin enabled take a while to get past the STK500 bootloader.
+	 */
+	public static final int BOARD_RESET_TIME = 2500;
+
+	public static final int NUL = 0;	// ASCII NUL character
+	public static final int ENQ = 5;	// ASCII ESC character
+	public static final int LF = 10;	// ASCII LF character
+
+	/**
+	 * G2 responses have one of the following as the top-level Json value
+	 * in the response object.
+	 */
+	public static final String ACKNOWLEDGEMENT = "ack";
+	public static final String FOOTER = "f";
+	public static final String RESPONSE = "r";
+	public static final String STATUS = "sr";
 	
-	public SingleCharacterCommand(SingleCharacterType type) {
-		this.type = type;
-	}
-
-	@Override
-	public int compareTo(Command other) {
-		if (other instanceof DataCommand) {
-			return -1;
-		} else {
-			return getId() - other.getId();
-		}
-	}
-
-	public int getPriority() {
-		return type.getPriority();
-	}
-
-	public boolean isControl() {
-		return true;
-	}
-
-	public void printOn(PrintStream out) {
-		out.write(type.getCommand());
-		out.flush();
-	}
+	
 }

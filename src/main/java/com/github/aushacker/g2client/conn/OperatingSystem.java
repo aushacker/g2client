@@ -24,6 +24,9 @@ import java.util.List;
 import com.fazecast.jSerialComm.SerialPort;
 
 /**
+ * Helper code for dealing with serial library differences across
+ * multiple platforms.
+ * 
  * @since October 2018
  * @author Stephen Davies
  */

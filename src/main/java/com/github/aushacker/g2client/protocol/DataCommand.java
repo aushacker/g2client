@@ -18,6 +18,8 @@
  */
 package com.github.aushacker.g2client.protocol;
 
+import java.io.PrintStream;
+
 /**
  * @author Stephen Davies
  * @since October 2018
@@ -45,6 +47,15 @@ public class DataCommand extends Command {
 
 	public int getPriority() {
 		return 1;
+	}
+
+	public boolean isControl() {
+		return false;
+	}
+
+	public void printOn(PrintStream out) {
+		out.println(data);
+		out.flush();
 	}
 
 	@Override

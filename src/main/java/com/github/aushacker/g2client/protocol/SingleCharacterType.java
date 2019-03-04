@@ -29,8 +29,7 @@ public enum SingleCharacterType {
 	RESUME('~'),
 	QUEUE_FLUSH('%'),
 	KILL_JOB((char) 4),
-	RESET((char) 24),
-	ENQ((char) 5);
+	RESET((char) 24);
 	
 	private char command;
 

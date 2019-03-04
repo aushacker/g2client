@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Stephen Davies
+ * Copyright 2019 Stephen Davies
  *
  * This file is part of g2client.
  *
@@ -18,39 +18,10 @@
  */
 package com.github.aushacker.g2client.protocol;
 
-import java.io.PrintStream;
-
 /**
  * @author Stephen Davies
- * @since October 2018
+ * @since
  */
-public class SingleCharacterCommand extends Command {
+public class MotorHandler extends Handler {
 
-	private SingleCharacterType type;
-	
-	public SingleCharacterCommand(SingleCharacterType type) {
-		this.type = type;
-	}
-
-	@Override
-	public int compareTo(Command other) {
-		if (other instanceof DataCommand) {
-			return -1;
-		} else {
-			return getId() - other.getId();
-		}
-	}
-
-	public int getPriority() {
-		return type.getPriority();
-	}
-
-	public boolean isControl() {
-		return true;
-	}
-
-	public void printOn(PrintStream out) {
-		out.write(type.getCommand());
-		out.flush();
-	}
 }

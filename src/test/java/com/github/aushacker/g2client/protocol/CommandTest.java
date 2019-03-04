@@ -41,7 +41,7 @@ public class CommandTest {
 	@Before
 	public void setUp() {
 		c1 = new DataCommand("G21");
-		c2 = SingleCharacterType.ENQ.asCommand();
+		c2 = SingleCharacterType.RESET.asCommand();
 		c3 = new DataCommand("G17");
 		c4 = SingleCharacterType.FEEDHOLD.asCommand();
 	}

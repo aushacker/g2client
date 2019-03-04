@@ -18,9 +18,11 @@
  */
 package com.github.aushacker.g2client.protocol;
 
+import java.io.PrintStream;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
+ * Commands represent i
  * @author Stephen Davies
  * @since October 2018
  */
@@ -42,4 +44,8 @@ public abstract class Command implements Comparable<Command> {
 	public int hashCode() {
 		return id;
 	}
+	
+	public abstract boolean isControl();
+
+	public abstract void printOn(PrintStream out);
 }

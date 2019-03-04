@@ -18,121 +18,309 @@
  */
 package com.github.aushacker.g2client.conn;
 
+import static com.github.aushacker.g2client.protocol.Constants.*;
+
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PrintStream;
 import java.io.StringReader;
-import java.util.Queue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.PriorityBlockingQueue;
-import java.util.concurrent.TimeUnit;
 
 import javax.json.Json;
 import javax.json.JsonObject;
+import javax.json.JsonReader;
+import javax.json.JsonValue;
+import javax.json.JsonValue.ValueType;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.fazecast.jSerialComm.SerialPort;
 import com.github.aushacker.g2client.protocol.Command;
+import com.github.aushacker.g2client.protocol.DataCommand;
+import com.github.aushacker.g2client.protocol.SingleCharacterCommand;
+import com.github.aushacker.g2client.protocol.SingleCharacterType;
 
 /**
+ * A multi-threaded handler for communicating with a G2 controller board
+ * over a serial port. Manages the G2 linemode protocol (g2core 100 builds).
+ *
  * @since October 2018
  * @author Stephen Davies
  */
 public class PortMonitor {
 
 	private static final int G2_BAUD = 115200;
-	private static final int NUL = 0;	// ASCII NUL character
-	private static final int ENQ = 5;	// ASCII ESC character
-	private static final int LF = 10;	// ASCII LF character
 
-	private static final int POLL_TIMEOUT = 100;
+	private final Logger logger = LoggerFactory.getLogger(PortMonitor.class);
 
 	private SerialPort port;
 
-	private boolean shutdown;
+	private volatile State state;
+	
+	private volatile boolean shutdown;
+
+	private volatile boolean ack;
+
+	private volatile int lineCount;
+
+	private Object semaphore = new Object();
 
 	private PriorityBlockingQueue<Command> in;
-	private BlockingQueue<JsonObject> out;
+	private BlockingQueue<JsonValue> out;
 
 	public PortMonitor(SerialPort port) {
 		this.port = port;
+		this.state = State.RESET;
+		this.lineCount = 3;
 		this.in = new PriorityBlockingQueue<>();
 		this.out = new LinkedBlockingQueue<>();
 	}
 
-	public Queue<Command> getIn() {
-		return in;
+	public void enqueue(String data) {
+		enqueueCommand(new DataCommand(data));
 	}
 
-	public BlockingQueue<JsonObject> getOut() {
+	private void enqueueCommand(Command cmd) {
+		in.add(cmd);
+
+		synchronized(semaphore) {
+			semaphore.notify();
+		}
+	}
+
+	public void feedhold() {
+		enqueueCommand(new SingleCharacterCommand(SingleCharacterType.FEEDHOLD));
+	}
+
+	public BlockingQueue<JsonValue> getOut() {
 		return out;
 	}
 
-	public void shutdown() {
-		shutdown = true;
+	private void initialisePort() {
+		port.setComPortParameters(G2_BAUD, 8, 1, SerialPort.NO_PARITY);
+		port.setComPortTimeouts(SerialPort.TIMEOUT_READ_SEMI_BLOCKING, 0, 0);
 	}
 
-	public void start() {
-		port.openPort();
-		port.setComPortParameters(G2_BAUD, 8, 1, SerialPort.NO_PARITY);
-		port.setComPortTimeouts(SerialPort.TIMEOUT_READ_SEMI_BLOCKING, 100, 0);
+	public void reset() {
+		enqueueCommand(new SingleCharacterCommand(SingleCharacterType.RESET));
+	}
 
-		new Thread(new ReceiveProcess()).start();
+	public void resume() {
+		enqueueCommand(new SingleCharacterCommand(SingleCharacterType.RESUME));
+	}
 
-		for (int i = 0; i < 2; i++) {
-			try {
-				port.writeBytes(new byte[] { ENQ }, 1L);
-				Thread.sleep(1000L);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+	private void setState(State state) {
+		this.state = state;
+		
+		logger.info("State changed to {}", state);
+	}
+
+	public synchronized void shutdown() {
+		shutdown = true;
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		
+		synchronized (semaphore) {
+			semaphore.notify();
 		}
 
+		port.closePort();
+	}
+
+	public synchronized void start() {
+		try {
+			if (state == State.RESET) {
+				logger.info("Setting up serial port {}", port);
+				
+				initialisePort();
+				if (!port.openPort()) {
+					logger.error("Cannot open serial port {}", port);
+					throw new IllegalStateException("Cannot open serial port");
+				}
+
+				startProcess(new ReceiveProcess(), "rx");
+				startProcess(new TransmitProcess(), "tx");
+			}
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	private void startProcess(Runnable process, String name) {
+		Thread t = new Thread(process, name);
+		t.setPriority(Thread.MAX_PRIORITY - 1);
+		t.start();
+	}
+
+	private enum State {
+		RESET, SYNCHRONISING, READY;
 	}
 
 	private class TransmitProcess implements Runnable {
+
+		private PrintStream out;
+
 		public void run() {
+			logger.info("Transmit process running");
+
+			out = new PrintStream(port.getOutputStream());
+
 			while (!shutdown) {
-				try {
-					Command c = in.poll(POLL_TIMEOUT, TimeUnit.MILLISECONDS);
-					
-					if (c != null) {
-						
+				logger.debug("Input queue length: {} lineCount: {}", in.size(), lineCount);
+				
+				switch (state) {
+				case RESET:
+					try {
+						Thread.sleep(BOARD_RESET_TIME);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
 					}
+					setState(State.SYNCHRONISING);
+					break;
+				case SYNCHRONISING:
+					synchronise();
+					setState(State.READY);
+					break;
+				default:
+					try {
+						Command cmd = in.peek();
+						if (cmd == null) {
+							// Wait for more data to arrive
+							synchronized (semaphore) {
+								logger.debug("Waiting, no data");
+								semaphore.wait();
+							}
+						} else {
+							// Always process control commands
+							if (cmd.isControl()) {
+								cmd = in.poll();
+								cmd.printOn(out);
+							} else {
+								if (lineCount > 0) {
+									cmd = in.poll();	// in case queue has updated since peek
+									cmd.printOn(out);
+									if (!cmd.isControl()) {
+										lineCount--;
+									}
+								} else {
+									// too many lines
+									synchronized (semaphore) {
+										logger.debug("Waiting, buffer full");
+										semaphore.wait();
+									}
+								}
+							}
+						}
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+
+			logger.info("Transmit process terminated");
+		}
+
+		private void synchronise() {
+			ack = false;
+
+			for (int i = 0; i < 10; i++) {
+				out.write(ENQ);
+				out.flush();
+				try {
+					Thread.sleep(100);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
+				
+				if (ack)
+					return;
 			}
+
+			logger.error("Unable to synchronise with g2 board");
+			port.closePort();
+			shutdown = true;
 		}
 	}
 
+	/**
+	 * Handle the data coming back from the g2 controller. In general this is a
+	 * stream of characters (LF delimited) forming JSON response packets.
+	 */
 	private class ReceiveProcess implements Runnable {
 
-		@Override
 		public void run() {
-			InputStream in = port.getInputStream();
-			StringBuilder buff = new StringBuilder();
+			logger.info("Receive process running");
 
-			while (!shutdown) {
-				try {
+			StringBuilder sb = new StringBuilder();
+			InputStream in = port.getInputStream();
+			
+			try {
+				while (!shutdown) {
 					int c = in.read();
-					if (c > NUL && c != LF) {
-						buff.append((char)c);
-					} else if (c == LF) {
-						if (buff.length() > 0) {
-							process(Json.createReader(new StringReader(buff.toString())).readObject());
-							buff = new StringBuilder();
+
+					if (c < NUL) {
+						// TODO - should this force a state change to RESET so we begin again?
+						break;
+					}
+					if (c == LF) {
+						// 
+						if (sb.length() > 0) {
+							processResponse(sb.toString());
+							sb = new StringBuilder();
 						}
+					} else {
+						sb.append((char)c);
 					}
 				}
-				catch (IOException e) {
-					e.printStackTrace();
-				}
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
+
+			logger.info("Receive process terminated");
 		}
 
-		private void process(JsonObject response) {
-			out.add(response);
+		/**
+		 * G2 board has output a line (response of some kind). Perform basic
+		 * parsing to determine if response is only for the PortMonitor or if
+		 * it should be handled by a higher layer i.e. queued.
+		 * 
+		 * @param response Response from g2 board
+		 */
+		private void processResponse(String s) {
+			logger.debug("Received from g2: {}", s);
+
+			if (s.startsWith("{")) {
+
+				JsonReader rdr = Json.createReader(new StringReader(s));
+				JsonValue jsonResponse = rdr.readValue();
+				rdr.close();
+				
+				if (jsonResponse.getValueType() == ValueType.OBJECT) {
+					JsonObject jo = (JsonObject) jsonResponse;
+					if (jo.containsKey(ACKNOWLEDGEMENT)) {
+						ack = true;
+					} else if (jo.containsKey(RESPONSE)) {
+						// More buffer space available, adjust linemode count and notify tx thread
+						lineCount++;
+						synchronized(semaphore) {
+							semaphore.notify();
+						}
+						// Pass to higher layer
+						out.add(jsonResponse);
+					} else if (jo.containsKey(STATUS)) {
+						// No effect on linemode, pass to higher layer.
+						out.add(jsonResponse);
+					}
+				}
+ 			}
 		}
 	}
 }
