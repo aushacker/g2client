@@ -20,6 +20,7 @@ package com.github.aushacker.g2client.ui;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.util.prefs.Preferences;
 
 /**
  * User configurable UI preferences, things the user can adjust like font
@@ -30,8 +31,22 @@ import java.awt.Font;
  */
 public class UIPreferences {
 
+	private static final String FONT_NAME = "fontName";
+	private static final String DEFAULT_FONT_NAME = "SansSerif";
+
+	/**
+	 * Directory containing gcode scripts. 
+	 */
+	private static final String SCRIPT_HOME = "scriptHome";
+
+	private static final String PORT_NAME = "portName";
+
+	private static Preferences prefs = Preferences.userNodeForPackage(UIPreferences.class);
+	
 	public Font getDroFont() {
-		return new Font("SansSerif", Font.BOLD, 30);
+		String fontName = prefs.get(FONT_NAME, DEFAULT_FONT_NAME);
+
+		return new Font(fontName, Font.BOLD, 30);
 	}
 
 	public Color getDroBackground() {
@@ -44,5 +59,21 @@ public class UIPreferences {
 
 	public Color getDroForeground() {
 		return Color.BLACK;
+	}
+
+	public String getPortName() {
+		return prefs.get(PORT_NAME, "");
+	}
+
+	public String getScriptHome() {
+		return prefs.get(SCRIPT_HOME, "");
+	}
+
+	public void setPortName(String portName) {
+		prefs.put(PORT_NAME, portName);
+	}
+
+	public void setScriptHome(String scriptHome) {
+		prefs.put(SCRIPT_HOME, scriptHome);
 	}
 }

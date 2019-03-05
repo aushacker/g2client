@@ -30,9 +30,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.fazecast.jSerialComm.SerialPort;
+import com.github.aushacker.g2client.protocol.Command;
 import com.github.aushacker.g2client.protocol.Handler;
 import com.github.aushacker.g2client.protocol.NoOpHandler;
 import com.github.aushacker.g2client.protocol.PropertyHandler;
+import com.github.aushacker.g2client.protocol.SingleCharacterCommand;
+import com.github.aushacker.g2client.protocol.SingleCharacterType;
 import com.github.aushacker.g2client.state.Axis;
 import com.github.aushacker.g2client.state.MachineState;
 import com.github.aushacker.g2client.state.Motor;
@@ -43,7 +46,7 @@ import com.github.aushacker.g2client.state.Motor;
  */
 public class MachineController {
 
-	private final Logger logger;
+	private final Logger logger = LoggerFactory.getLogger(MachineController.class);
 
 	private MachineState machineState;
 
@@ -56,7 +59,6 @@ public class MachineController {
 	private BlockingQueue<JsonValue> in;
 
 	public MachineController() {
-		logger = LoggerFactory.getLogger(MachineController.class);
 		machineState = new MachineState();
 		shutdown = false;
 		in = new LinkedBlockingQueue<>();
@@ -67,28 +69,39 @@ public class MachineController {
 		t.start();
 	}
 
-	public void connect(SerialPort port) {
+	public boolean connect(SerialPort port) {
 		if (monitor != null) {
 			monitor.shutdown();
 			in.clear();
 		}
 
 		monitor = new PortMonitor(port, in);
-		monitor.start();
-		
-		try {
-			Thread.sleep(500);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
+		if (monitor.start()) {
+			queryMachineState();
+			return true;
+		} else {
+			return false;
 		}
-		
-		queryMachineState();
 	}
 
 	public void enqueue(String data) {
 		if (monitor != null) {
 			monitor.enqueue(data);
 		}
+	}
+
+	private void enqueueCommand(Command cmd) {
+		if (monitor != null) {
+			monitor.enqueueCommand(cmd);
+		}
+	}
+
+	public void feedhold() {
+		enqueueCommand(new SingleCharacterCommand(SingleCharacterType.FEEDHOLD));
+	}
+
+	public void flush() {
+		enqueueCommand(new SingleCharacterCommand(SingleCharacterType.QUEUE_FLUSH));
 	}
 
 	public MachineState getMachineState() {
@@ -101,6 +114,10 @@ public class MachineController {
 
 	public void homeMachine(Axis axis) {
 		enqueue("G28.2 " + axis + "0");
+	}
+
+	public void killJob() {
+		enqueueCommand(new SingleCharacterCommand(SingleCharacterType.KILL_JOB));
 	}
 
 	private void queryMachineState() {
@@ -162,13 +179,23 @@ public class MachineController {
 	private void registerStatusHandler(Handler parent) {
 		Handler sHandler = new Handler();
 
+		sHandler.register("feed", new PropertyHandler(machineState, "feedRate"));
+		sHandler.register("line", new PropertyHandler(machineState, "line"));
 		sHandler.register("posx", new PropertyHandler(machineState, "x"));
 		sHandler.register("posy", new PropertyHandler(machineState, "y"));
 		sHandler.register("posz", new PropertyHandler(machineState, "z"));
-		sHandler.register("vel", new PropertyHandler(machineState, "velocity"));
 		sHandler.register("stat", new PropertyHandler(machineState, "status"));
+		sHandler.register("vel", new PropertyHandler(machineState, "velocity"));
 
 		parent.register(STATUS, sHandler);
+	}
+
+	public void reset() {
+		enqueueCommand(new SingleCharacterCommand(SingleCharacterType.RESET));
+	}
+
+	public void resume() {
+		enqueueCommand(new SingleCharacterCommand(SingleCharacterType.RESUME));
 	}
 
 	public void shutdown() {

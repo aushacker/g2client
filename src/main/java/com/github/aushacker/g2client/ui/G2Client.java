@@ -26,10 +26,14 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.SwingConstants;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
+import javax.swing.SwingUtilities;
 
+import com.fazecast.jSerialComm.SerialPort;
 import com.github.aushacker.g2client.conn.MachineController;
 import com.github.aushacker.g2client.conn.OperatingSystem;
 
@@ -48,49 +52,51 @@ public class G2Client extends JFrame {
 	private UIPreferences preferences;
 
 	public G2Client() {
-		super("g2client");
+		super("G2Client - Gcode Runner");
 
 		controller = new MachineController();
 		preferences = new UIPreferences();
 
 		Container contentPane = getContentPane();
 
-		AxesPanel axesPanel = new AxesPanel(controller, preferences);
+		JTabbedPane tp = new JTabbedPane();
 
-		JLabel label = new JLabel("X:", SwingConstants.CENTER);
-		JButton btConnect = new JButton("Connect");
-		btConnect.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				controller.connect(OperatingSystem.current().getFilteredPorts().get(0));
-				
-				try {
-					Thread.sleep(2000);
-				} catch (InterruptedException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-				
-				controller.enqueue("{\"x\":{\"am\":1}}");
-				controller.enqueue("{\"y\":{\"am\":1}}");
-				//controller.enqueue("{\"sr\":n}");
-//				controller.enqueue("G0 X10 Y10");
-//				controller.enqueue("G0 X-10 Y10");
-//				controller.enqueue("G0 X-10 Y-10");
-//				controller.enqueue("G0 X10 Y-10");
-//				controller.enqueue("G0 X10 Y10");
-//				controller.enqueue("G0 X0 Y0");
-				controller.enqueue("{\"di1\":{\"mo\":0,\"ac\":2,\"fn\":1}}");
-				controller.enqueue("{\"di2\":{\"mo\":0,\"ac\":2,\"fn\":1}}");
-				controller.enqueue("{\"di3\":{\"mo\":0,\"ac\":2,\"fn\":1}}");
-				controller.enqueue("{\"di4\":{\"mo\":0,\"ac\":2,\"fn\":1}}");
+		tp.addTab("Run", new RunPanel(controller, preferences));
+		tp.addTab("Config", new ConfigPanel(controller, preferences));
+		tp.addTab("Diagnostics", new JPanel());
 
-			}
-		});
+		contentPane.add(tp, BorderLayout.CENTER);
 
-		contentPane.add(label, BorderLayout.CENTER);
-		contentPane.add(axesPanel, BorderLayout.EAST);
-		contentPane.add(btConnect, BorderLayout.SOUTH);
+		SwingUtilities.invokeLater(new InitializationProcess(tp));
+	}
+
+	private void connect() {
+		controller.connect(OperatingSystem.current().getFilteredPorts().get(0));
+		
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		controller.enqueue("{\"x\":{\"am\":1}}");
+		controller.enqueue("{\"y\":{\"am\":1}}");
+		controller.enqueue("{\"sr\":n}");
+		controller.enqueue("{\"line\":0}");
+//				controller.enqueue("N1 G21 G90");
+//				controller.enqueue("N2 G1 X10 Y10 F800");
+//				controller.enqueue("N3 G1 X10 Y10");
+//				controller.enqueue("N4 G1 X-10 Y10");
+//				controller.enqueue("N5 G1 X-10 Y-10");
+//				controller.enqueue("N6 G1 X10 Y-10");
+//				controller.enqueue("N7 G1 X10 Y10");
+//				controller.enqueue("N8 G1 X0 Y0");
+//				controller.enqueue("{\"line\":n}");
+//				controller.enqueue("{\"di1\":{\"mo\":0,\"ac\":2,\"fn\":1}}");
+//				controller.enqueue("{\"di2\":{\"mo\":0,\"ac\":2,\"fn\":1}}");
+//				controller.enqueue("{\"di3\":{\"mo\":0,\"ac\":2,\"fn\":1}}");
+//				controller.enqueue("{\"di4\":{\"mo\":0,\"ac\":2,\"fn\":1}}");
 	}
 
 	private void shutdown() {
@@ -112,4 +118,39 @@ public class G2Client extends JFrame {
 		});
 	}
 
+	private class InitializationProcess implements Runnable {
+		JComponent parent;
+
+		InitializationProcess(JComponent parent) {
+			this.parent = parent;
+		}
+
+		public void run() {
+			// Attempt to find preferred SerialPort
+			String portName = preferences.getPortName();
+			SerialPort port = null;
+			
+			for (SerialPort p : OperatingSystem.current().getFilteredPorts()) {
+				if (p.getSystemPortName().equals(portName)) {
+					port = p;
+					break;
+				}
+			}
+
+			if (port != null) {
+				if (!controller.connect(port)) {
+					JOptionPane.showMessageDialog(parent,
+							"Unable to connect with g2 controller, \n" +
+							"check configuration.",
+							"Connection Error",
+							JOptionPane.ERROR_MESSAGE);
+				}
+			} else {
+				JOptionPane.showMessageDialog(parent,
+					"Configured serial port not found.",
+					"Configuration Error",
+					JOptionPane.ERROR_MESSAGE);
+			}
+		}
+	}
 }

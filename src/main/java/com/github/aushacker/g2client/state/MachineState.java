@@ -30,9 +30,13 @@ public class MachineState {
 
 	public static final int MOTOR_COUNT = 6;
 
+	private int feedRate;
+
 	private String firmwareBuild;
 
 	private String firmwareVersion;
+
+	private int line;
 
 	/**
 	 * g2 allows for 6 motors but the number present depends on the actual 
@@ -72,12 +76,20 @@ public class MachineState {
 		pcs.addPropertyChangeListener(listener);
 	}
 
+	public int getFeedRate() {
+		return feedRate;
+	}
+
 	public String getFirmwareBuild() {
 		return firmwareBuild;
 	}
 
 	public String getFirmwareVersion() {
 		return firmwareVersion;
+	}
+
+	public int getLine() {
+		return line;
 	}
 
 	public Motor getMotors(int index) {
@@ -108,12 +120,26 @@ public class MachineState {
 		pcs.removePropertyChangeListener(listener);
 	}
 
+	public void setFeedRate(int feedRate) {
+		int old = this.feedRate;
+		this.feedRate = feedRate;
+
+		pcs.firePropertyChange("feedRate", old, feedRate);
+	}
+
 	public void setFirmwareBuild(String fb) {
 		firmwareBuild = fb;
 	}
 
 	public void setFirmwareVersion(String fv) {
 		firmwareVersion = fv;
+	}
+
+	public void setLine(int line) {
+		int old = this.line;
+		this.line = line;
+
+		pcs.firePropertyChange("line", old, line);
 	}
 
 	public void setStatus(int status) {

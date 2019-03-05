@@ -39,8 +39,6 @@ import org.slf4j.LoggerFactory;
 import com.fazecast.jSerialComm.SerialPort;
 import com.github.aushacker.g2client.protocol.Command;
 import com.github.aushacker.g2client.protocol.DataCommand;
-import com.github.aushacker.g2client.protocol.SingleCharacterCommand;
-import com.github.aushacker.g2client.protocol.SingleCharacterType;
 
 /**
  * A multi-threaded handler for communicating with a G2 controller board
@@ -82,16 +80,12 @@ public class PortMonitor {
 		enqueueCommand(new DataCommand(data));
 	}
 
-	private void enqueueCommand(Command cmd) {
+	public void enqueueCommand(Command cmd) {
 		in.add(cmd);
 
 		synchronized(semaphore) {
 			semaphore.notify();
 		}
-	}
-
-	public void feedhold() {
-		enqueueCommand(new SingleCharacterCommand(SingleCharacterType.FEEDHOLD));
 	}
 
 	public BlockingQueue<JsonValue> getOut() {
@@ -101,14 +95,6 @@ public class PortMonitor {
 	private void initialisePort() {
 		port.setComPortParameters(G2_BAUD, 8, 1, SerialPort.NO_PARITY);
 		port.setComPortTimeouts(SerialPort.TIMEOUT_READ_SEMI_BLOCKING, 0, 0);
-	}
-
-	public void reset() {
-		enqueueCommand(new SingleCharacterCommand(SingleCharacterType.RESET));
-	}
-
-	public void resume() {
-		enqueueCommand(new SingleCharacterCommand(SingleCharacterType.RESUME));
 	}
 
 	private void setState(State state) {
@@ -132,7 +118,7 @@ public class PortMonitor {
 		port.closePort();
 	}
 
-	public synchronized void start() {
+	public synchronized boolean start() {
 		try {
 			if (state == State.RESET) {
 				logger.info("Setting up serial port {}", port);
@@ -140,17 +126,20 @@ public class PortMonitor {
 				initialisePort();
 				if (!port.openPort()) {
 					logger.error("Cannot open serial port {}", port);
-					throw new IllegalStateException("Cannot open serial port");
+					return false;
 				}
 
 				startProcess(new ReceiveProcess(), "rx");
 				startProcess(new TransmitProcess(), "tx");
+				
+				Thread.sleep(2 * BOARD_RESET_TIME);
 			}
 		}
 		catch (Exception e) {
 			e.printStackTrace();
 		}
 
+		return state == State.READY;
 	}
 
 	private void startProcess(Runnable process, String name) {
@@ -160,7 +149,7 @@ public class PortMonitor {
 	}
 
 	private enum State {
-		RESET, SYNCHRONISING, READY;
+		RESET, SYNCHRONISING, READY, FAILED;
 	}
 
 	private class TransmitProcess implements Runnable {
@@ -186,7 +175,6 @@ public class PortMonitor {
 					break;
 				case SYNCHRONISING:
 					synchronise();
-					setState(State.READY);
 					break;
 				default:
 					try {
@@ -239,10 +227,13 @@ public class PortMonitor {
 					e.printStackTrace();
 				}
 				
-				if (ack)
+				if (ack) {
+					setState(State.READY);
 					return;
+				}
 			}
 
+			setState(State.FAILED);
 			logger.error("Unable to synchronise with g2 board");
 			port.closePort();
 			shutdown = true;

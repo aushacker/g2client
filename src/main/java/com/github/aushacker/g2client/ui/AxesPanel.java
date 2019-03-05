@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with g2client. If not, see <https://www.gnu.org/licenses/>.
  */
-
 package com.github.aushacker.g2client.ui;
 
 import java.awt.GridBagConstraints;
@@ -30,7 +29,6 @@ import java.text.DecimalFormat;
 
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
-import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
@@ -44,9 +42,9 @@ import com.github.aushacker.g2client.state.Axis;
  * @author Stephen Davies
  * @since March 2019
  */
-public class AxesPanel extends JPanel implements PropertyChangeListener {
+public class AxesPanel extends G2Panel implements PropertyChangeListener {
 
-	private MachineController controller;
+	private static final long serialVersionUID = 2012787993585660363L;
 
 	private JTextField x;
 
@@ -56,16 +54,11 @@ public class AxesPanel extends JPanel implements PropertyChangeListener {
 
 	private JLabel yLabel;
 
-	private UIPreferences prefs;
-
 	public AxesPanel(MachineController controller, UIPreferences prefs) {
-		super(new GridBagLayout());
+		super(new GridBagLayout(), controller, prefs);
 
-		this.controller = controller;
-		this.controller.getMachineState().addPropertyChangeListener(this);
+		getMachineState().addPropertyChangeListener(this);
 
-		this.prefs = prefs;
-		
 		x = createField();
 		y = createField();
 
@@ -89,90 +82,57 @@ public class AxesPanel extends JPanel implements PropertyChangeListener {
 		c.gridy = 1;
 		add(y, c);
 
-		createXMenu();
-		createYMenu();
+		xLabel.setComponentPopupMenu(createMenu(Axis.X));
+		yLabel.setComponentPopupMenu(createMenu(Axis.Y));
 	}
 
 	private JTextField createField() {
 		JTextField f = new JTextField(format(new BigDecimal(0)), 8);
 		f.setEditable(false);
-		f.setFont(prefs.getDroFont());
-		f.setForeground(prefs.getDroForeground());
+		f.setFont(getPrefs().getDroFont());
+		f.setForeground(getPrefs().getDroForeground());
 		f.setHorizontalAlignment(JTextField.RIGHT);
 		return f;
 	}
 
 	private JLabel createLabel(String text) {
 		JLabel l = new JLabel(text);
-		l.setFont(prefs.getDroFont());
-		l.setForeground(prefs.getDroForeground());
+		l.setFont(getPrefs().getDroFont());
+		l.setForeground(getPrefs().getDroForeground());
 		return l;
 	}
 
-	private void createXMenu() {
-		JPopupMenu xMenu = new JPopupMenu();
+	private JPopupMenu createMenu(Axis axis) {
+		JPopupMenu menu = new JPopupMenu();
 		
-		JMenuItem item = new JMenuItem("Go to zero on X axis (G53 G0 X0)");
+		JMenuItem item = new JMenuItem("Go to zero on " + axis + " axis (G53 G0 " + axis + "0)");
 		item.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				controller.goToMachineZero(Axis.X);
+				getController().goToMachineZero(axis);
 			}
 		});
-		xMenu.add(item);
+		menu.add(item);
 		
-		item = new JMenuItem("Zero X axis (G28.3 X0)");
+		item = new JMenuItem("Zero " + axis + " axis (G28.3 " + axis + "0)");
 		item.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				controller.zeroMachine(Axis.X);
+				getController().zeroMachine(axis);
 			}
 		});
-		xMenu.add(item);
+		menu.add(item);
 		
-		item = new JMenuItem("Home X axis (G28.2 X0)");
+		item = new JMenuItem("Home " + axis + " axis (G28.2 " + axis + "0)");
 		item.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				controller.homeMachine(Axis.X);
+				getController().homeMachine(axis);
 			}
 		});
-		xMenu.add(item);
+		menu.add(item);
 		
-		xLabel.setComponentPopupMenu(xMenu);
-	}
-
-	private void createYMenu() {
-		JPopupMenu yMenu = new JPopupMenu();
-		
-		JMenuItem item = new JMenuItem("Go to zero on Y axis (G53 G0 Y0)");
-		item.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				controller.goToMachineZero(Axis.Y);
-			}
-		});
-		yMenu.add(item);
-		
-		item = new JMenuItem("Zero Y axis (G28.3 Y0)");
-		item.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				controller.zeroMachine(Axis.Y);
-			}
-		});
-		yMenu.add(item);
-		
-		item = new JMenuItem("Home Y axis (G28.2 Y0)");
-		item.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				controller.homeMachine(Axis.Y);
-			}
-		});
-		yMenu.add(item);
-		
-		yLabel.setComponentPopupMenu(yMenu);
+		return menu;
 	}
 
 	private String format(BigDecimal value) {
