@@ -22,12 +22,20 @@ import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 
-import javax.swing.JButton;
 import javax.swing.JComponent;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
@@ -51,52 +59,70 @@ public class G2Client extends JFrame {
 
 	private UIPreferences preferences;
 
-	public G2Client() {
+	private JTabbedPane tp = new JTabbedPane();
+	
+	private JMenuBar mb = new JMenuBar();
+	private JMenu fileMenu = new JMenu("File");
+	private JMenuItem openItem = new JMenuItem("Open...");
+
+	private RunPanel runPanel;
+
+	public G2Client(UIPreferences preferences) {
 		super("G2Client - Gcode Runner");
+		this.preferences = preferences;
 
 		controller = new MachineController();
-		preferences = new UIPreferences();
 
 		Container contentPane = getContentPane();
 
-		JTabbedPane tp = new JTabbedPane();
+		initializeMenus();
 
-		tp.addTab("Run", new RunPanel(controller, preferences));
+		tp.addTab("Run", runPanel = new RunPanel(controller, preferences));
 		tp.addTab("Config", new ConfigPanel(controller, preferences));
 		tp.addTab("Diagnostics", new JPanel());
 
 		contentPane.add(tp, BorderLayout.CENTER);
 
+		// Window resizes are persistent
+		contentPane.addComponentListener(new ComponentAdapter() {
+			@Override
+			public void componentResized(ComponentEvent e) {
+				preferences.setHeight(getHeight());
+				preferences.setWidth(getWidth());
+			}
+		});
+
 		SwingUtilities.invokeLater(new InitializationProcess(tp));
 	}
 
-	private void connect() {
-		controller.connect(OperatingSystem.current().getFilteredPorts().get(0));
-		
-		try {
-			Thread.sleep(2000);
-		} catch (InterruptedException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+	private void fileOpen() {
+		String home = preferences.getScriptHome();
+		JFileChooser chooser;
+
+		if (home != null && home.trim().length() > 0) {
+			chooser = new JFileChooser(home);
+		} else {
+			chooser = new JFileChooser();
 		}
+
+		int result = chooser.showOpenDialog(tp);
+		File script = chooser.getSelectedFile();
+		if (result == JFileChooser.APPROVE_OPTION && script.exists()) {
+			runPanel.openFile(script);
+		}
+	}
+
+	private void initializeMenus() {
+		mb.add(fileMenu);
+		fileMenu.add(openItem);
+		setJMenuBar(mb);
 		
-		controller.enqueue("{\"x\":{\"am\":1}}");
-		controller.enqueue("{\"y\":{\"am\":1}}");
-		controller.enqueue("{\"sr\":n}");
-		controller.enqueue("{\"line\":0}");
-//				controller.enqueue("N1 G21 G90");
-//				controller.enqueue("N2 G1 X10 Y10 F800");
-//				controller.enqueue("N3 G1 X10 Y10");
-//				controller.enqueue("N4 G1 X-10 Y10");
-//				controller.enqueue("N5 G1 X-10 Y-10");
-//				controller.enqueue("N6 G1 X10 Y-10");
-//				controller.enqueue("N7 G1 X10 Y10");
-//				controller.enqueue("N8 G1 X0 Y0");
-//				controller.enqueue("{\"line\":n}");
-//				controller.enqueue("{\"di1\":{\"mo\":0,\"ac\":2,\"fn\":1}}");
-//				controller.enqueue("{\"di2\":{\"mo\":0,\"ac\":2,\"fn\":1}}");
-//				controller.enqueue("{\"di3\":{\"mo\":0,\"ac\":2,\"fn\":1}}");
-//				controller.enqueue("{\"di4\":{\"mo\":0,\"ac\":2,\"fn\":1}}");
+		openItem.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				fileOpen();
+			}
+		});
 	}
 
 	private void shutdown() {
@@ -104,9 +130,10 @@ public class G2Client extends JFrame {
 	}
 
 	public static void main(String[] args) {
-		G2Client f = new G2Client();
-		
-		f.setBounds(100, 100, 800, 400);
+		UIPreferences preferences = new UIPreferences();
+		G2Client f = new G2Client(preferences);
+
+		f.setBounds(100, 100, preferences.getWidth(), preferences.getHeight());
 		f.setVisible(true);
 		f.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
@@ -118,6 +145,9 @@ public class G2Client extends JFrame {
 		});
 	}
 
+	/**
+	 * Attempts to connect to the SerialPort and initialize the g2 controller.
+	 */
 	private class InitializationProcess implements Runnable {
 		JComponent parent;
 
@@ -138,7 +168,23 @@ public class G2Client extends JFrame {
 			}
 
 			if (port != null) {
-				if (!controller.connect(port)) {
+				// Found
+				if (controller.connect(port)) {
+					// Connected ok, try to play initial script
+					try (BufferedReader in = new BufferedReader(new FileReader(preferences.getInitialScript()))) {
+						String line = in.readLine();
+						while (line != null) {
+							controller.enqueue(line);
+							line = in.readLine();
+						}
+					}
+					catch (Exception e) {
+						JOptionPane.showMessageDialog(parent,
+								"Unable to open initial script.",
+								"File Not Found",
+								JOptionPane.ERROR_MESSAGE);
+					}
+				} else {
 					JOptionPane.showMessageDialog(parent,
 							"Unable to connect with g2 controller, \n" +
 							"check configuration.",
@@ -146,6 +192,7 @@ public class G2Client extends JFrame {
 							JOptionPane.ERROR_MESSAGE);
 				}
 			} else {
+				// SerialPort not found
 				JOptionPane.showMessageDialog(parent,
 					"Configured serial port not found.",
 					"Configuration Error",

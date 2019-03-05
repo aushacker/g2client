@@ -120,11 +120,24 @@ public class MachineController {
 		enqueueCommand(new SingleCharacterCommand(SingleCharacterType.KILL_JOB));
 	}
 
+	/**
+	 * Run a bunch of command to determine the initial machine state.
+	 */
 	private void queryMachineState() {
+		enqueue("{\"sr\":n}");
+
 		// Motors 1-6
-		for (int i = 1; i <= MachineState.MOTOR_COUNT; i++) {
-			enqueue("{\"" + i + "\":n}");
-		}
+//		for (int i = 1; i <= MachineState.MOTOR_COUNT; i++) {
+//			enqueue("{\"" + i + "\":n}");
+//		}
+
+		// All axes
+		//enqueue("{\"x\":n}");
+
+		// Config for all digital inputs
+//		for (int i = 1; i <= MachineState.DINPUT_COUNT; i++) {
+//			enqueue("{\"di" + i + "\":n}");
+//		}
 	}
 
 	public void registerHandlers() {
@@ -192,6 +205,10 @@ public class MachineController {
 
 	public void reset() {
 		enqueueCommand(new SingleCharacterCommand(SingleCharacterType.RESET));
+	}
+
+	public void resetLineCounter() {
+		enqueue("{\"line\":0}");
 	}
 
 	public void resume() {

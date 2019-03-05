@@ -34,11 +34,20 @@ public class UIPreferences {
 	private static final String FONT_NAME = "fontName";
 	private static final String DEFAULT_FONT_NAME = "SansSerif";
 
+	private static final String HEIGHT = "height";
+	private static final int DEFAULT_HEIGHT = 400;
+	private static final String WIDTH = "width";
+	private static final int DEFAULT_WIDTH = 800;
+	
 	/**
 	 * Directory containing gcode scripts. 
 	 */
 	private static final String SCRIPT_HOME = "scriptHome";
+	private static final String INITIAL_SCRIPT = "initialScript";
 
+	/**
+	 * SerialPort system name.
+	 */
 	private static final String PORT_NAME = "portName";
 
 	private static Preferences prefs = Preferences.userNodeForPackage(UIPreferences.class);
@@ -61,12 +70,32 @@ public class UIPreferences {
 		return Color.BLACK;
 	}
 
+	public int getHeight() {
+		return prefs.getInt(HEIGHT, DEFAULT_HEIGHT);
+	}
+
 	public String getPortName() {
 		return prefs.get(PORT_NAME, "");
 	}
 
+	public String getInitialScript() {
+		return prefs.get(INITIAL_SCRIPT, "");
+	}
+
 	public String getScriptHome() {
 		return prefs.get(SCRIPT_HOME, "");
+	}
+
+	public int getWidth() {
+		return prefs.getInt(WIDTH, DEFAULT_WIDTH);
+	}
+
+	public void setHeight(int height) {
+		prefs.putInt(HEIGHT, height);
+	}
+
+	public void setInitialScript(String initialScript) {
+		prefs.put(INITIAL_SCRIPT, initialScript);
 	}
 
 	public void setPortName(String portName) {
@@ -75,5 +104,9 @@ public class UIPreferences {
 
 	public void setScriptHome(String scriptHome) {
 		prefs.put(SCRIPT_HOME, scriptHome);
+	}
+
+	public void setWidth(int width) {
+		prefs.putInt(WIDTH, width);
 	}
 }

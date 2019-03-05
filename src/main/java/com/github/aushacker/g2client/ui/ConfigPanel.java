@@ -50,13 +50,16 @@ import com.github.aushacker.g2client.conn.OperatingSystem;
  */
 public class ConfigPanel extends G2Panel {
 
-	private JTextField scriptHomeField = new JTextField(40);
+	private JTextField initialScriptField;
+
+	private JTextField scriptHomeField;
 
 	private JComboBox<SerialPort> portChoice = new JComboBox<>();
 
 	public ConfigPanel(MachineController controller, UIPreferences prefs) {
 		super(new GridBagLayout(), controller, prefs);
 
+		initialScriptField = new JTextField(prefs.getInitialScript(), 40);
 		scriptHomeField = new JTextField(prefs.getScriptHome(), 40);
 		populatePortChoice();
 
@@ -65,7 +68,6 @@ public class ConfigPanel extends G2Panel {
 		gbc.anchor = GridBagConstraints.WEST;
 		gbc.gridwidth = 1;
 		gbc.insets = new Insets(0, 0, 0, 0);
-
 		add(new JLabel("Script Home"), gbc);
 
 		add(Box.createHorizontalStrut(10));
@@ -73,17 +75,31 @@ public class ConfigPanel extends G2Panel {
 		add(scriptHomeField, gbc);
 
 		gbc.gridwidth = 1;
-
 		add(new JLabel("Serial Port"), gbc);
 
 		add(Box.createHorizontalStrut(10));
+		gbc.gridwidth = GridBagConstraints.REMAINDER;
 		gbc.fill = GridBagConstraints.NONE;
 		add(portChoice, gbc);
+
+		gbc.gridwidth = 1;
+		add(new JLabel("Initial Script"), gbc);
+
+		add(Box.createHorizontalStrut(10));
+		gbc.gridwidth = GridBagConstraints.REMAINDER;
+		add(initialScriptField, gbc);
 
 		initializeHandlers();
 	}
 	
 	private void initializeHandlers() {
+		initialScriptField.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent evt) {
+				getPrefs().setInitialScript(initialScriptField.getText());
+			}
+		});
+
 		scriptHomeField.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent evt) {

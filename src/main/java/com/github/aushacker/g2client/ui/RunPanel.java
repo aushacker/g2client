@@ -19,6 +19,7 @@
 package com.github.aushacker.g2client.ui;
 
 import java.awt.BorderLayout;
+import java.io.File;
 
 import com.github.aushacker.g2client.conn.MachineController;
 
@@ -28,11 +29,21 @@ import com.github.aushacker.g2client.conn.MachineController;
  */
 public class RunPanel extends G2Panel {
 
+	private GCodePanel codePanel;
+	
+	private ControlPanel controlPanel;
+	
 	public RunPanel(MachineController controller, UIPreferences prefs) {
 		super(new BorderLayout(), controller, prefs);
 
-		ControlPanel controlPanel = new ControlPanel(controller, prefs);
+		codePanel = new GCodePanel(controller, prefs);
+		controlPanel = new ControlPanel(controller, prefs);
 
+		add(codePanel, BorderLayout.CENTER);
 		add(controlPanel, BorderLayout.EAST);
+	}
+
+	public void openFile(File file) {
+		codePanel.openFile(file);
 	}
 }

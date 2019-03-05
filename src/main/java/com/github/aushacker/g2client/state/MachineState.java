@@ -28,6 +28,10 @@ import java.math.BigDecimal;
  */
 public class MachineState {
 
+	public static final int DINPUT_COUNT = 9;
+
+	public static final int DOUTPUT_COUNT = 9;
+
 	public static final int MOTOR_COUNT = 6;
 
 	private int feedRate;
