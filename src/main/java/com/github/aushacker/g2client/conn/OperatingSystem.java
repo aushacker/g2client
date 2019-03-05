@@ -42,6 +42,18 @@ public enum OperatingSystem {
 			}
 			return result;
 		}
+	},
+	WINDOWS {
+		protected List<SerialPort> filter(SerialPort[] ports) {
+			ArrayList<SerialPort> result = new ArrayList<SerialPort>();
+			
+			for (SerialPort port : ports) {
+				if (port.getSystemPortName().startsWith("COM")) {
+					result.add(port);
+				}
+			}
+			return result;
+		}
 	};
 
 	protected abstract List<SerialPort> filter(SerialPort[] ports);
@@ -51,10 +63,14 @@ public enum OperatingSystem {
 	}
 
 	public static OperatingSystem current() {
-		switch (System.getProperty("os.name")) {
-		case "Mac OS X":
+
+		String os = System.getProperty("os.name").toLowerCase();
+		
+		if (os.indexOf("mac") >= 0) {
 			return MACOS;
-		default:
+		} else if (os.indexOf("win") >= 0) {
+			return WINDOWS;
+		} else {
 			throw new IllegalArgumentException();
 		}
 	}

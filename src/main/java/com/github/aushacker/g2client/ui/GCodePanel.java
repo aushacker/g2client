@@ -103,7 +103,6 @@ public class GCodePanel extends G2Panel {
 		String[] lines = textPane.getText().split("\\n");
 		for (int i = 0; i < lines.length; i++) {
 			String c = "N" + (i + 1) + " " + lines[i];
-			System.out.println(c);
 			getController().enqueue(c);
 		}
 	}

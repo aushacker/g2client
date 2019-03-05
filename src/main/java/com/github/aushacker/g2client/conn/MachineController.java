@@ -124,6 +124,7 @@ public class MachineController {
 	 * Run a bunch of command to determine the initial machine state.
 	 */
 	private void queryMachineState() {
+		resetLineCounter();
 		enqueue("{\"sr\":n}");
 
 		// Motors 1-6
