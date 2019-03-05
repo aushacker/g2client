@@ -100,8 +100,6 @@ public class GCodePanel extends G2Panel {
 		goToLineZero();
 		getController().resetLineCounter();
 		
-		int line = 1;
-
 		String[] lines = textPane.getText().split("\\n");
 		for (int i = 0; i < lines.length; i++) {
 			String c = "N" + (i + 1) + " " + lines[i];
