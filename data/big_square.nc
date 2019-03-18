@@ -1,7 +1,8 @@
-(Small square, clockwise)
+(Big square, clockwise)
 G21 G90
 G1 X200 Y200 F800
 G1 X200 Y-200
 G1 X-200 Y-200
 G1 X-200 Y200
 G1 X200 Y200
+G1 X0 Y0
