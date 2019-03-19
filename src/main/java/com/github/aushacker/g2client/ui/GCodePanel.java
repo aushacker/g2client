@@ -31,7 +31,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
 
-import com.github.aushacker.g2client.conn.MachineController;
+import com.github.aushacker.g2client.conn.IController;
 
 /**
  * @author Stephen Davies
@@ -44,7 +44,7 @@ public class GCodePanel extends G2Panel {
 
 	private JButton playButton = new JButton("Play");
 
-	public GCodePanel(MachineController controller, UIPreferences preferences) {
+	public GCodePanel(IController controller, UIPreferences preferences) {
 		super(new BorderLayout(), controller, preferences);
 
 		// Create and link the Gcode text objects

@@ -18,6 +18,8 @@
  */
 package com.github.aushacker.g2client.ui;
 
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
@@ -26,18 +28,19 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
+import java.util.Arrays;
 
-import javax.swing.JLabel;
-import javax.swing.JMenuItem;
-import javax.swing.JPopupMenu;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
-import com.github.aushacker.g2client.conn.MachineController;
+import com.github.aushacker.g2client.conn.IController;
 import com.github.aushacker.g2client.state.Axis;
 
 /**
- * Displays the X & Y axis information.
+ * Displays X, Y & Z axis information.
  *
  * @author Stephen Davies
  * @since March 2019
@@ -46,44 +49,26 @@ public class AxesPanel extends G2Panel implements PropertyChangeListener {
 
 	private static final long serialVersionUID = 2012787993585660363L;
 
-	private JTextField x;
+	private JButton home;
+	private JButton x;
+	private JButton y;
+	private JButton z;
+	private JButton zero;
 
-	private JLabel xLabel;
+	private JTextField xPos;
+	private JTextField yPos;
+	private JTextField zPos;
 
-	private JTextField y;
+	public AxesPanel(IController controller, UIPreferences prefs) {
+		super(new BorderLayout(), controller, prefs);
 
-	private JLabel yLabel;
+		createWidgets();
+		layoutWidgets();
+		initialiseEvents();
+	}
 
-	public AxesPanel(MachineController controller, UIPreferences prefs) {
-		super(new GridBagLayout(), controller, prefs);
-
-		getMachineState().addPropertyChangeListener(this);
-
-		x = createField();
-		y = createField();
-
-		GridBagConstraints c = new GridBagConstraints();
-		c.gridx = 0;
-		c.gridy = 0;
-		add(xLabel = createLabel("X"), c);
-		
-		c = new GridBagConstraints();
-		c.gridx = 1;
-		c.gridy = 0;
-		add(x, c);
-		
-		c = new GridBagConstraints();
-		c.gridx = 0;
-		c.gridy = 1;
-		add(yLabel = createLabel("Y"), c);
-		
-		c = new GridBagConstraints();
-		c.gridx = 1;
-		c.gridy = 1;
-		add(y, c);
-
-		xLabel.setComponentPopupMenu(createMenu(Axis.X));
-		yLabel.setComponentPopupMenu(createMenu(Axis.Y));
+	private JButton createButton(String text) {
+		return new JButton("<html>" + text + "</html>");
 	}
 
 	private JTextField createField() {
@@ -95,81 +80,122 @@ public class AxesPanel extends G2Panel implements PropertyChangeListener {
 		return f;
 	}
 
-	private JLabel createLabel(String text) {
-		JLabel l = new JLabel(text);
-		l.setFont(getPrefs().getDroFont());
-		l.setForeground(getPrefs().getDroForeground());
-		return l;
+	private void createWidgets() {
+		xPos = createField();
+		yPos = createField();
+		zPos = createField();
+
+		home = createButton("Ref<br>All<br>Home");
+		x = createButton("Zero<br>X");
+		y = createButton("Zero<br>Y");
+		z = createButton("Zero<br>Z");
+		zero = createButton("Goto Zero");
 	}
 
-	private JPopupMenu createMenu(Axis axis) {
-		JPopupMenu menu = new JPopupMenu();
-		
-		JMenuItem item = new JMenuItem("Go to zero on " + axis + " axis (G53 G0 " + axis + "0)");
-		item.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				getController().goToMachineZero(axis);
-			}
-		});
-		menu.add(item);
-		
-		item = new JMenuItem("Zero " + axis + " axis (G28.3 " + axis + "0)");
-		item.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				getController().zeroMachine(axis);
-			}
-		});
-		menu.add(item);
-		
-		item = new JMenuItem("Home " + axis + " axis (G28.2 " + axis + "0)");
-		item.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				getController().homeMachine(axis);
-			}
-		});
-		menu.add(item);
-		
-		return menu;
-	}
-
+	/**
+	 * Pretty print DRO fields.
+	 */
 	private String format(BigDecimal value) {
 		DecimalFormat df = new DecimalFormat("+#,##0.000;-#,##0.000");
 		return df.format(value);
 	}
 
+	private void initialiseEvents() {
+		getMachineState().addPropertyChangeListener(this);
+		
+		home.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				getController().homeMachine(getPrefs().getHoming());
+			}
+		});
+		
+		x.addActionListener(new ZeroAxisHandler(Axis.X));
+		y.addActionListener(new ZeroAxisHandler(Axis.Y));
+		z.addActionListener(new ZeroAxisHandler(Axis.Z));
+
+		zero.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				getController().goToZero(Arrays.asList(Axis.X, Axis.Y));
+			}
+		});
+	}
+
+	/**
+	 * Using BorderLayout at top level to make sizing of home button easy.
+	 * Other widgets are dumped into a nested panel for easier layout management.
+	 */
+	private void layoutWidgets() {
+		setBorder(BorderFactory.createTitledBorder("Axis Control"));
+	
+		JPanel dro = new JPanel(new GridBagLayout());
+		GridBagConstraints c = new GridBagConstraints();
+	
+		// X
+		dro.add(x, c);
+	
+		c.gridwidth = GridBagConstraints.REMAINDER;
+		dro.add(xPos, c);
+	
+		// Y
+		c.gridwidth = 1;
+		dro.add(y, c);
+	
+		c.gridwidth = GridBagConstraints.REMAINDER;
+		dro.add(yPos, c);
+	
+		// Z
+		c.anchor = GridBagConstraints.NORTH;
+		c.gridwidth = 1;
+		c.weighty = 1;
+		dro.add(z, c);
+	
+		c.gridwidth = GridBagConstraints.REMAINDER;
+		dro.add(zPos, c);
+
+		JPanel bottomButtons = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		bottomButtons.add(zero);
+
+		add(home, BorderLayout.WEST);
+		add(dro, BorderLayout.CENTER);
+		add(bottomButtons, BorderLayout.SOUTH);
+	}
+
+	/**
+	 * Filter and queue an update for relevant model changes.
+	 */
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
 		Object newValue = evt.getNewValue();
 		JTextField field;
 		switch (evt.getPropertyName()) {
 		case "x":
-			field = x;
+			field = xPos;
 			break;
 		case "y":
-			field = y;
+			field = yPos;
+			break;
+		case "z":
+			field = zPos;
 			break;
 		default:
 			// Nothing we're interested in, bail early
 			return;
 		}
 		
-		SwingUtilities.invokeLater(new DelayedUpdate(field, (BigDecimal) newValue));
+		SwingUtilities.invokeLater(new DelayedTextUpdate(field, format((BigDecimal) newValue)));
 	}
 
-	private class DelayedUpdate implements Runnable {
-		JTextField field;
-		BigDecimal value;
+	private class ZeroAxisHandler implements ActionListener {
+		Axis axis;
 		
-		DelayedUpdate(JTextField field, BigDecimal value) {
-			this.field = field;
-			this.value = value;
+		ZeroAxisHandler(Axis axis) {
+			this.axis = axis;
 		}
 		
-		public void run() {
-			field.setText(format(value));
+		public void actionPerformed(ActionEvent e) {
+			getController().zero(axis);
 		}
 	}
 }

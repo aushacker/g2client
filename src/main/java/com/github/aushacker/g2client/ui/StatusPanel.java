@@ -29,7 +29,7 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
-import com.github.aushacker.g2client.conn.MachineController;
+import com.github.aushacker.g2client.conn.IController;
 import com.github.aushacker.g2client.protocol.StatValue;
 
 /**
@@ -40,80 +40,83 @@ import com.github.aushacker.g2client.protocol.StatValue;
  */
 public class StatusPanel extends G2Panel implements PropertyChangeListener {
 
+	private static final long serialVersionUID = -6920839130694141489L;
+
 	private static final int WIDTH = 10;
 
 	private JTextField tfFeedRate;
-
 	private JTextField tfLine;
-
 	private JTextField tfStatus;
-
 	private JTextField tfVelocity;
 
-	public StatusPanel(MachineController controller, UIPreferences prefs) {
+	public StatusPanel(IController controller, UIPreferences prefs) {
 		super(new GridBagLayout(), controller, prefs);
 		
-		GridBagConstraints c = new GridBagConstraints();
-		c.gridx = 0;
-		c.gridy = 0;
-		add(new JLabel("Velocity"), c);
+		createWidgets();
+		layoutWidgets();
+		initialiseEvents();
+	}
 
-		tfVelocity = new JTextField(format(getMachineState().getVelocity()), WIDTH);
-		tfVelocity.setEditable(false);
-		tfVelocity.setHorizontalAlignment(JTextField.RIGHT);
-		c = new GridBagConstraints();
-		c.gridx = 1;
-		c.gridy = 0;
-		c.weightx = 0.5;
-		add(tfVelocity, c);
-		
-		c = new GridBagConstraints();
-		c.gridx = 2;
-		c.gridy = 0;
-		add(new JLabel("Feed Rate"), c);
-		
+	private void createWidgets() {
 		tfFeedRate = new JTextField(Integer.toString(getMachineState().getFeedRate()), WIDTH);
 		tfFeedRate.setEditable(false);
 		tfFeedRate.setHorizontalAlignment(JTextField.RIGHT);
-		c = new GridBagConstraints();
-		c.gridx = 3;
-		c.gridy = 0;
-		c.weightx = 0.5;
-		add(tfFeedRate, c);
-		
-		c = new GridBagConstraints();
-		c.gridx = 0;
-		c.gridy = 1;
-		add(new JLabel("Line"), c);
-		
+	
 		tfLine = new JTextField(Integer.toString(getMachineState().getLine()), WIDTH);
 		tfLine.setEditable(false);
 		tfLine.setHorizontalAlignment(JTextField.RIGHT);
-		c = new GridBagConstraints();
-		c.gridx = 1;
-		c.gridy = 1;
-		c.weightx = 0.5;
-		add(tfLine, c);
-		
-		c = new GridBagConstraints();
-		c.gridx = 2;
-		c.gridy = 1;
-		add(new JLabel("Status"), c);
-		
+	
 		tfStatus = new JTextField(StatValue.lookupId(getMachineState().getStatus()).getDescription(), WIDTH);
 		tfStatus.setEditable(false);
-		c = new GridBagConstraints();
-		c.gridx = 3;
-		c.gridy = 1;
-		c.weightx = 0.5;
-		add(tfStatus, c);
-		
-		getMachineState().addPropertyChangeListener(this);
+	
+		tfVelocity = new JTextField(format(getMachineState().getVelocity()), WIDTH);
+		tfVelocity.setEditable(false);
+		tfVelocity.setHorizontalAlignment(JTextField.RIGHT);
 	}
 
 	private String format(BigDecimal value) {
 		DecimalFormat df = new DecimalFormat("#,##0.00");
 		return df.format(value);
+	}
+
+	private void initialiseEvents() {
+		getMachineState().addPropertyChangeListener(this);
+	}
+
+	private void layoutWidgets() {
+		GridBagConstraints c = new GridBagConstraints();
+		add(new JLabel("Velocity"), c);
+
+		c.gridx = 1;
+		c.weightx = 0.5;
+		add(tfVelocity, c);
+		
+		c.gridx = 2;
+		c.gridy = 0;
+		add(new JLabel("Feed Rate"), c);
+		
+		c.gridx = 3;
+		c.gridy = 0;
+		c.weightx = 0.5;
+		add(tfFeedRate, c);
+		
+		c.gridx = 0;
+		c.gridy = 1;
+		add(new JLabel("Line"), c);
+		
+		c.gridx = 1;
+		c.gridy = 1;
+		c.weightx = 0.5;
+		add(tfLine, c);
+		
+		c.gridx = 2;
+		c.gridy = 1;
+		add(new JLabel("Status"), c);
+		
+		c.gridx = 3;
+		c.gridy = 1;
+		c.weightx = 0.5;
+		add(tfStatus, c);
 	}
 
 	@Override
@@ -143,20 +146,6 @@ public class StatusPanel extends G2Panel implements PropertyChangeListener {
 			return;
 		}
 		
-		SwingUtilities.invokeLater(new DelayedUpdate(field, value));
-	}
-
-	private class DelayedUpdate implements Runnable {
-		JTextField field;
-		String value;
-		
-		DelayedUpdate(JTextField field, String value) {
-			this.field = field;
-			this.value = value;
-		}
-		
-		public void run() {
-			field.setText(value);
-		}
+		SwingUtilities.invokeLater(new DelayedTextUpdate(field, value));
 	}
 }

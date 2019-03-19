@@ -23,7 +23,7 @@ import java.awt.GridBagLayout;
 
 import javax.swing.JPanel;
 
-import com.github.aushacker.g2client.conn.MachineController;
+import com.github.aushacker.g2client.conn.IController;
 
 /**
  * Controls visual component spacing in the UI. Controller operations are delegated
@@ -34,7 +34,7 @@ import com.github.aushacker.g2client.conn.MachineController;
  */
 public class ControlPanel extends G2Panel {
 
-	public ControlPanel(MachineController controller, UIPreferences prefs) {
+	public ControlPanel(IController controller, UIPreferences prefs) {
 		super(new GridBagLayout(), controller, prefs);
 
 		GridBagConstraints c = new GridBagConstraints();

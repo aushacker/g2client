@@ -38,8 +38,8 @@ import javax.swing.ListCellRenderer;
 import javax.swing.border.Border;
 
 import com.fazecast.jSerialComm.SerialPort;
+import com.github.aushacker.g2client.conn.IController;
 
-import com.github.aushacker.g2client.conn.MachineController;
 import com.github.aushacker.g2client.conn.OperatingSystem;
 
 /**
@@ -50,13 +50,15 @@ import com.github.aushacker.g2client.conn.OperatingSystem;
  */
 public class ConfigPanel extends G2Panel {
 
+	private static final long serialVersionUID = 1108114237450732892L;
+
 	private JTextField initialScriptField;
 
 	private JTextField scriptHomeField;
 
 	private JComboBox<SerialPort> portChoice = new JComboBox<>();
 
-	public ConfigPanel(MachineController controller, UIPreferences prefs) {
+	public ConfigPanel(IController controller, UIPreferences prefs) {
 		super(new GridBagLayout(), controller, prefs);
 
 		initialScriptField = new JTextField(prefs.getInitialScript(), 40);

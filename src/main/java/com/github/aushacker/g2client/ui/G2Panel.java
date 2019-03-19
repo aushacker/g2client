@@ -22,7 +22,7 @@ import java.awt.LayoutManager;
 
 import javax.swing.JPanel;
 
-import com.github.aushacker.g2client.conn.MachineController;
+import com.github.aushacker.g2client.conn.IController;
 import com.github.aushacker.g2client.state.MachineState;
 
 /**
@@ -35,18 +35,18 @@ public abstract class G2Panel extends JPanel {
 
 	private static final long serialVersionUID = 8901180446217631821L;
 
-	private MachineController controller;
+	private IController controller;
 
 	private UIPreferences prefs;
 
-	public G2Panel(LayoutManager layoutManager, MachineController controller, UIPreferences prefs) {
+	public G2Panel(LayoutManager layoutManager, IController controller, UIPreferences prefs) {
 		super(layoutManager);
 		
 		this.controller = controller;
 		this.prefs = prefs;
 	}
 
-	protected MachineController getController() {
+	protected IController getController() {
 		return controller;
 	}
 

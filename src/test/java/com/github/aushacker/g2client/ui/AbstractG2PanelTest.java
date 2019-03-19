@@ -16,43 +16,46 @@
  * You should have received a copy of the GNU General Public License
  * along with g2client. If not, see <https://www.gnu.org/licenses/>.
  */
+
 package com.github.aushacker.g2client.ui;
 
+import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
+
 import java.awt.BorderLayout;
-import java.io.File;
+import java.awt.Container;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+
+import javax.swing.JFrame;
 
 import com.github.aushacker.g2client.conn.IController;
+import com.github.aushacker.g2client.conn.MockController;
 
 /**
+ * Testing tool for UI layout.
+ *
  * @author Stephen Davies
  * @since March 2019
  */
-public class RunPanel extends G2Panel {
+public abstract class AbstractG2PanelTest {
 
-	private static final long serialVersionUID = 4447900800636040730L;
+	public AbstractG2PanelTest() {
+		JFrame f = new JFrame();
+		Container contentPane = f.getContentPane();
 
-	private GCodePanel codePanel;
-	
-	private ControlPanel controlPanel;
-	
-	public RunPanel(IController controller, UIPreferences prefs) {
-		super(new BorderLayout(), controller, prefs);
+		contentPane.add(createPanel(new MockController(), new UIPreferences()), BorderLayout.CENTER);
 
-		createWidgets();
-		layoutWidgets();
+		f.setBounds(100, 100, 400, 300);
+		f.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+		
+		f.addWindowListener(new WindowAdapter() {
+			public void windowClosed(WindowEvent e) {
+				System.exit(0);
+			}
+		});
+
+		f.setVisible(true);
 	}
 
-	private void layoutWidgets() {
-		add(codePanel, BorderLayout.CENTER);
-		add(controlPanel, BorderLayout.EAST);
-	}
-
-	private void createWidgets() {
-		codePanel = new GCodePanel(getController(), getPrefs());
-		controlPanel = new ControlPanel(getController(), getPrefs());
-	}
-
-	public void openFile(File file) {
-		codePanel.openFile(file);
-	}
+	protected abstract G2Panel createPanel(IController controller, UIPreferences prefs);
 }

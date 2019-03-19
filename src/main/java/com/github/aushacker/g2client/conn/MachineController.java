@@ -20,6 +20,7 @@ package com.github.aushacker.g2client.conn;
 
 import static com.github.aushacker.g2client.protocol.Constants.*;
 
+import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
@@ -44,7 +45,7 @@ import com.github.aushacker.g2client.state.Motor;
  * @author Stephen Davies
  * @since March 2019
  */
-public class MachineController {
+public class MachineController implements IController {
 
 	private final Logger logger = LoggerFactory.getLogger(MachineController.class);
 
@@ -112,8 +113,23 @@ public class MachineController {
 		enqueue("G53 G0 " + axis + "0");
 	}
 
+	@Override
+	public void goToZero(List<Axis> axes) {
+		// TODO Auto-generated method stub
+		
+	}
+
 	public void homeMachine(Axis axis) {
 		enqueue("G28.2 " + axis + "0");
+	}
+
+	@Override
+	public void homeMachine(List<Axis> axes) {
+		StringBuilder cmd = new StringBuilder("G28.2 ");
+		
+		axes.forEach(axis -> cmd.append("" + axis + "0"));
+
+		enqueue(cmd.toString());
 	}
 
 	public void killJob() {
@@ -221,6 +237,11 @@ public class MachineController {
 		if (monitor != null) {
 			monitor.shutdown();
 		}
+	}
+
+	@Override
+	public void zero(Axis axis) {
+		enqueue("G0 " + axis + "0");
 	}
 
 	public void zeroMachine(Axis axis) {

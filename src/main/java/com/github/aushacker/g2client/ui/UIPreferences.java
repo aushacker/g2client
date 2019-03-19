@@ -20,7 +20,11 @@ package com.github.aushacker.g2client.ui;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.util.Arrays;
+import java.util.List;
 import java.util.prefs.Preferences;
+
+import com.github.aushacker.g2client.state.Axis;
 
 /**
  * User configurable UI preferences, things the user can adjust like font
@@ -52,18 +56,18 @@ public class UIPreferences {
 
 	private static Preferences prefs = Preferences.userNodeForPackage(UIPreferences.class);
 	
-	public Font getDroFont() {
-		String fontName = prefs.get(FONT_NAME, DEFAULT_FONT_NAME);
-
-		return new Font(fontName, Font.BOLD, 30);
-	}
-
 	public Color getDroBackground() {
 		return Color.WHITE;
 	}
 
 	public Color getDroErrorBackground() {
 		return Color.RED;
+	}
+
+	public Font getDroFont() {
+		String fontName = prefs.get(FONT_NAME, DEFAULT_FONT_NAME);
+
+		return new Font(fontName, Font.BOLD, 30);
 	}
 
 	public Color getDroForeground() {
@@ -74,12 +78,16 @@ public class UIPreferences {
 		return prefs.getInt(HEIGHT, DEFAULT_HEIGHT);
 	}
 
-	public String getPortName() {
-		return prefs.get(PORT_NAME, "");
+	public List<Axis> getHoming() {
+		return Arrays.asList(Axis.X, Axis.Y);
 	}
 
 	public String getInitialScript() {
 		return prefs.get(INITIAL_SCRIPT, "");
+	}
+
+	public String getPortName() {
+		return prefs.get(PORT_NAME, "");
 	}
 
 	public String getScriptHome() {

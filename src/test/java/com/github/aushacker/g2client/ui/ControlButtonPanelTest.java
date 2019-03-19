@@ -16,10 +16,8 @@
  * You should have received a copy of the GNU General Public License
  * along with g2client. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.github.aushacker.g2client.ui;
 
-import java.awt.BorderLayout;
-import java.io.File;
+package com.github.aushacker.g2client.ui;
 
 import com.github.aushacker.g2client.conn.IController;
 
@@ -27,32 +25,14 @@ import com.github.aushacker.g2client.conn.IController;
  * @author Stephen Davies
  * @since March 2019
  */
-public class RunPanel extends G2Panel {
+public class ControlButtonPanelTest extends AbstractG2PanelTest {
 
-	private static final long serialVersionUID = 4447900800636040730L;
-
-	private GCodePanel codePanel;
-	
-	private ControlPanel controlPanel;
-	
-	public RunPanel(IController controller, UIPreferences prefs) {
-		super(new BorderLayout(), controller, prefs);
-
-		createWidgets();
-		layoutWidgets();
+	public static void main(String[] args) {
+		new ControlButtonPanelTest();
 	}
 
-	private void layoutWidgets() {
-		add(codePanel, BorderLayout.CENTER);
-		add(controlPanel, BorderLayout.EAST);
-	}
-
-	private void createWidgets() {
-		codePanel = new GCodePanel(getController(), getPrefs());
-		controlPanel = new ControlPanel(getController(), getPrefs());
-	}
-
-	public void openFile(File file) {
-		codePanel.openFile(file);
+	@Override
+	protected G2Panel createPanel(IController controller, UIPreferences prefs) {
+		return new ControlButtonPanel(controller, prefs);
 	}
 }

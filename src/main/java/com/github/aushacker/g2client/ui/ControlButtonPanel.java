@@ -24,7 +24,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 
-import com.github.aushacker.g2client.conn.MachineController;
+import com.github.aushacker.g2client.conn.IController;
 
 /**
  * Provides UI access to the basic job control functions such as feedhold
@@ -37,44 +37,60 @@ public class ControlButtonPanel extends G2Panel {
 
 	private static final long serialVersionUID = -8758366619253512200L;
 
-	public ControlButtonPanel(MachineController controller, UIPreferences prefs) {
+	private JButton feedhold;
+	private JButton flush;
+	private JButton kill;
+	private JButton resume;
+
+	public ControlButtonPanel(IController controller, UIPreferences prefs) {
 		super(new FlowLayout(), controller, prefs);
 		
-		JButton btFeedhold = new JButton("Feedhold");
-		btFeedhold.addActionListener(new ActionListener() {
+		createWidgets();
+		layoutWidgets();
+		initialiseEvents();
+	}
+
+	private void createWidgets() {
+		feedhold = new JButton("Feedhold");
+		flush = new JButton("Flush Q");
+		kill = new JButton("Kill");
+		resume = new JButton("Resume");
+	}
+
+	private void initialiseEvents() {
+		feedhold.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent evt) {
-				controller.feedhold();
+				getController().feedhold();
 			}
 		});
 
-		JButton btResume = new JButton("Resume");
-		btResume.addActionListener(new ActionListener() {
+		resume.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent evt) {
-				controller.resume();
+				getController().resume();
 			}
 		});
 
-		JButton btFlush = new JButton("Flush Q");
-		btFlush.addActionListener(new ActionListener() {
+		flush.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent evt) {
-				controller.flush();
+				getController().flush();
 			}
 		});
 
-		JButton btKill = new JButton("Kill");
-		btKill.addActionListener(new ActionListener() {
+		kill.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent evt) {
-				controller.killJob();
+				getController().killJob();
 			}
 		});
+	}
 
-		add(btFeedhold);
-		add(btResume);
-		add(btFlush);
-		add(btKill);
+	private void layoutWidgets() {
+		add(feedhold);
+		add(resume);
+		add(flush);
+		add(kill);
 	}
 }

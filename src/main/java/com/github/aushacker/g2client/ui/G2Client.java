@@ -69,9 +69,9 @@ public class G2Client extends JFrame {
 
 	public G2Client(UIPreferences preferences) {
 		super("G2Client - Gcode Runner");
-		this.preferences = preferences;
 
-		controller = new MachineController();
+		this.preferences = preferences;
+		this.controller = new MachineController();
 
 		Container contentPane = getContentPane();
 
