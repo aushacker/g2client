@@ -33,27 +33,36 @@ import com.github.aushacker.g2client.state.MachineState;
  */
 public interface IController {
 
-	public void enqueue(String command);
+	void enqueue(String command);
 
-	public void feedhold();
+	void feedhold();
 
-	public void flush();
+	void flush();
 
-	public MachineState getMachineState();
+	MachineState getMachineState();
 
-	public void goToMachineZero(Axis axis);
+	void goToMachineZero(Axis axis);
 
-	public void goToZero(List<Axis> axes);
+	void goToZero(List<Axis> axes);
 
-	public void homeMachine(Axis axis);
+	void homeMachine(Axis axis);
 
-	public void homeMachine(List<Axis> axes);
+	void homeMachine(List<Axis> axes);
 
-	public void killJob();
+	/**
+	 * Instructs the controller to commence jogging. Distances and
+	 * mode are to be taken from the MachineState.
+	 * 
+	 * @param axis Axis to jog
+	 * @param positive when true jog in the positive direction
+	 */
+	void jog(Axis axis, boolean positive);
 
-	public void resetLineCounter();
+	void killJob();
 
-	public void resume();
+	void resetLineCounter();
+
+	void resume();
 
 	/**
 	 * Set the current position to zero in the active fixture offset.
@@ -62,7 +71,7 @@ public interface IController {
 	 *
 	 * @param axis
 	 */
-	public void zero(Axis axis);
+	void zero(Axis axis);
 
-	public void zeroMachine(Axis axis);
+	void zeroMachine(Axis axis);
 }

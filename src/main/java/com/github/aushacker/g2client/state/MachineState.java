@@ -40,6 +40,8 @@ public class MachineState {
 
 	private String firmwareVersion;
 
+	private int jogIndex;
+
 	private int line;
 
 	/**
@@ -53,6 +55,8 @@ public class MachineState {
 	private PropertyChangeSupport pcs;
 
 	private int status;
+
+	private Unit units;
 
 	private BigDecimal velocity;
 
@@ -70,6 +74,9 @@ public class MachineState {
 
 		pcs = new PropertyChangeSupport(this);
 
+		units = Unit.MM;
+		jogIndex = units.getDefaultIndex();
+
 		velocity = new BigDecimal(0);
 		x = new BigDecimal(0);
 		y = new BigDecimal(0);
@@ -78,6 +85,14 @@ public class MachineState {
 
 	public void addPropertyChangeListener(PropertyChangeListener listener) {
 		pcs.addPropertyChangeListener(listener);
+	}
+
+	public void cycleJogIncrement() {
+		int next = jogIndex + 1;
+		if (next > units.getMaxIndex())
+			next = 0;
+		
+		setJogIndex(next);
 	}
 
 	public int getFeedRate() {
@@ -92,6 +107,10 @@ public class MachineState {
 		return firmwareVersion;
 	}
 
+	public double getJogIncrement() {
+		return units.getIncrement(jogIndex);
+	}
+
 	public int getLine() {
 		return line;
 	}
@@ -102,6 +121,10 @@ public class MachineState {
 
 	public int getStatus() {
 		return status;
+	}
+
+	public Unit getUnits() {
+		return units;
 	}
 
 	public BigDecimal getVelocity() {
@@ -139,6 +162,13 @@ public class MachineState {
 		firmwareVersion = fv;
 	}
 
+	public void setJogIndex(int jogIndex) {
+		int oldIndex = this.jogIndex;
+		this.jogIndex = jogIndex;
+
+		pcs.firePropertyChange("jogIndex", oldIndex, jogIndex);
+	}
+
 	public void setLine(int line) {
 		int old = this.line;
 		this.line = line;
@@ -151,6 +181,14 @@ public class MachineState {
 		this.status = status;
 		
 		pcs.firePropertyChange("status", old, status);
+	}
+
+	public void setUnits(Unit units) {
+		Unit old = this.units;
+		this.units = units;
+		pcs.firePropertyChange("units", old, units);
+
+		setJogIndex(units.getDefaultIndex());
 	}
 
 	public void setVelocity(BigDecimal velocity) {

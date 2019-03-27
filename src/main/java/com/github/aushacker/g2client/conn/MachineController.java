@@ -132,6 +132,11 @@ public class MachineController implements IController {
 		enqueue(cmd.toString());
 	}
 
+	@Override
+	public void jog(Axis axis, boolean positive) {
+		// TODO
+	}
+
 	public void killJob() {
 		enqueueCommand(new SingleCharacterCommand(SingleCharacterType.KILL_JOB));
 	}

@@ -81,6 +81,11 @@ public class MockController implements IController {
 	}
 
 	@Override
+	public void jog(Axis axis, boolean positive) {
+		System.out.println("Jog " + axis + (positive ? "+" : "-") + " " + getMachineState().getJogIncrement());
+	}
+
+	@Override
 	public void killJob() {
 		System.out.println("Kill job");
 	}
