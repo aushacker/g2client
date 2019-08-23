@@ -79,6 +79,7 @@ public class UIPreferences {
 	}
 
 	public List<Axis> getHoming() {
+		// Quick circuit is a 2 axis machine
 		return Arrays.asList(Axis.X, Axis.Y);
 	}
 

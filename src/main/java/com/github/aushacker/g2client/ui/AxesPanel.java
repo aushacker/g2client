@@ -67,8 +67,10 @@ public class AxesPanel extends G2Panel implements PropertyChangeListener {
 		initialiseEvents();
 	}
 
-	private JButton createButton(String text) {
-		return new JButton("<html>" + text + "</html>");
+	private JButton createButton(String text, String toolTip) {
+		JButton bt = new JButton("<html>" + text + "</html>");
+		bt.setToolTipText(toolTip);
+		return bt;
 	}
 
 	private JTextField createField() {
@@ -85,11 +87,11 @@ public class AxesPanel extends G2Panel implements PropertyChangeListener {
 		yPos = createField();
 		zPos = createField();
 
-		home = createButton("Ref<br>All<br>Home");
-		x = createButton("Zero<br>X");
-		y = createButton("Zero<br>Y");
-		z = createButton("Zero<br>Z");
-		zero = createButton("Goto Zero");
+		home = createButton("Home<br>Machine", "G28.2 X0 Y0");
+		x = createButton("Zero<br>X", "G0 X0");
+		y = createButton("Zero<br>Y", "G0 Y0");
+		z = createButton("Zero<br>Z", "G0 Z0");
+		zero = createButton("Goto XY Zero", "");
 	}
 
 	/**

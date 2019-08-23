@@ -94,7 +94,7 @@ public class JogPanel extends G2Panel implements PropertyChangeListener {
 	}
 
 	private String getIncrement() {
-		DecimalFormat df = new DecimalFormat("#,##0.0####");
+		DecimalFormat df = new DecimalFormat("00.0000");
 		return df.format(state.getJogIncrement());
 	}
 
