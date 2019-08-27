@@ -18,6 +18,8 @@
  */
 package com.github.aushacker.g2client.state;
 
+import java.math.BigDecimal;
+
 /**
  * @author Stephen Davies
  * @since March 2019
@@ -40,11 +42,11 @@ public class Motor {
 
 	private int powerMode;
 
-	private double stepAngle;
+	private BigDecimal stepAngle;
 
 	private double stepsPerUnit;
 
-	private double travelPerRev;
+	private BigDecimal travelPerRev;
 
 	public Motor(int id) {
 		this.id = id;
@@ -74,7 +76,7 @@ public class Motor {
 		return powerMode;
 	}
 
-	public double getStepAngle() {
+	public BigDecimal getStepAngle() {
 		return stepAngle;
 	}
 
@@ -82,7 +84,7 @@ public class Motor {
 		return stepsPerUnit;
 	}
 
-	public double getTravelPerRev() {
+	public BigDecimal getTravelPerRev() {
 		return travelPerRev;
 	}
 
@@ -106,7 +108,7 @@ public class Motor {
 		this.powerMode = powerMode;
 	}
 
-	public void setStepAngle(double stepAngle) {
+	public void setStepAngle(BigDecimal stepAngle) {
 		this.stepAngle = stepAngle;
 	}
 
@@ -114,7 +116,7 @@ public class Motor {
 		this.stepsPerUnit = stepsPerUnit;
 	}
 
-	public void setTravelPerRev(double travelPerRev) {
+	public void setTravelPerRev(BigDecimal travelPerRev) {
 		this.travelPerRev = travelPerRev;
 	}
 }
