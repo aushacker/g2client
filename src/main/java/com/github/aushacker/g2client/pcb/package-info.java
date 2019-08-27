@@ -17,19 +17,8 @@
  * along with g2client. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.github.aushacker.g2client.protocol;
-
-import javax.json.JsonValue;
-
 /**
- * Handler for JsonValues the client is not currently interested in.
- * Prevents the logs getting spammed.
- *
  * @author Stephen Davies
- * @since March 2019
+ * @since August 2019
  */
-public class NoOpHandler extends Handler {
-
-	public void handle(JsonValue ignored) { }
-
-}
+package com.github.aushacker.g2client.pcb;

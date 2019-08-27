@@ -43,6 +43,5 @@ public class Constants {
 	public static final String FOOTER = "f";
 	public static final String RESPONSE = "r";
 	public static final String STATUS = "sr";
-	
-	
+	public static final String SYSTEM = "sys";	
 }

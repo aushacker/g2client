@@ -36,9 +36,15 @@ public class MachineState {
 
 	private int feedRate;
 
-	private String firmwareBuild;
+	private BigDecimal firmwareBuild;
 
-	private String firmwareVersion;
+	private String firmwareBuildString;
+
+	private String firmwareConfig;
+
+	private BigDecimal firmwareVersion;
+
+	private BigDecimal hardwareVersion;
 
 	private int jogIndex;
 
@@ -99,12 +105,24 @@ public class MachineState {
 		return feedRate;
 	}
 
-	public String getFirmwareBuild() {
+	public BigDecimal getFirmwareBuild() {
 		return firmwareBuild;
 	}
 
-	public String getFirmwareVersion() {
+	public String getFirmwareBuildString() {
+		return firmwareBuildString;
+	}
+
+	public String getFirmwareConfig() {
+		return firmwareConfig;
+	}
+
+	public BigDecimal getFirmwareVersion() {
 		return firmwareVersion;
+	}
+
+	public BigDecimal getHardwareVersion() {
+		return hardwareVersion;
 	}
 
 	public double getJogIncrement() {
@@ -154,12 +172,39 @@ public class MachineState {
 		pcs.firePropertyChange("feedRate", old, feedRate);
 	}
 
-	public void setFirmwareBuild(String fb) {
+	public void setFirmwareBuild(BigDecimal fb) {
+		BigDecimal old = this.firmwareBuild;
 		firmwareBuild = fb;
+
+		pcs.firePropertyChange("firmwareBuild", old, firmwareBuild);
 	}
 
-	public void setFirmwareVersion(String fv) {
+	public void setFirmwareBuildString(String fbs) {
+		String old = this.firmwareBuildString;
+		firmwareBuildString = fbs;
+
+		pcs.firePropertyChange("firmwareBuildString", old, firmwareBuildString);
+	}
+
+	public void setFirmwareConfig(String fbc) {
+		String old = this.firmwareConfig;
+		firmwareConfig = fbc;
+
+		pcs.firePropertyChange("firmwareConfig", old, firmwareConfig);
+	}
+
+	public void setFirmwareVersion(BigDecimal fv) {
+		BigDecimal old = this.firmwareVersion;
 		firmwareVersion = fv;
+
+		pcs.firePropertyChange("firmwareVersion", old, firmwareVersion);
+	}
+
+	public void setHardwareVersion(BigDecimal hv) {
+		BigDecimal old = hardwareVersion;
+		hardwareVersion = hv;
+
+		pcs.firePropertyChange("hardwareVersion", old, hardwareVersion);
 	}
 
 	public void setJogIndex(int jogIndex) {

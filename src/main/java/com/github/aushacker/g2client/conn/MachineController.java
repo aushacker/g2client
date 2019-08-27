@@ -142,11 +142,12 @@ public class MachineController implements IController {
 	}
 
 	/**
-	 * Run a bunch of command to determine the initial machine state.
+	 * Run a bunch of commands to determine the initial machine state.
 	 */
 	private void queryMachineState() {
+		enqueue("$");			// Hardware/firmware values
 		resetLineCounter();
-		enqueue("{\"sr\":n}");
+		enqueue("{\"sr\":n}");	// Current status
 
 		// Motors 1-6
 //		for (int i = 1; i <= MachineState.MOTOR_COUNT; i++) {
@@ -165,25 +166,19 @@ public class MachineController implements IController {
 	public void registerHandlers() {
 		handler = new Handler();
 		
-		Handler hResponse = new Handler();
-		hResponse.register("fv", new PropertyHandler(machineState, "firmwareVersion"));
-		hResponse.register("fb", new PropertyHandler(machineState, "firmwareBuild"));
-		hResponse.register("fbs", new NoOpHandler());
-		hResponse.register("fbc", new NoOpHandler());
-		hResponse.register("hp", new NoOpHandler());
-		hResponse.register("hv", new NoOpHandler());
-		hResponse.register("id", new NoOpHandler());
-		hResponse.register("msg", new NoOpHandler());
+		// Handles values nested under {"r":...}
+		Handler response = new Handler();
+		registerSettings(response);
+		registerSystem(response);
+		registerStatusHandler(response);
+		registerMotors(response);
+		handler.register(RESPONSE, response);
 
-		handler.register(RESPONSE, hResponse);
+		// Handles values nested under {...,"f":...}
 		handler.register(FOOTER, new NoOpHandler());
-
-		registerMotors(hResponse);
 
 		// Register for asynchronous status responses
 		registerStatusHandler(handler);
-		// Register for client requested status
-		registerStatusHandler(hResponse);
 	}
 
 	/**
@@ -211,6 +206,53 @@ public class MachineController implements IController {
 		}
 	}
 
+	/**
+	 * g2 reports the machines system settings at different times with different JSon
+	 * nesting levels.
+	 */
+	private void registerSettings(Handler parent) {	
+		parent.register("fv", new PropertyHandler(machineState, "firmwareVersion"));
+		parent.register("fb", new PropertyHandler(machineState, "firmwareBuild"));
+		parent.register("fbs", new PropertyHandler(machineState, "firmwareBuildString"));
+		parent.register("fbc", new PropertyHandler(machineState, "firmwareConfig"));
+		parent.register("hp", new NoOpHandler());
+		parent.register("hv", new PropertyHandler(machineState, "hardwareVersion"));
+		parent.register("id", new NoOpHandler());
+		parent.register("jt", new NoOpHandler());
+		parent.register("ct", new NoOpHandler());
+		parent.register("sl", new NoOpHandler());
+		parent.register("lim", new NoOpHandler());
+		parent.register("saf", new NoOpHandler());
+		parent.register("m48e", new NoOpHandler());
+		parent.register("mfoe", new NoOpHandler());
+		parent.register("mfo", new NoOpHandler());
+		parent.register("mtoe", new NoOpHandler());
+		parent.register("mto", new NoOpHandler());
+		parent.register("mt", new NoOpHandler());
+		parent.register("spep", new NoOpHandler());
+		parent.register("spdp", new NoOpHandler());
+		parent.register("spph", new NoOpHandler());
+		parent.register("spdw", new NoOpHandler());
+		parent.register("ssoe", new NoOpHandler());
+		parent.register("sso", new NoOpHandler());
+		parent.register("copf", new NoOpHandler());
+		parent.register("comp", new NoOpHandler());
+		parent.register("cofp", new NoOpHandler());
+		parent.register("coph", new NoOpHandler());
+		parent.register("tv", new NoOpHandler());
+		parent.register("ej", new NoOpHandler());
+		parent.register("jv", new NoOpHandler());
+		parent.register("qv", new NoOpHandler());
+		parent.register("sv", new NoOpHandler());
+		parent.register("si", new NoOpHandler());
+		parent.register("gpl", new NoOpHandler());
+		parent.register("gun", new NoOpHandler());
+		parent.register("gco", new NoOpHandler());
+		parent.register("gpa", new NoOpHandler());
+		parent.register("gdi", new NoOpHandler());
+		parent.register("msg", new NoOpHandler());
+	}
+
 	private void registerStatusHandler(Handler parent) {
 		Handler sHandler = new Handler();
 
@@ -223,6 +265,17 @@ public class MachineController implements IController {
 		sHandler.register("vel", new PropertyHandler(machineState, "velocity"));
 
 		parent.register(STATUS, sHandler);
+	}
+
+	/**
+	 * g2 reports the machines system settings at different times with different JSon
+	 * nesting levels.
+	 */
+	private void registerSystem(Handler parent) {
+		Handler handler = new Handler();
+		registerSettings(handler);
+		
+		parent.register(SYSTEM, handler);
 	}
 
 	public void reset() {

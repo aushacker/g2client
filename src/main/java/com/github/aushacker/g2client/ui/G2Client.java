@@ -79,7 +79,7 @@ public class G2Client extends JFrame {
 
 		tp.addTab("Run", runPanel = new RunPanel(controller, preferences));
 		tp.addTab("Config", new ConfigPanel(controller, preferences));
-		tp.addTab("Diagnostics", new JPanel());
+		tp.addTab("Diagnostics", new DiagnosticsPanel(controller, preferences));
 
 		contentPane.add(tp, BorderLayout.CENTER);
 
