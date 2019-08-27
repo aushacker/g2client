@@ -20,8 +20,6 @@ package com.github.aushacker.g2client.ui;
 
 import java.awt.BorderLayout;
 import java.awt.Container;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.WindowAdapter;
@@ -37,7 +35,6 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
 
@@ -46,7 +43,16 @@ import com.github.aushacker.g2client.conn.MachineController;
 import com.github.aushacker.g2client.conn.OperatingSystem;
 
 /**
- * Top level UI component i.e. the application.
+ * Top level UI component i.e. the application. Manages global objects like the
+ * MachineController and top-level tasks like menus and application lifecycle.
+ * <p>
+ * Primary UI component is a JTabbedPane that allows the user to switch between
+ * the following panels:
+ * <ul>
+ * <li>{@link RunPanel}</li>
+ * <li>{@link ConfigPanel}</li>
+ * <li>{@link DiagnosticsPanel}</li>
+ * </ul>
  *
  * @author Stephen Davies
  * @since March 2019
@@ -63,7 +69,8 @@ public class G2Client extends JFrame {
 	
 	private JMenuBar mb = new JMenuBar();
 	private JMenu fileMenu = new JMenu("File");
-	private JMenuItem openItem = new JMenuItem("Open...");
+	private JMenuItem fileOpenItem = new JMenuItem("Open...");
+	private JMenuItem fileExitItem = new JMenuItem("Exit");
 
 	private RunPanel runPanel;
 
@@ -114,19 +121,22 @@ public class G2Client extends JFrame {
 
 	private void initializeMenus() {
 		mb.add(fileMenu);
-		fileMenu.add(openItem);
-		setJMenuBar(mb);
+		fileMenu.add(fileOpenItem);
+		fileMenu.add(fileExitItem);
 		
-		openItem.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				fileOpen();
-			}
-		});
+		initMenuEvents();
+		
+		setJMenuBar(mb);
+	}
+	
+	private void initMenuEvents() {
+		fileOpenItem.addActionListener(e -> fileOpen());
+		fileExitItem.addActionListener(e -> shutdown());
 	}
 
 	private void shutdown() {
 		controller.shutdown();
+		System.exit(0);
 	}
 
 	public static void main(String[] args) {
@@ -140,7 +150,6 @@ public class G2Client extends JFrame {
 		f.addWindowListener(new WindowAdapter() {
 			public void windowClosed(WindowEvent e) {
 				f.shutdown();
-				System.exit(0);
 			}
 		});
 	}

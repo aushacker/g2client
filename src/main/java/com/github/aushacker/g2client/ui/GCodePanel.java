@@ -39,6 +39,8 @@ import com.github.aushacker.g2client.conn.IController;
  */
 public class GCodePanel extends G2Panel {
 
+	private static final long serialVersionUID = -1699674077772697176L;
+
 	private JTextPane textPane;
 	private JScrollPane scrollPane;
 
@@ -108,6 +110,9 @@ public class GCodePanel extends G2Panel {
 	}
 
 	class ButtonPanel extends JPanel {
+
+		private static final long serialVersionUID = -3107027042637386805L;
+
 		ButtonPanel() {
 			setLayout(new FlowLayout(FlowLayout.LEFT));
 		}

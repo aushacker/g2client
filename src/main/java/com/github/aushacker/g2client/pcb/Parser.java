@@ -76,16 +76,16 @@ public class Parser {
 
 	private void processBody() throws IOException, ParseException {
 		String s  = nextLine();
-		
+
+		// Expecting either a tool selection or an M30
 		while ( ! (Excellon.M30.equals(s))) {
-			Excellon.Tool tool;
-			if ((tool = result.getToolContext(s)) != null) {
-				s = nextLine();
+			if (result.isToolSelection(s)) {
+				result.selectTool(s);
+				state = State.TOOL;
+				processTool();
 			} else {
 				throw new ParseException("Expecting M30 or tool selection", in.getLineNumber());
 			}
-			
-			s = nextLine();
 		}
 	}
 
@@ -117,6 +117,21 @@ public class Parser {
 
 		// Current line is %, header is complete
 		state = State.BODY;
+	}
+
+	private void processTool() throws IOException, ParseException {
+		String s  = nextLine();
+
+		// Expecting a tool selection, M30 or point
+		while ( ! (Excellon.M30.equals(s))) {
+			if (result.isToolSelection(s)) {
+				result.selectTool(s);
+				state = State.TOOL;
+				processTool();
+			} else {
+				throw new ParseException("Expecting M30 or tool selection", in.getLineNumber());
+			}
+		}
 	}
 
 	private enum State {

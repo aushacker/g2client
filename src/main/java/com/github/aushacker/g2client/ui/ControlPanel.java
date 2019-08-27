@@ -34,6 +34,8 @@ import com.github.aushacker.g2client.conn.IController;
  */
 public class ControlPanel extends G2Panel {
 
+	private static final long serialVersionUID = 4195185461115800021L;
+
 	public ControlPanel(IController controller, UIPreferences prefs) {
 		super(new GridBagLayout(), controller, prefs);
 

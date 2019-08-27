@@ -59,7 +59,7 @@ public class Excellon {
 	/**
 	 * Tool context (body subsection).
 	 */
-	private static final Pattern TOOL_CONTEXT = Pattern.compile("^T(\\d+)$");
+	private static final Pattern TOOL_SELECTION = Pattern.compile("^T(\\d+)$");
 
 	private static final Pattern POINT = Pattern.compile("^X(\\d{0,2}\\.?\\d{0,4})Y(\\d{0,2}\\.?\\d{0,4})$");
 
@@ -67,16 +67,17 @@ public class Excellon {
 
 	private Map<String, Tool> tools;
 
+	/**
+	 * Current tool.
+	 */
+	private Tool tool;
+
 	public Excellon() {
 		this.tools = new HashMap<>();
 	}
 
-	public Tool getToolContext(String s) {
-		Matcher m = TOOL_CONTEXT.matcher(s);
-		if (m.matches()) {
-			return tools.get(m.group(1));
-		}
-		return null;
+	public boolean isToolSelection(String s) {
+		return TOOL_SELECTION.matcher(s).matches();
 	}
 
 	public int getToolCount() {
@@ -97,6 +98,19 @@ public class Excellon {
 			m.matches();
 			tools.put(m.group(1), new Tool(m.group(1), m.group(2)));
 		}
+	}
+
+	/**
+	 * Client should have previously called isToolSelection.
+	 * 
+	 * @param s - E.g. T01
+	 */
+	public void selectTool(String s) {
+		setTool(tools.get(s));
+	}
+
+	public void setTool(Tool tool) {
+		this.tool = tool;
 	}
 
 	public void setUnits(Units units) {

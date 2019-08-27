@@ -54,11 +54,11 @@ public class PropertyHandlerTest {
 	@Test
 	public void testStringOperation() {
 		MachineState ms = new MachineState();
-		handler = new PropertyHandler(ms, "firmwareBuild");
+		handler = new PropertyHandler(ms, "firmwareBuildString");
 
-		assertNull(ms.getFirmwareBuild());
+		assertNull(ms.getFirmwareBuildString());
 		handler.handle(create("1.2"));
-		assertEquals("1.2", ms.getFirmwareBuild());
+		assertEquals("1.2", ms.getFirmwareBuildString());
 	}
 
 	@Test
