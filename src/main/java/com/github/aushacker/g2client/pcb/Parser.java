@@ -39,7 +39,9 @@ public class Parser {
 
 	private State state;
 
-	private Excellon result;
+	private Excellon excellon;
+
+	private String currentLine;
 
 	public static Excellon parse(Reader in) throws IOException, ParseException {
 		return new Parser(in).parse();
@@ -48,7 +50,7 @@ public class Parser {
 	private Parser(Reader in) {
 		this.in = new LineNumberReader(in);
 		this.state = State.H_START;
-		this.result = new Excellon();
+		this.excellon = new Excellon();
 	}
 
 	public State getState() {
@@ -56,14 +58,16 @@ public class Parser {
 	}
 
 	/**
-	 * Return the next non-blank, non-comment line in the source file.
+	 * Set up the next non-blank, non-comment line in the source file.
 	 */
-	private String nextLine() throws IOException {
+	private void nextLine() throws IOException {
 		while (true) {
 			String s = in.readLine();
 			s = s.trim();
-			if (s.length() > 0 && !s.startsWith(COMMENT))
-				return s;
+			if (s.length() > 0 && !s.startsWith(COMMENT)) {
+				currentLine = s;
+				break;
+			}
 		}
 	}
 
@@ -71,18 +75,20 @@ public class Parser {
 		processHeader();
 		processBody();
 
-		return result;
+		return excellon;
 	}
 
 	private void processBody() throws IOException, ParseException {
-		String s  = nextLine();
-
+		nextLine();
+		
 		// Expecting either a tool selection or an M30
-		while ( ! (Excellon.M30.equals(s))) {
-			if (result.isToolSelection(s)) {
-				result.selectTool(s);
+		while (true) {
+			if (Excellon.M30.equals(currentLine)) {
+				break;
+			} else if (excellon.isToolSelection(currentLine)) {
+				excellon.selectTool(currentLine);
 				state = State.TOOL;
-				processTool();
+				processPoints();
 			} else {
 				throw new ParseException("Expecting M30 or tool selection", in.getLineNumber());
 			}
@@ -95,42 +101,45 @@ public class Parser {
 	 */
 	private void processHeader() throws IOException, ParseException {
 		// Consume initial % (MUST)
-		String s = nextLine();
-		if (H_DELIM.equalsIgnoreCase(s)) {
+		nextLine();
+		if (H_DELIM.equalsIgnoreCase(currentLine)) {
 			state = State.H_COMMAND;
 		} else {
 			throw new ParseException("Failed to find start of header", in.getLineNumber());
 		}
 
 		// Consume initial M48 (MUST)
-		s = nextLine();
-		if (Excellon.M48.equalsIgnoreCase(s)) {
+		nextLine();
+		if (Excellon.M48.equalsIgnoreCase(currentLine)) {
 			state = State.H_FIELD;
 		} else {
 			throw new ParseException("Failed to find M48 (start of header)", in.getLineNumber());
 		}
 
 		// Units, tools etc
-		while ( ! (H_DELIM.equals(s = nextLine()))) {
-			result.processHeader(s);
+		nextLine();
+		while ( ! (H_DELIM.equals(currentLine))) {
+			excellon.processHeader(currentLine);
+			nextLine();
 		}
 
 		// Current line is %, header is complete
 		state = State.BODY;
 	}
 
-	private void processTool() throws IOException, ParseException {
-		String s  = nextLine();
+	private void processPoints() throws IOException, ParseException {
+		nextLine();
 
 		// Expecting a tool selection, M30 or point
-		while ( ! (Excellon.M30.equals(s))) {
-			if (result.isToolSelection(s)) {
-				result.selectTool(s);
-				state = State.TOOL;
-				processTool();
-			} else {
+		while (true) {
+			if ( (Excellon.M30.equals(currentLine)) || (excellon.isToolSelection(currentLine)) ) {
+				break;
+			} else if (excellon.isPoint(currentLine)) {
+			} else {	
 				throw new ParseException("Expecting M30 or tool selection", in.getLineNumber());
 			}
+			
+			nextLine();
 		}
 	}
 

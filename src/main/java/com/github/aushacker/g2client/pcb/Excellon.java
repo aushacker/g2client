@@ -76,6 +76,10 @@ public class Excellon {
 		this.tools = new HashMap<>();
 	}
 
+	public boolean isPoint(String s) {
+		return POINT.matcher(s).matches();
+	}
+
 	public boolean isToolSelection(String s) {
 		return TOOL_SELECTION.matcher(s).matches();
 	}
