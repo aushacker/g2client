@@ -22,6 +22,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.util.Arrays;
 import java.util.List;
+import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
 import com.github.aushacker.g2client.state.Axis;
@@ -105,6 +106,11 @@ public class UIPreferences {
 
 	public void setInitialScript(String initialScript) {
 		prefs.put(INITIAL_SCRIPT, initialScript);
+		try {
+			prefs.flush();
+		} catch (BackingStoreException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void setPortName(String portName) {
@@ -113,6 +119,11 @@ public class UIPreferences {
 
 	public void setScriptHome(String scriptHome) {
 		prefs.put(SCRIPT_HOME, scriptHome);
+		try {
+			prefs.flush();
+		} catch (BackingStoreException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void setWidth(int width) {
