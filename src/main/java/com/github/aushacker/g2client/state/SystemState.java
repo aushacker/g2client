@@ -19,88 +19,93 @@
 
 package com.github.aushacker.g2client.state;
 
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
-import java.math.BigDecimal;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 
 /**
+ * 
  * @author Stephen Davies
- * @since 2019
+ * @since August 2019
  */
 public class SystemState {
 
-	private BigDecimal firmwareBuild;
+	private DoubleProperty firmwareBuild;
 
-	private String firmwareBuildString;
+	private StringProperty firmwareBuildString;
 
-	private String firmwareConfig;
+	private StringProperty firmwareConfig;
 
-	private BigDecimal firmwareVersion;
+	private DoubleProperty firmwareVersion;
 
-	private BigDecimal hardwareVersion;
+	private DoubleProperty hardwareVersion;
 
-	private PropertyChangeSupport pcs;
-
-	public void addPropertyChangeListener(PropertyChangeListener listener) {
-		pcs.addPropertyChangeListener(listener);
+	public SystemState() {
+		firmwareBuild = new SimpleDoubleProperty();
+		firmwareBuildString = new SimpleStringProperty();
+		firmwareConfig = new SimpleStringProperty();
+		firmwareVersion = new SimpleDoubleProperty();
+		hardwareVersion = new SimpleDoubleProperty();
 	}
 
-	public BigDecimal getFirmwareBuild() {
+	public DoubleProperty firmwareBuildProperty() {
 		return firmwareBuild;
 	}
 
-	public String getFirmwareBuildString() {
+	public StringProperty firmwareBuildStringProperty() {
 		return firmwareBuildString;
 	}
 
-	public String getFirmwareConfig() {
+	public StringProperty firmwareConfigProperty() {
 		return firmwareConfig;
 	}
 
-	public BigDecimal getFirmwareVersion() {
+	public DoubleProperty firmwareVersionProperty() {
 		return firmwareVersion;
 	}
 
-	public BigDecimal getHardwareVersion() {
+	public double getFirmwareBuild() {
+		return firmwareBuild.get();
+	}
+
+	public String getFirmwareBuildString() {
+		return firmwareBuildString.get();
+	}
+
+	public String getFirmwareConfig() {
+		return firmwareConfig.get();
+	}
+
+	public double getFirmwareVersion() {
+		return firmwareVersion.get();
+	}
+
+	public double getHardwareVersion() {
+		return hardwareVersion.get();
+	}
+
+	public DoubleProperty hardwareVersionProperty() {
 		return hardwareVersion;
 	}
 
-	public void removePropertyChangeListener(PropertyChangeListener listener) {
-		pcs.removePropertyChangeListener(listener);
-	}
-
-	public void setFirmwareBuild(BigDecimal fb) {
-		BigDecimal old = this.firmwareBuild;
-		firmwareBuild = fb;
-
-		pcs.firePropertyChange("firmwareBuild", old, firmwareBuild);
+	public void setFirmwareBuild(double fb) {
+		firmwareBuild.set(fb);
 	}
 
 	public void setFirmwareBuildString(String fbs) {
-		String old = this.firmwareBuildString;
-		firmwareBuildString = fbs;
-
-		pcs.firePropertyChange("firmwareBuildString", old, firmwareBuildString);
+		firmwareBuildString.set(fbs);
 	}
 
 	public void setFirmwareConfig(String fbc) {
-		String old = this.firmwareConfig;
-		firmwareConfig = fbc;
-
-		pcs.firePropertyChange("firmwareConfig", old, firmwareConfig);
+		firmwareConfig.set(fbc);
 	}
 
-	public void setFirmwareVersion(BigDecimal fv) {
-		BigDecimal old = this.firmwareVersion;
-		firmwareVersion = fv;
-
-		pcs.firePropertyChange("firmwareVersion", old, firmwareVersion);
+	public void setFirmwareVersion(double fv) {
+		firmwareVersion.set(fv);
 	}
 
-	public void setHardwareVersion(BigDecimal hv) {
-		BigDecimal old = hardwareVersion;
-		hardwareVersion = hv;
-
-		pcs.firePropertyChange("hardwareVersion", old, hardwareVersion);
+	public void setHardwareVersion(double hv) {
+		hardwareVersion.set(hv);
 	}
 }
