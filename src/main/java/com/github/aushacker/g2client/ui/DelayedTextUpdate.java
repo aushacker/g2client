@@ -37,6 +37,7 @@ public class DelayedTextUpdate implements Runnable {
 		this.value = value;
 	}
 
+	@Override
 	public void run() {
 		c.setText(value);
 	}

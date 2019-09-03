@@ -156,6 +156,7 @@ public class PortMonitor {
 
 		private PrintStream out;
 
+		@Override
 		public void run() {
 			logger.info("Transmit process running");
 
@@ -246,6 +247,7 @@ public class PortMonitor {
 	 */
 	private class ReceiveProcess implements Runnable {
 
+		@Override
 		public void run() {
 			logger.info("Receive process running");
 

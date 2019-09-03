@@ -21,6 +21,7 @@ package com.github.aushacker.g2client.conn;
 
 import java.util.List;
 
+import com.fazecast.jSerialComm.SerialPort;
 import com.github.aushacker.g2client.state.Axis;
 import com.github.aushacker.g2client.state.MachineState;
 
@@ -32,6 +33,8 @@ import com.github.aushacker.g2client.state.MachineState;
  * @since March 2019
  */
 public interface IController {
+
+	boolean connect(SerialPort port);
 
 	void enqueue(String command);
 
@@ -63,6 +66,8 @@ public interface IController {
 	void resetLineCounter();
 
 	void resume();
+
+	void shutdown();
 
 	/**
 	 * Set the current position to zero in the active fixture offset.

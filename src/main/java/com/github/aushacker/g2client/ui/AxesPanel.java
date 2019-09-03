@@ -196,6 +196,7 @@ public class AxesPanel extends G2Panel implements PropertyChangeListener {
 			this.axis = axis;
 		}
 		
+		@Override
 		public void actionPerformed(ActionEvent e) {
 			getController().zero(axis);
 		}

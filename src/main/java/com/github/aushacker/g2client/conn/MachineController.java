@@ -85,6 +85,7 @@ public class MachineController implements IController {
 		}
 	}
 
+	@Override
 	public void enqueue(String data) {
 		if (monitor != null) {
 			monitor.enqueue(data);
@@ -97,18 +98,22 @@ public class MachineController implements IController {
 		}
 	}
 
+	@Override
 	public void feedhold() {
 		enqueueCommand(new SingleCharacterCommand(SingleCharacterType.FEEDHOLD));
 	}
 
+	@Override
 	public void flush() {
 		enqueueCommand(new SingleCharacterCommand(SingleCharacterType.QUEUE_FLUSH));
 	}
 
+	@Override
 	public MachineState getMachineState() {
 		return machineState;
 	}
 
+	@Override
 	public void goToMachineZero(Axis axis) {
 		enqueue("G53 G0 " + axis + "0");
 	}
@@ -119,6 +124,7 @@ public class MachineController implements IController {
 		
 	}
 
+	@Override
 	public void homeMachine(Axis axis) {
 		enqueue("G28.2 " + axis + "0");
 	}
@@ -137,6 +143,7 @@ public class MachineController implements IController {
 		// TODO
 	}
 
+	@Override
 	public void killJob() {
 		enqueueCommand(new SingleCharacterCommand(SingleCharacterType.KILL_JOB));
 	}
@@ -282,10 +289,12 @@ public class MachineController implements IController {
 		enqueueCommand(new SingleCharacterCommand(SingleCharacterType.RESET));
 	}
 
+	@Override
 	public void resetLineCounter() {
 		enqueue("{\"line\":0}");
 	}
 
+	@Override
 	public void resume() {
 		enqueueCommand(new SingleCharacterCommand(SingleCharacterType.RESUME));
 	}
@@ -302,6 +311,7 @@ public class MachineController implements IController {
 		enqueue("G0 " + axis + "0");
 	}
 
+	@Override
 	public void zeroMachine(Axis axis) {
 		enqueue("G28.3 " + axis + "0");
 	}
@@ -314,6 +324,7 @@ public class MachineController implements IController {
 			this.in = in;
 		}
 
+		@Override
 		public void run() {
 			logger.info("Controller receive process running");
 			

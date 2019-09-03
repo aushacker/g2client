@@ -30,6 +30,7 @@ import javax.json.JsonValue;
  */
 public class NoOpHandler extends Handler {
 
+	@Override
 	public void handle(JsonValue ignored) { }
 
 }

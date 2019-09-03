@@ -19,15 +19,22 @@
 
 package com.github.aushacker.g2client.jfx;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 
+import com.fazecast.jSerialComm.SerialPort;
 import com.github.aushacker.g2client.conn.IController;
-import com.github.aushacker.g2client.state.SystemState;
+import com.github.aushacker.g2client.conn.MachineController;
+import com.github.aushacker.g2client.conn.OperatingSystem;
 import com.github.aushacker.g2client.ui.UIPreferences;
 
 import javafx.application.Application;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
@@ -51,8 +58,20 @@ public class G2Client extends Application {
 
 	private UIPreferences preferences;
 
+	private ConfigPane configPane;
+
+	private DiagnosticsPane diagnosticsPane;
+
+	private RunPane runPane;
+
 	public static void main(String[] args) {
 		launch(args);
+	}
+
+	private void createChildPanes() {
+		configPane = new ConfigPane(mainStage, controller, preferences);
+		diagnosticsPane = new DiagnosticsPane(mainStage, controller, preferences);
+		runPane = new RunPane(mainStage, controller, preferences);
 	}
 
 	/**
@@ -80,16 +99,17 @@ public class G2Client extends Application {
 
 		Tab tab = new Tab();
 		tab.setText("Run");
+		tab.setContent(runPane.getPane());
 		tabPane.getTabs().add(tab);
 
 		tab = new Tab();
 		tab.setText("Config");
-		tab.setContent(ConfigPane.create(preferences));
+		tab.setContent(configPane.getPane());
 		tabPane.getTabs().add(tab);
 
 		tab = new Tab();
 		tab.setText("Diagnostics");
-		tab.setContent(SystemStatePane.create(new SystemState()));
+		tab.setContent(diagnosticsPane.getPane());
 		tabPane.getTabs().add(tab);
 
 		return tabPane;
@@ -124,8 +144,11 @@ public class G2Client extends Application {
 	public void start(Stage mainStage) throws Exception {
 		this.mainStage = mainStage;
 
+		controller = new MachineController();
 		preferences = new UIPreferences();
 		BorderPane root = new BorderPane();
+
+		createChildPanes();
 
 		root.setTop(createMenuPane());
 		root.setCenter(createTabPane());
@@ -138,5 +161,56 @@ public class G2Client extends Application {
         mainStage.setScene(scene);
         mainStage.sizeToScene();
         mainStage.show();
+        
+        startMachine();
+	}
+
+	private void startMachine() {
+		// Attempt to find preferred SerialPort
+		String portName = preferences.getPortName();
+		SerialPort port = null;
+		
+		for (SerialPort p : OperatingSystem.current().getFilteredPorts()) {
+			if (p.getSystemPortName().equals(portName)) {
+				port = p;
+				break;
+			}
+		}
+
+		if (port != null) {
+			// Found
+			if (controller.connect(port)) {
+				// Connected ok, try to play initial script
+				try (BufferedReader in = new BufferedReader(new FileReader(preferences.getInitialScript()))) {
+					String line = in.readLine();
+					while (line != null) {
+						controller.enqueue(line);
+						line = in.readLine();
+					}
+				}
+				catch (Exception e) {
+					new Alert(AlertType.ERROR,
+							"Unable to open initial script - File Not Found",
+							ButtonType.CANCEL).showAndWait();
+				}
+			} else {
+				new Alert(AlertType.ERROR,
+						"Unable to connect with g2 controller, check configuration.",
+						ButtonType.CANCEL).showAndWait();
+			}
+		} else {
+			// not found
+			new Alert(AlertType.ERROR,
+					"Configured serial port not found.",
+					ButtonType.CANCEL).showAndWait();
+		}
+	}
+
+	/**
+	 * Cleanup application resources.
+	 */
+	@Override
+	public void stop() {
+		controller.shutdown();
 	}
 }

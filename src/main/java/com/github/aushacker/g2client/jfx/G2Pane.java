@@ -23,38 +23,90 @@ import com.github.aushacker.g2client.conn.IController;
 import com.github.aushacker.g2client.state.MachineState;
 import com.github.aushacker.g2client.ui.UIPreferences;
 
+import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
+
 /**
  * Common attributes shared by all panes in the application.
  *
  * @author Stephen Davies
  * @since August 2019
  */
-public abstract class G2Pane {
+public abstract class G2Pane <T extends Pane> {
 
-	private G2Client top;
+	/**
+	 * Top level view object for the subclass.
+	 */
+	private T pane;
+
+	/**
+	 * Allow access to the top-level so that controls like Dialogs
+	 * can operate modally.
+	 */
+	private Stage top;
 	
-	public G2Pane(G2Client top) {
+	private IController controller;
+	
+	private UIPreferences preferences;
+	
+	public G2Pane(Stage top, IController controller, UIPreferences preferences) {
 		this.top = top;
+		this.controller = controller;
+		this.preferences = preferences;
+	}
+	
+	protected void initialize() {
+		initializePane();
+		createWidgets();
+		layoutWidgets();
+		hookEvents();
 	}
 
 	/**
-	 * Convenience method.
+	 * Subclassses must create their widgets.
 	 */
+	protected abstract void createWidgets();	
+
 	protected IController getController() {
-		return top.getController();
+		return controller;
 	}
 
 	/**
 	 * Convenience method.
 	 */
 	protected MachineState getMachineState() {
-		return top.getController().getMachineState();
+		return controller.getMachineState();
+	}
+
+	public T getPane() {
+		return pane;
+	}
+
+	protected UIPreferences getPreferences() {
+		return preferences;
+	}
+
+	protected Stage getTop() {
+		return top;
 	}
 
 	/**
-	 * Convenience method.
+	 * Subclasses may not have any UI event they wish to respond to.
+	 * Thus they MAY override.
 	 */
-	protected UIPreferences getPrefs() {
-		return top.getUIPreferences();
+	protected void hookEvents() {}
+
+	/**
+	 * Subclassses must initialize their pane.
+	 */
+	protected abstract void initializePane();
+	
+	/**
+	 * Subclassses must layout their widgets.
+	 */
+	protected abstract void layoutWidgets();	
+
+	protected void setPane(T pane) {
+		this.pane = pane;
 	}
 }

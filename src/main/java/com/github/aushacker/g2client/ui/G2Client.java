@@ -148,6 +148,7 @@ public class G2Client extends JFrame {
 		f.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
 		f.addWindowListener(new WindowAdapter() {
+			@Override
 			public void windowClosed(WindowEvent e) {
 				f.shutdown();
 			}
@@ -164,6 +165,7 @@ public class G2Client extends JFrame {
 			this.parent = parent;
 		}
 
+		@Override
 		public void run() {
 			// Attempt to find preferred SerialPort
 			String portName = preferences.getPortName();

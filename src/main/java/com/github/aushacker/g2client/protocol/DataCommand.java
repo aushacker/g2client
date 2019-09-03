@@ -49,10 +49,12 @@ public class DataCommand extends Command {
 		return 1;
 	}
 
+	@Override
 	public boolean isControl() {
 		return false;
 	}
 
+	@Override
 	public void printOn(PrintStream out) {
 		out.println(data);
 		out.flush();

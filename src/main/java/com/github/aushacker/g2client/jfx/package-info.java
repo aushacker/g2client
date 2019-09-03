@@ -19,6 +19,6 @@
 
 /**
  * @author Stephen Davies
- * @since
+ * @since August 2019
  */
 package com.github.aushacker.g2client.jfx;

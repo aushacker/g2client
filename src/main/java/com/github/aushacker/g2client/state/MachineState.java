@@ -62,6 +62,8 @@ public class MachineState {
 
 	private int status;
 
+	private SystemState systemState;
+
 	private Unit units;
 
 	private BigDecimal velocity;
@@ -83,6 +85,7 @@ public class MachineState {
 		units = Unit.MM;
 		jogIndex = units.getDefaultIndex();
 
+		systemState = new SystemState();
 		velocity = new BigDecimal(0);
 		x = new BigDecimal(0);
 		y = new BigDecimal(0);
@@ -139,6 +142,10 @@ public class MachineState {
 
 	public int getStatus() {
 		return status;
+	}
+
+	public SystemState getSystemState() {
+		return systemState;
 	}
 
 	public Unit getUnits() {

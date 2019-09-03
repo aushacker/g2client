@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Stephen Davies
+ * Copyright 2019 Stephen Davies
  *
  * This file is part of g2client.
  *
@@ -16,43 +16,39 @@
  * You should have received a copy of the GNU General Public License
  * along with g2client. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.github.aushacker.g2client.protocol;
 
-import java.io.PrintStream;
+package com.github.aushacker.g2client.jfx;
+
+import com.github.aushacker.g2client.conn.IController;
+import com.github.aushacker.g2client.ui.UIPreferences;
+
+import javafx.scene.layout.GridPane;
+import javafx.stage.Stage;
 
 /**
  * @author Stephen Davies
- * @since October 2018
+ * @since August 2019
  */
-public class SingleCharacterCommand extends Command {
+public class ControlPane extends G2Pane<GridPane> {
 
-	private SingleCharacterType type;
-	
-	public SingleCharacterCommand(SingleCharacterType type) {
-		this.type = type;
+	private ControlPane(Stage top, IController controller, UIPreferences preferences) {
+		super(top, controller, preferences);
 	}
 
 	@Override
-	public int compareTo(Command other) {
-		if (other instanceof DataCommand) {
-			return -1;
-		} else {
-			return getId() - other.getId();
-		}
-	}
-
-	public int getPriority() {
-		return type.getPriority();
+	protected void createWidgets() {
+		
 	}
 
 	@Override
-	public boolean isControl() {
-		return true;
+	protected void initializePane() {
+		setPane(new GridPane());
+		getPane().setHgap(10);
+		getPane().setVgap(10);
 	}
 
 	@Override
-	public void printOn(PrintStream out) {
-		out.write(type.getCommand());
-		out.flush();
+	protected void layoutWidgets() {
+		
 	}
 }

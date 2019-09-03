@@ -32,6 +32,7 @@ import com.fazecast.jSerialComm.SerialPort;
  */
 public enum OperatingSystem {
 	MACOS() {
+		@Override
 		protected List<SerialPort> filter(SerialPort[] ports) {
 			ArrayList<SerialPort> result = new ArrayList<SerialPort>();
 			
@@ -44,6 +45,7 @@ public enum OperatingSystem {
 		}
 	},
 	WINDOWS {
+		@Override
 		protected List<SerialPort> filter(SerialPort[] ports) {
 			ArrayList<SerialPort> result = new ArrayList<SerialPort>();
 			

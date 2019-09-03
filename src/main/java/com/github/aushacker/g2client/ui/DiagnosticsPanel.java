@@ -94,6 +94,7 @@ public class DiagnosticsPanel extends G2Panel implements PropertyChangeListener 
 		return tf;
 	}
 
+	@Override
 	public void propertyChange(PropertyChangeEvent e) {
 		switch (e.getPropertyName()) {
 		case "firmwareVersion":
