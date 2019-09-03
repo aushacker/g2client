@@ -19,36 +19,42 @@
 
 package com.github.aushacker.g2client.jfx;
 
-import com.github.aushacker.g2client.conn.IController;
-import com.github.aushacker.g2client.ui.UIPreferences;
+import org.controlsfx.tools.Borders;
 
-import javafx.scene.layout.GridPane;
+import com.github.aushacker.g2client.conn.IController;
+
+import javafx.scene.Node;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 /**
  * @author Stephen Davies
  * @since August 2019
  */
-public class ControlPane extends G2Pane<GridPane> {
+public class ControlPane extends G2Pane<VBox> {
 
-	private ControlPane(Stage top, IController controller, UIPreferences preferences) {
+	private AxesPane axesPane;
+
+	public ControlPane(Stage top, IController controller, UIPreferences preferences) {
 		super(top, controller, preferences);
+		
+		initialize();
 	}
 
 	@Override
 	protected void createWidgets() {
-		
+		axesPane = new AxesPane(getTop(), getController(), getPreferences());
 	}
 
 	@Override
 	protected void initializePane() {
-		setPane(new GridPane());
-		getPane().setHgap(10);
-		getPane().setVgap(10);
+		setPane(new VBox());
 	}
 
 	@Override
 	protected void layoutWidgets() {
-		
+		Node axes = Borders.wrap(axesPane.getPane()).lineBorder().title("Axis Control").color(Color.BLACK).buildAll();
+		getPane().getChildren().addAll(axes);
 	}
 }

@@ -19,36 +19,67 @@
 
 package com.github.aushacker.g2client.jfx;
 
+import java.text.DecimalFormat;
+
 import com.github.aushacker.g2client.conn.IController;
 
-import javafx.scene.layout.BorderPane;
+import javafx.geometry.Pos;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
 /**
  * @author Stephen Davies
- * @since August 2019
+ * @since September 2019
  */
-public class CodePane extends G2Pane<BorderPane> {
+public class AxesPane extends G2Pane<GridPane> {
 
-	private CodePane(Stage top, IController controller, UIPreferences preferences) {
+	private TextField xPos;
+	private TextField yPos;
+	private TextField zPos;
+	
+	public AxesPane(Stage top, IController controller, UIPreferences preferences) {
 		super(top, controller, preferences);
+
+		initialize();
+	}
+
+	private TextField createField() {
+		TextField f = new TextField(format(0.0));
+		f.setEditable(false);
+		f.setAlignment(Pos.CENTER_RIGHT);
+		return f;
 	}
 
 	@Override
 	protected void createWidgets() {
-		// TODO Auto-generated method stub
+		xPos = createField();
+		yPos = createField();
+		zPos = createField();
+	}
+
+	/**
+	 * Pretty print DRO fields.
+	 */
+	private String format(double value) {
+		DecimalFormat df = new DecimalFormat("+#,##0.000;-#,##0.000");
+		return df.format(value);
+	}
+
+	@Override
+	protected void hookEvents() {
 		
 	}
 
 	@Override
 	protected void initializePane() {
-		setPane(new BorderPane());
+		setPane(new GridPane());
 	}
 
 	@Override
 	protected void layoutWidgets() {
-		// TODO Auto-generated method stub
-		
+		getPane().add(xPos, 0, 0);
+		getPane().add(yPos, 0, 1);
+		getPane().add(zPos, 0, 2);
 	}
-
 }

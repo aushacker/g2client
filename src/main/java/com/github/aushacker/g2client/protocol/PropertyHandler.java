@@ -89,11 +89,20 @@ public class PropertyHandler extends Handler {
 			} else if ((value.getValueType() == ValueType.NUMBER) && (type == int.class)) {
 				JsonNumber n = (JsonNumber) value;
 				setter.invoke(target, n.intValue());
+			} else if ((value.getValueType() == ValueType.NUMBER) && (type == double.class)) {
+				JsonNumber n = (JsonNumber) value;
+				setter.invoke(target, n.doubleValue());
+			} else if ((value.getValueType() == ValueType.NUMBER) && (type == BigDecimal.class)) {
+				JsonNumber n = (JsonNumber) value;
+				setter.invoke(target, n.bigDecimalValue());
 			} else if ((value.getValueType() == ValueType.NUMBER) && (type == BigDecimal.class)) {
 				JsonNumber n = (JsonNumber) value;
 				setter.invoke(target, n.bigDecimalValue());
 			} else {
-				logger.warn("Unable to handle property: {} json type: {} value: {}, check target type matches Json value", name, value.getValueType(), value);
+				logger.warn("Unable to handle property: {} json type: {} value: {}, check target type matches Json value",
+						name,
+						value.getValueType(),
+						value);
 			}
 		}
 		catch (IllegalAccessException | InvocationTargetException e) {

@@ -54,7 +54,7 @@ public class MachineState {
 	 * g2 allows for 6 motors but the number present depends on the actual 
 	 * controller build.
 	 * <p>
-	 * g2 uses 1 based indexing i.e. motors 1 to 6 but code used 0 based.
+	 * g2 uses 1 based indexing i.e. motors 1 to 6 but code using 0 based.
 	 */
 	private Motor[] motors;
 

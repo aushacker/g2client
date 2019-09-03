@@ -27,7 +27,6 @@ import com.fazecast.jSerialComm.SerialPort;
 import com.github.aushacker.g2client.conn.IController;
 import com.github.aushacker.g2client.conn.MachineController;
 import com.github.aushacker.g2client.conn.OperatingSystem;
-import com.github.aushacker.g2client.ui.UIPreferences;
 
 import javafx.application.Application;
 import javafx.scene.Node;
@@ -40,6 +39,7 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.control.TabPane.TabClosingPolicy;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
@@ -96,6 +96,7 @@ public class G2Client extends Application {
 	 */
 	private TabPane createTabPane() {
 		TabPane tabPane = new TabPane();
+		tabPane.setTabClosingPolicy(TabClosingPolicy.UNAVAILABLE);
 
 		Tab tab = new Tab();
 		tab.setText("Run");

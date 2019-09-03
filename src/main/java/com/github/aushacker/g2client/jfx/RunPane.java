@@ -22,12 +22,8 @@ package com.github.aushacker.g2client.jfx;
 import java.io.File;
 
 import com.github.aushacker.g2client.conn.IController;
-import com.github.aushacker.g2client.ui.UIPreferences;
 
-import javafx.scene.control.Button;
-import javafx.scene.control.TitledPane;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 /**
@@ -44,16 +40,18 @@ public class RunPane extends G2Pane<BorderPane> {
 	/**
 	 * DRO etc.
 	 */
-	//private ControlPane controlPane;
+	private ControlPane controlPane;
 
 	public RunPane(Stage top, IController controller, UIPreferences preferences) {
 		super(top, controller, preferences);
+		
+		initialize();
 	}
 
 	@Override
 	protected void createWidgets() {
 //		codePanel = new GCodePanel(getController(), getPrefs());
-//		controlPanel = new ControlPanel(getController(), getPrefs());
+		controlPane = new ControlPane(getTop(), getController(), getPreferences());
 	}
 
 	@Override
@@ -63,9 +61,9 @@ public class RunPane extends G2Pane<BorderPane> {
 
 	@Override
 	protected void layoutWidgets() {
-		getPane().setTop(new VBox(new TitledPane("T1", new Button("B1"))));
+//		getPane().setTop(new VBox(new TitledPane("T1", new Button("B1"))));
 //		add(codePanel, BorderLayout.CENTER);
-//		add(controlPanel, BorderLayout.EAST);
+		getPane().setRight(controlPane.getPane());
 	}
 
 	public void openFile(File file) {

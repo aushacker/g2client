@@ -24,7 +24,6 @@ import java.io.File;
 import com.fazecast.jSerialComm.SerialPort;
 import com.github.aushacker.g2client.conn.IController;
 import com.github.aushacker.g2client.conn.OperatingSystem;
-import com.github.aushacker.g2client.ui.UIPreferences;
 
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
@@ -99,15 +98,23 @@ public class ConfigPane extends G2Pane<GridPane> {
 		btSettingsFile = new Button("Edit...");
 	}
 
+	private void handleChangedPort() {
+		getPreferences().setPortName(cbSerialPort.getValue() == null ? "" : cbSerialPort.getValue().getSystemPortName());
+	}
+
 	/**
 	 * Allows the client to change the gcode script home directory.
 	 */
 	private void handleEditGcodeDir() {
 		DirectoryChooser dialog = new DirectoryChooser();
 
-		if (getPreferences().getScriptHome() != null) {
+		if (getPreferences().getScriptHome() != null &&
+				new File(getPreferences().getScriptHome()).exists()) {
 			dialog.setInitialDirectory(new File(getPreferences().getScriptHome()));
+		} else {
+			dialog.setInitialDirectory(new File(System.getProperty("user.home")));
 		}
+
 		dialog.setTitle("GCode Script Directory");
 		
 		File f = dialog.showDialog(getTop());
@@ -147,6 +154,7 @@ public class ConfigPane extends G2Pane<GridPane> {
 	protected void hookEvents() {
 		btGcodeDir.setOnAction(e -> handleEditGcodeDir());
 		btSettingsFile.setOnAction(e -> handleEditSettingsFile());
+		cbSerialPort.setOnAction(e -> handleChangedPort());
 	}
 	
 	@Override

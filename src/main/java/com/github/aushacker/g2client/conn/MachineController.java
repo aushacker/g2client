@@ -218,12 +218,12 @@ public class MachineController implements IController {
 	 * nesting levels.
 	 */
 	private void registerSettings(Handler parent) {	
-		parent.register("fv", new PropertyHandler(machineState, "firmwareVersion"));
-		parent.register("fb", new PropertyHandler(machineState, "firmwareBuild"));
-		parent.register("fbs", new PropertyHandler(machineState, "firmwareBuildString"));
-		parent.register("fbc", new PropertyHandler(machineState, "firmwareConfig"));
+		parent.register("fv", new PropertyHandler(machineState.getSystemState(), "firmwareVersion"));
+		parent.register("fb", new PropertyHandler(machineState.getSystemState(), "firmwareBuild"));
+		parent.register("fbs", new PropertyHandler(machineState.getSystemState(), "firmwareBuildString"));
+		parent.register("fbc", new PropertyHandler(machineState.getSystemState(), "firmwareConfig"));
 		parent.register("hp", new NoOpHandler());
-		parent.register("hv", new PropertyHandler(machineState, "hardwareVersion"));
+		parent.register("hv", new PropertyHandler(machineState.getSystemState(), "hardwareVersion"));
 		parent.register("id", new NoOpHandler());
 		parent.register("jt", new NoOpHandler());
 		parent.register("ct", new NoOpHandler());

@@ -19,11 +19,14 @@
 
 package com.github.aushacker.g2client.jfx;
 
+import org.controlsfx.tools.Borders;
+
 import com.github.aushacker.g2client.conn.IController;
-import com.github.aushacker.g2client.ui.UIPreferences;
 
 import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.layout.GridPane;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 /**
@@ -55,6 +58,7 @@ public class DiagnosticsPane extends G2Pane<GridPane> {
 
 	@Override
 	protected void layoutWidgets() {
-		getPane().add(statePane.getPane(), 0, 0);
+		Node state = Borders.wrap(statePane.getPane()).lineBorder().title("Firmware/Hardware Settings").color(Color.BLACK).buildAll();
+		getPane().add(state, 0, 0);
 	}
 }

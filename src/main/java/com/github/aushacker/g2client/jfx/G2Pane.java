@@ -21,7 +21,6 @@ package com.github.aushacker.g2client.jfx;
 
 import com.github.aushacker.g2client.conn.IController;
 import com.github.aushacker.g2client.state.MachineState;
-import com.github.aushacker.g2client.ui.UIPreferences;
 
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;

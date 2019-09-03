@@ -21,7 +21,6 @@ package com.github.aushacker.g2client.jfx;
 
 import com.github.aushacker.g2client.conn.IController;
 import com.github.aushacker.g2client.state.SystemState;
-import com.github.aushacker.g2client.ui.UIPreferences;
 
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
