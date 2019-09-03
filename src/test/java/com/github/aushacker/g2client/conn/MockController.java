@@ -21,6 +21,7 @@ package com.github.aushacker.g2client.conn;
 
 import java.util.List;
 
+import com.fazecast.jSerialComm.SerialPort;
 import com.github.aushacker.g2client.state.Axis;
 import com.github.aushacker.g2client.state.MachineState;
 
@@ -36,6 +37,12 @@ public class MockController implements IController {
 
 	public MockController() {
 		state = new MachineState();
+	}
+
+	@Override
+	public boolean connect(SerialPort port) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 	@Override
@@ -96,6 +103,12 @@ public class MockController implements IController {
 	@Override
 	public void resume() {
 		System.out.println("Resume");
+	}
+
+	@Override
+	public void shutdown() {
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
