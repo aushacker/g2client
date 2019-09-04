@@ -22,6 +22,8 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.math.BigDecimal;
 
+import javafx.beans.property.SimpleObjectProperty;
+
 /**
  * @author Stephen Davies
  * @since March 2019
@@ -68,11 +70,11 @@ public class MachineState {
 
 	private BigDecimal velocity;
 
-	private BigDecimal x;
+	private SimpleObjectProperty<BigDecimal> x;
 
-	private BigDecimal y;
+	private SimpleObjectProperty<BigDecimal> y;
 
-	private BigDecimal z;
+	private SimpleObjectProperty<BigDecimal> z;
 
 	public MachineState() {
 		motors = new Motor[MOTOR_COUNT];
@@ -87,13 +89,24 @@ public class MachineState {
 
 		systemState = new SystemState();
 		velocity = new BigDecimal(0);
-		x = new BigDecimal(0);
-		y = new BigDecimal(0);
-		z = new BigDecimal(0);
+		
+		x = createBigDecimalWrapper(0);
+		y = createBigDecimalWrapper(0);
+		z = createBigDecimalWrapper(0);
 	}
 
 	public void addPropertyChangeListener(PropertyChangeListener listener) {
+		// TODO remove once Swing UI is removed
 		pcs.addPropertyChangeListener(listener);
+	}
+
+	/**
+	 * Helper for JavaFX bound properties.
+	 */
+	private SimpleObjectProperty<BigDecimal> createBigDecimalWrapper(int val) {
+		SimpleObjectProperty<BigDecimal> wrapper = new SimpleObjectProperty<>();
+		wrapper.set(new BigDecimal(val));
+		return wrapper;
 	}
 
 	public void cycleJogIncrement() {
@@ -157,15 +170,15 @@ public class MachineState {
 	}
 
 	public BigDecimal getX() {
-		return x;
+		return x.get();
 	}
 
 	public BigDecimal getY() {
-		return y;
+		return y.get();
 	}
 
 	public BigDecimal getZ() {
-		return z;
+		return z.get();
 	}
 
 	public void removePropertyChangeListener(PropertyChangeListener listener) {
@@ -180,6 +193,7 @@ public class MachineState {
 	}
 
 	public void setFirmwareBuild(BigDecimal fb) {
+		// TODO remove once Swing UI is removed
 		BigDecimal old = this.firmwareBuild;
 		firmwareBuild = fb;
 
@@ -187,6 +201,7 @@ public class MachineState {
 	}
 
 	public void setFirmwareBuildString(String fbs) {
+		// TODO remove once Swing UI is removed
 		String old = this.firmwareBuildString;
 		firmwareBuildString = fbs;
 
@@ -194,6 +209,7 @@ public class MachineState {
 	}
 
 	public void setFirmwareConfig(String fbc) {
+		// TODO remove once Swing UI is removed
 		String old = this.firmwareConfig;
 		firmwareConfig = fbc;
 
@@ -201,6 +217,7 @@ public class MachineState {
 	}
 
 	public void setFirmwareVersion(BigDecimal fv) {
+		// TODO remove once Swing UI is removed
 		BigDecimal old = this.firmwareVersion;
 		firmwareVersion = fv;
 
@@ -208,6 +225,7 @@ public class MachineState {
 	}
 
 	public void setHardwareVersion(BigDecimal hv) {
+		// TODO remove once Swing UI is removed
 		BigDecimal old = hardwareVersion;
 		hardwareVersion = hv;
 
@@ -251,23 +269,26 @@ public class MachineState {
 	}
 
 	public void setX(BigDecimal x) {
-		BigDecimal old = this.x;
-		this.x = x;
+		// TODO remove once Swing UI is removed
+		BigDecimal old = this.x.get();
+		this.x.set(x);
 		
-		pcs.firePropertyChange("x", old, x);
+		pcs.firePropertyChange("x", old, this.x.get());
 	}
 
 	public void setY(BigDecimal y) {
-		BigDecimal old = this.y;
-		this.y = y;
+		// TODO remove once Swing UI is removed
+		BigDecimal old = this.y.get();
+		this.y.set(y);
 		
-		pcs.firePropertyChange("y", old, y);
+		pcs.firePropertyChange("y", old, this.y.get());
 	}
 
 	public void setZ(BigDecimal z) {
-		BigDecimal old = this.z;
-		this.z = z;
+		// TODO remove once Swing UI is removed
+		BigDecimal old = this.z.get();
+		this.z.set(z);
 		
-		pcs.firePropertyChange("z", old, z);
+		pcs.firePropertyChange("z", old, this.z.get());
 	}
 }
