@@ -53,6 +53,11 @@ public class MachineState {
 	private int line;
 
 	/**
+	 * g2 uses 1 based indexing i.e. inputs 1 to 10 but code using 0 based.
+	 */
+	private DigitalInput[] digitalInputs;
+
+	/**
 	 * g2 allows for 6 motors but the number present depends on the actual 
 	 * controller build.
 	 * <p>

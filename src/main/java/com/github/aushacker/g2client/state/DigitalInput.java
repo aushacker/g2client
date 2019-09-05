@@ -19,10 +19,80 @@
 
 package com.github.aushacker.g2client.state;
 
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
+
 /**
  * @author Stephen Davies
  * @since October 2018
  */
 public class DigitalInput {
 
+	private SimpleObjectProperty<Action> action;
+
+	private SimpleObjectProperty<Function> function;
+
+	private SimpleObjectProperty<Mode> mode;
+
+	public Action getAction() {
+		return action.get();
+	}
+
+	public ObjectProperty<Action> getActionProperty() {
+		return action;
+	}
+
+	public Function getFunction() {
+		return function.get();
+	}
+
+	public ObjectProperty<Function> getFunctionProperty() {
+		return function;
+	}
+
+	public Mode getMode() {
+		return mode.get();
+	}
+
+	public ObjectProperty<Mode> getModeProperty() {
+		return mode;
+	}
+
+	public void setAction(Action a) {
+		action.setValue(a);
+	}
+
+	public void setFunction(Function f) {
+		function.setValue(f);
+	}
+
+	public void setMode(Mode m) {
+		mode.setValue(m);
+	}
+
+	public enum Mode { 
+		ACTIVE_LOW,
+		ACTIVE_HIGH,
+		DISABLED;
+	}
+
+	public enum Action {
+		NONE,
+		STOP,
+		FAST_STOP,
+		HALT,
+		CYCLE_START,
+		ALARM,
+		SHUTDOWN,
+		PANIC,
+		RESET;
+	}
+
+	public enum Function {
+		NONE,
+		LIMIT,
+		INTERLOCK,
+		SHUTDOWN,
+		PROBE;
+	}
 }
