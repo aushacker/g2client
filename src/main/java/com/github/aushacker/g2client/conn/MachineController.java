@@ -53,7 +53,7 @@ public class MachineController implements IController {
 
 	private PortMonitor monitor;
 
-	private Handler handler;
+	private Handler top;
 
 	private volatile boolean shutdown;
 
@@ -70,6 +70,7 @@ public class MachineController implements IController {
 		t.start();
 	}
 
+	@Override
 	public boolean connect(SerialPort port) {
 		if (monitor != null) {
 			monitor.shutdown();
@@ -157,9 +158,9 @@ public class MachineController implements IController {
 		enqueue("{\"sr\":n}");	// Current status
 
 		// Motors 1-6
-//		for (int i = 1; i <= MachineState.MOTOR_COUNT; i++) {
-//			enqueue("{\"" + i + "\":n}");
-//		}
+		for (int i = 1; i <= MachineState.MOTOR_COUNT; i++) {
+			enqueue("{\"" + i + "\":n}");
+		}
 
 		// All axes
 		//enqueue("{\"x\":n}");
@@ -171,21 +172,21 @@ public class MachineController implements IController {
 	}
 
 	public void registerHandlers() {
-		handler = new Handler();
+		top = new Handler();
 		
 		// Handles values nested under {"r":...}
-		Handler response = new Handler();
+		Handler response = new Handler(RESPONSE);
 		registerSettings(response);
 		registerSystem(response);
 		registerStatusHandler(response);
 		registerMotors(response);
-		handler.register(RESPONSE, response);
+		top.register(response);
 
 		// Handles values nested under {...,"f":...}
-		handler.register(FOOTER, new NoOpHandler());
+		top.register(FOOTER, new NoOpHandler());
 
 		// Register for asynchronous status responses
-		registerStatusHandler(handler);
+		registerStatusHandler(top);
 	}
 
 	/**
@@ -333,7 +334,7 @@ public class MachineController implements IController {
 					JsonValue rsp = in.poll(100, TimeUnit.MILLISECONDS);
 
 					if (rsp != null) {
-						handler.handle(rsp);
+						top.handle(rsp);
 					}
 				} catch (InterruptedException e) {
 					e.printStackTrace();

@@ -19,9 +19,18 @@
 
 package com.github.aushacker.g2client.jfx;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+
+import org.fxmisc.richtext.CodeArea;
+import org.fxmisc.richtext.LineNumberFactory;
+
 import com.github.aushacker.g2client.conn.IController;
 
+import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
 /**
@@ -30,14 +39,29 @@ import javafx.stage.Stage;
  */
 public class CodePane extends G2Pane<BorderPane> {
 
-	private CodePane(Stage top, IController controller, UIPreferences preferences) {
+	private Button btPlay;
+
+	private CodeArea codeArea;
+
+	public CodePane(Stage top, IController controller, UIPreferences preferences) {
 		super(top, controller, preferences);
+		
+		initialize();
 	}
 
 	@Override
 	protected void createWidgets() {
-		// TODO Auto-generated method stub
-		
+		btPlay = new Button("Play");
+		codeArea = new CodeArea("");
+
+		// add line numbers to the left of area
+		codeArea.setParagraphGraphicFactory(LineNumberFactory.get(codeArea));
+		//codeArea.setEditable(false);
+	}
+
+	@Override
+	protected void hookEvents() {
+		btPlay.setOnAction(e -> play());
 	}
 
 	@Override
@@ -47,8 +71,44 @@ public class CodePane extends G2Pane<BorderPane> {
 
 	@Override
 	protected void layoutWidgets() {
-		// TODO Auto-generated method stub
+		HBox buttons = new HBox();
+		buttons.getChildren().add(btPlay);
 		
+		getPane().setTop(buttons);
+		getPane().setCenter(codeArea);
 	}
 
+	/**
+	 * Dumps the contents of a file into the code pane. Hopefully this is
+	 * actually a gcode file.
+	 */
+	public void openFile(File gcode) {
+		try (BufferedReader in = new BufferedReader(new FileReader(gcode))) {
+			StringBuilder sb = new StringBuilder();
+			String line = in.readLine();
+
+			while (line != null) {
+				sb.append(line);
+				sb.append("\n");
+				line = in.readLine();
+			}
+
+			codeArea.replaceText(sb.toString());
+			codeArea.moveTo(0, 0);
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void play() {
+		codeArea.moveTo(0, 0);
+		getController().resetLineCounter();
+		
+		String[] lines = codeArea.getText().split("\\n");
+		for (int i = 0; i < lines.length; i++) {
+			String c = "N" + (i + 1) + " " + lines[i];
+			getController().enqueue(c);
+		}
+	}
 }

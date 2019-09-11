@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Stephen Davies
+ * Copyright 2019 Stephen Davies
  *
  * This file is part of g2client.
  *
@@ -17,16 +17,41 @@
  * along with g2client. If not, see <https://www.gnu.org/licenses/>.
  */
 
+package com.github.aushacker.g2client.jfx;
+
+import com.github.aushacker.g2client.conn.IController;
+
+import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
+
 /**
- * Types related to the actual messages exchanged with g2core.
- * <p>
- * Describe the g2 Json strcuture.
- * <P>
- * What problems does it present?
- * <p>
- * Example tree.
- * 
  * @author Stephen Davies
- * @since October 2018
+ * @since September 2019
  */
-package com.github.aushacker.g2client.protocol;
+public class MotorPane extends G2Pane<StackPane> {
+
+	public MotorPane(Stage top, IController controller, UIPreferences preferences) {
+		super(top, controller, preferences);
+		
+		initialize();
+	}
+
+	@Override
+	protected void createWidgets() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	protected void initializePane() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	protected void layoutWidgets() {
+		// TODO Auto-generated method stub
+		
+	}
+
+}

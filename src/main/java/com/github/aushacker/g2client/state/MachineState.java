@@ -22,6 +22,7 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.math.BigDecimal;
 
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 
 /**
@@ -30,9 +31,9 @@ import javafx.beans.property.SimpleObjectProperty;
  */
 public class MachineState {
 
-	public static final int DINPUT_COUNT = 9;
+	public static final int DINPUT_COUNT = 10;
 
-	public static final int DOUTPUT_COUNT = 9;
+	public static final int DOUTPUT_COUNT = 10;
 
 	public static final int MOTOR_COUNT = 6;
 
@@ -178,12 +179,24 @@ public class MachineState {
 		return x.get();
 	}
 
+	public ObjectProperty<BigDecimal> getXProperty() {
+		return x;
+	}
+
 	public BigDecimal getY() {
 		return y.get();
 	}
 
+	public ObjectProperty<BigDecimal> getYProperty() {
+		return y;
+	}
+
 	public BigDecimal getZ() {
 		return z.get();
+	}
+
+	public ObjectProperty<BigDecimal> getZProperty() {
+		return z;
 	}
 
 	public void removePropertyChangeListener(PropertyChangeListener listener) {

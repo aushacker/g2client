@@ -121,6 +121,8 @@ public class G2Client extends Application {
 	 */
 	private void fileOpen() {
 		FileChooser fileChooser = new FileChooser();
+		
+		fileChooser.setInitialDirectory(new File(preferences.getScriptHome()));
 		fileChooser.setTitle("Open GCode File");
 		fileChooser.getExtensionFilters().addAll(
 				new ExtensionFilter("GCode Files", "*.cnc", "*.gc", "*.gcode", "*.nc"),
@@ -129,7 +131,7 @@ public class G2Client extends Application {
 		File selectedFile = fileChooser.showOpenDialog(mainStage);
 
 		if (selectedFile != null) {
-			//mainStage.display(selectedFile);
+			runPane.openFile(selectedFile);
 		}
 	}
 

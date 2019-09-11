@@ -29,12 +29,28 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * Responses from g2core are encoded with Json. Handler and its subclasses
+ * are responsible for mapping the Json response into a series of updates
+ * on the MachineState graph.
+ * <p>
+ * Basically there is a tree of possible response structures, some handlers
+ * are present in multiple parts of the tree.
+ *
  * @author Stephen Davies
  * @since March 2019
  */
 public class Handler {
 
-	private final Logger logger;
+	/**
+	 * Make it easier to debug what can be complex behaviour.
+	 */
+	private static final Logger logger = LoggerFactory.getLogger(Handler.class);
+
+	/**
+	 * Json structure name. Special case for top level handler,
+	 * this field will be null.
+	 */
+	private String name;
 
 	/**
 	 * Maps the Json field name to the appropriate Handler.
@@ -42,9 +58,12 @@ public class Handler {
 	private Map<String,Handler> handlers;
 
 	public Handler() {
-		logger = LoggerFactory.getLogger(Handler.class);
+		this(null);
+	}
 
-		handlers = new HashMap<>();
+	public Handler(String name) {
+		this.name = name;
+		this.handlers = new HashMap<>();
 	}
 
 	public void handle(JsonValue v) {
@@ -59,6 +78,10 @@ public class Handler {
 				}
 			}
 		}
+	}
+
+	public void register(Handler handler) {
+		register(handler.name, handler);
 	}
 
 	public void register(String key, Handler handler) {

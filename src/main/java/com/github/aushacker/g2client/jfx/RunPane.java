@@ -35,7 +35,7 @@ public class RunPane extends G2Pane<BorderPane> {
 	/**
 	 * GCode content
 	 */
-	//private CodePane codePane;
+	private CodePane codePane;
 	
 	/**
 	 * DRO etc.
@@ -50,7 +50,7 @@ public class RunPane extends G2Pane<BorderPane> {
 
 	@Override
 	protected void createWidgets() {
-//		codePanel = new GCodePanel(getController(), getPrefs());
+		codePane = new CodePane(getTop(), getController(), getPreferences());
 		controlPane = new ControlPane(getTop(), getController(), getPreferences());
 	}
 
@@ -63,10 +63,11 @@ public class RunPane extends G2Pane<BorderPane> {
 	protected void layoutWidgets() {
 //		getPane().setTop(new VBox(new TitledPane("T1", new Button("B1"))));
 //		add(codePanel, BorderLayout.CENTER);
+		getPane().setCenter(codePane.getPane());
 		getPane().setRight(controlPane.getPane());
 	}
 
 	public void openFile(File file) {
-		//codePane.openFile(file);
+		codePane.openFile(file);
 	}
 }

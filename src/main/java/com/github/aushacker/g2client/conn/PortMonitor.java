@@ -287,7 +287,7 @@ public class PortMonitor {
 		 * @param response Response from g2 board
 		 */
 		private void processResponse(String s) {
-			logger.debug("Received from g2: {}", s);
+			logger.debug("g2 says: {}", s);
 
 			if (s.startsWith("{")) {
 
