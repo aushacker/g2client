@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with g2client. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.github.aushacker.g2client.protocol;
+package com.github.aushacker.g2client.state;
 
 /**
  * Value of the machine 'stat' that is frequently returned in a
@@ -25,7 +25,7 @@ package com.github.aushacker.g2client.protocol;
  * @author Stephen Davies
  * @since March 2019
  */
-public enum StatValue {
+public enum DynamicState {
 	INITIALIZING(0, "Initializing"),
 	READY(1, "Ready"),
 	ALARM(2, "Alarm"),
@@ -48,7 +48,7 @@ public enum StatValue {
 
 	private final String description; 
 	
-	private StatValue(int id, String description) {
+	private DynamicState(int id, String description) {
 		this.id = id;
 		this.description = description;
 	}
@@ -61,16 +61,16 @@ public enum StatValue {
 		return id;
 	}
 
-	private static final StatValue[] byIds;
+	private static final DynamicState[] byIds;
 	
 	static {
-		byIds = new StatValue[StatValue.values().length];
-		for (StatValue v : StatValue.values()) {
+		byIds = new DynamicState[DynamicState.values().length];
+		for (DynamicState v : DynamicState.values()) {
 			byIds[v.getId()] = v;
 		}
 	}
 
-	public static StatValue lookupId(int id) {
+	public static DynamicState lookupId(int id) {
 		return byIds[id];
 	}
 }

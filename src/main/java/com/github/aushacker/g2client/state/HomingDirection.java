@@ -16,14 +16,15 @@
  * You should have received a copy of the GNU General Public License
  * along with g2client. If not, see <https://www.gnu.org/licenses/>.
  */
+
 package com.github.aushacker.g2client.state;
 
 /**
- * Axes controllable by G2Core.
+ * Which direction the machine seeks the home position for an axis.
  *
  * @author Stephen Davies
- * @since March 2019
+ * @since September 2019
  */
-public enum Axis {
-	X, Y, Z, A, B, C, U, V, W;
+public enum HomingDirection {
+	NEGATIVE, POSITIVE;
 }

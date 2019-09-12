@@ -16,14 +16,17 @@
  * You should have received a copy of the GNU General Public License
  * along with g2client. If not, see <https://www.gnu.org/licenses/>.
  */
+
 package com.github.aushacker.g2client.state;
 
 /**
- * Axes controllable by G2Core.
- *
+ * Describes allowable values for digital input and output pins.
+ * 
  * @author Stephen Davies
- * @since March 2019
+ * @since September 2019
  */
-public enum Axis {
-	X, Y, Z, A, B, C, U, V, W;
+public enum Mode {
+	ACTIVE_LOW,
+	ACTIVE_HIGH,
+	DISABLED;
 }

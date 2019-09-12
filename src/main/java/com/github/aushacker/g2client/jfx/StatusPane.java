@@ -80,7 +80,7 @@ public class StatusPane extends G2Pane<GridPane> {
 	}
 
 	private String getStatus() {
-		return getMachineState().getStatus().toString();
+		return getMachineState().getDynamicState().toString();
 	}
 
 	private String getVelocity() {
@@ -98,7 +98,7 @@ public class StatusPane extends G2Pane<GridPane> {
 				e -> tfFeedrate.setText(getFeedrate()));
 		getMachineState().lineProperty().addListener(
 				e -> tfLine.setText(getLine()));
-		getMachineState().statusProperty().addListener(
+		getMachineState().dynamicStateProperty().addListener(
 				e -> tfStatus.setText(getStatus()));
 		getMachineState().velocityProperty().addListener(
 				e -> tfVelocity.setText(getVelocity()));

@@ -26,34 +26,12 @@ import javafx.beans.property.SimpleObjectProperty;
  * @author Stephen Davies
  * @since October 2018
  */
-public class DigitalInput {
-
-	private SimpleObjectProperty<Action> action;
-
-	private SimpleObjectProperty<Function> function;
+public class DigitalOutputSettings {
 
 	private SimpleObjectProperty<Mode> mode;
 
-	public DigitalInput() {
-		this.action = new SimpleObjectProperty<>();
-		this.function = new SimpleObjectProperty<>();
+	public DigitalOutputSettings() {
 		this.mode = new SimpleObjectProperty<>();
-	}
-
-	public ObjectProperty<Action> actionProperty() {
-		return action;
-	}
-
-	public ObjectProperty<Function> functionProperty() {
-		return function;
-	}
-
-	public Action getAction() {
-		return action.get();
-	}
-
-	public Function getFunction() {
-		return function.get();
 	}
 
 	public Mode getMode() {
@@ -64,41 +42,8 @@ public class DigitalInput {
 		return mode;
 	}
 
-	public void setAction(Action a) {
-		action.set(a);
-	}
-
-	public void setFunction(Function f) {
-		function.set(f);
-	}
 
 	public void setMode(Mode m) {
 		mode.set(m);
-	}
-
-	public enum Mode { 
-		ACTIVE_LOW,
-		ACTIVE_HIGH,
-		DISABLED;
-	}
-
-	public enum Action {
-		NONE,
-		STOP,
-		FAST_STOP,
-		HALT,
-		CYCLE_START,
-		ALARM,
-		SHUTDOWN,
-		PANIC,
-		RESET;
-	}
-
-	public enum Function {
-		NONE,
-		LIMIT,
-		INTERLOCK,
-		SHUTDOWN,
-		PROBE;
 	}
 }

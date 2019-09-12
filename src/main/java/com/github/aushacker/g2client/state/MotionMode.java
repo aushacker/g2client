@@ -16,14 +16,16 @@
  * You should have received a copy of the GNU General Public License
  * along with g2client. If not, see <https://www.gnu.org/licenses/>.
  */
+
 package com.github.aushacker.g2client.state;
 
 /**
- * Axes controllable by G2Core.
+ * JSON 'momo' value.
  *
  * @author Stephen Davies
- * @since March 2019
+ * @since September 2019
  */
-public enum Axis {
-	X, Y, Z, A, B, C, U, V, W;
+public enum MotionMode {
+	TRAVERSE, STRAIGHT, CW_ARC, CCW_ARC,
+	UNDEFINED // currently undocumented;
 }

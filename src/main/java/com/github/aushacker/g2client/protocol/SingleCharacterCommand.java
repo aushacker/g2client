@@ -55,4 +55,9 @@ public class SingleCharacterCommand extends Command {
 		out.write(type.getCommand());
 		out.flush();
 	}
+
+	@Override
+	public String toString() {
+		return type.toString();
+	}
 }

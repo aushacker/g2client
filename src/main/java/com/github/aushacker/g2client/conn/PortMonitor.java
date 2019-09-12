@@ -191,10 +191,12 @@ public class PortMonitor {
 							if (cmd.isControl()) {
 								cmd = in.poll();
 								cmd.printOn(out);
+								logger.debug("sending: {}", cmd.toString());
 							} else {
 								if (lineCount > 0) {
 									cmd = in.poll();	// in case queue has updated since peek
 									cmd.printOn(out);
+									logger.debug("sending: {}", cmd.toString());
 									if (!cmd.isControl()) {
 										lineCount--;
 									}

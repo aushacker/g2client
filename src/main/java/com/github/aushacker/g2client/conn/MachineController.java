@@ -38,11 +38,20 @@ import com.github.aushacker.g2client.protocol.NoOpHandler;
 import com.github.aushacker.g2client.protocol.PropertyHandler;
 import com.github.aushacker.g2client.protocol.SingleCharacterCommand;
 import com.github.aushacker.g2client.protocol.SingleCharacterType;
-import com.github.aushacker.g2client.protocol.StatValue;
 import com.github.aushacker.g2client.state.Axis;
-import com.github.aushacker.g2client.state.DigitalInput;
+import com.github.aushacker.g2client.state.AxisMode;
+import com.github.aushacker.g2client.state.AxisSettings;
+import com.github.aushacker.g2client.state.CoordinateSystem;
+import com.github.aushacker.g2client.state.DigitalInputSettings;
+import com.github.aushacker.g2client.state.DigitalOutputSettings;
+import com.github.aushacker.g2client.state.DistanceMode;
+import com.github.aushacker.g2client.state.DynamicState;
+import com.github.aushacker.g2client.state.HomingDirection;
 import com.github.aushacker.g2client.state.MachineState;
+import com.github.aushacker.g2client.state.Mode;
+import com.github.aushacker.g2client.state.MotionMode;
 import com.github.aushacker.g2client.state.Motor;
+import com.github.aushacker.g2client.state.Unit;
 
 /**
  * @author Stephen Davies
@@ -156,22 +165,39 @@ public class MachineController implements IController {
 	 * Run a bunch of commands to determine the initial machine state.
 	 */
 	private void queryMachineState() {
-		enqueue("$");			// Hardware/firmware values
+		enqueue("$$");			// Hardware/firmware values
 		resetLineCounter();
-		enqueue("{\"sr\":n}");	// Current status
+		//enqueue("{\"sr\":n}");	// Current status
+	}
 
-		// Motors 1-6
-		for (int i = 1; i <= MachineState.MOTOR_COUNT; i++) {
-			enqueue("{\"" + i + "\":n}");
+	/**
+	 * Configure handlers for each individual axis.
+	 */
+	private void registerAxisSettings(Handler parent) {
+		for (Axis a : Axis.values()) {
+			registerAxisSettings(parent, a);
 		}
+	}
 
-		// All axes
-		//enqueue("{\"x\":n}");
+	private void registerAxisSettings(Handler parent, Axis axis) {
+		Handler handler = new Handler();
+		AxisSettings settings = machineState.lookupSettings(axis);
+		handler.register("am", new EnumPropertyHandler(settings, "mode", AxisMode.class));
+		handler.register("vm", new PropertyHandler(settings, "velocityMax"));
+		handler.register("fr", new PropertyHandler(settings, "feedrate"));
+		handler.register("tn", new PropertyHandler(settings, "travelMin"));
+		handler.register("tm", new PropertyHandler(settings, "travelMax"));
+		handler.register("jm", new PropertyHandler(settings, "jerkMax"));
+		handler.register("jh", new PropertyHandler(settings, "jerkHigh"));
+		handler.register("ra", new PropertyHandler(settings, "radius"));
+		handler.register("hi", new PropertyHandler(settings, "homingInput"));
+		handler.register("hd", new EnumPropertyHandler(settings, "homingDirection", HomingDirection.class));
+		handler.register("sv", new PropertyHandler(settings, "searchVelocity"));
+		handler.register("lv", new PropertyHandler(settings, "latchVelocity"));
+		handler.register("lb", new PropertyHandler(settings, "latchBackoff"));
+		handler.register("zb", new PropertyHandler(settings, "zeroBackoff"));
 
-		// Config for all digital inputs
-//		for (int i = 1; i <= MachineState.DINPUT_COUNT; i++) {
-//			enqueue("{\"di" + i + "\":n}");
-//		}
+		parent.register(axis.name().toLowerCase(), handler);
 	}
 
 	/**
@@ -179,10 +205,10 @@ public class MachineController implements IController {
 	 */
 	private void registerDigitalInput(Handler parent, int index) {
 		Handler mHandler = new Handler();
-		DigitalInput di = machineState.getDigitalInput(index);
-		mHandler.register("mo", new EnumPropertyHandler(di, "mode", DigitalInput.Mode.class));
-		mHandler.register("ac", new EnumPropertyHandler(di, "action", DigitalInput.Action.class));
-		mHandler.register("fn", new EnumPropertyHandler(di, "function", DigitalInput.Function.class));
+		DigitalInputSettings di = machineState.getDigitalInput(index);
+		mHandler.register("mo", new EnumPropertyHandler(di, "mode", Mode.class));
+		mHandler.register("ac", new EnumPropertyHandler(di, "action", DigitalInputSettings.Action.class));
+		mHandler.register("fn", new EnumPropertyHandler(di, "function", DigitalInputSettings.Function.class));
 		
 		// Model indexes are 0 based, Json values are 1 based
 		parent.register("di" + ((char)('1' + index)), mHandler);
@@ -191,6 +217,24 @@ public class MachineController implements IController {
 	private void registerDigitalInputs(Handler parent) {
 		for (int i = 0; i < MachineState.DINPUT_COUNT; i++) {
 			registerDigitalInput(parent, i);
+		}
+	}
+
+	/**
+	 * Configure handlers for a digital output.
+	 */
+	private void registerDigitalOutput(Handler parent, int index) {
+		Handler mHandler = new Handler();
+		DigitalOutputSettings digOut = machineState.getDigitalOutput(index);
+		mHandler.register("mo", new EnumPropertyHandler(digOut, "mode", Mode.class));
+		
+		// Model indexes are 0 based, Json values are 1 based
+		parent.register("do" + ((char)('1' + index)), mHandler);
+	}
+
+	private void registerDigitalOutputs(Handler parent) {
+		for (int i = 0; i < MachineState.DOUTPUT_COUNT; i++) {
+			registerDigitalOutput(parent, i);
 		}
 	}
 
@@ -204,8 +248,16 @@ public class MachineController implements IController {
 		registerStatusHandler(response);
 		registerMotors(response);
 		registerDigitalInputs(response);
+		registerDigitalOutputs(response);
+		registerAxisSettings(response);
+		// Ignore heaters
+		response.register("he1", new NoOpHandler());
+		response.register("he2", new NoOpHandler());
+		response.register("he3", new NoOpHandler());
+
 		top.register(response);
 
+		
 		// Handles values nested under {...,"f":...}
 		top.register(FOOTER, new NoOpHandler());
 
@@ -239,7 +291,7 @@ public class MachineController implements IController {
 	}
 
 	/**
-	 * g2 reports the machines system settings at different times with different JSon
+	 * g2 reports the machines system settings at different times with different JSON
 	 * nesting levels.
 	 */
 	private void registerSettings(Handler parent) {	
@@ -293,8 +345,12 @@ public class MachineController implements IController {
 		sHandler.register("posx", new PropertyHandler(machineState, "x"));
 		sHandler.register("posy", new PropertyHandler(machineState, "y"));
 		sHandler.register("posz", new PropertyHandler(machineState, "z"));
-		sHandler.register("stat", new EnumPropertyHandler(machineState, "status", StatValue.class));
+		sHandler.register("stat", new EnumPropertyHandler(machineState, "dynamicState", DynamicState.class));
 		sHandler.register("vel", new PropertyHandler(machineState, "velocity"));
+		sHandler.register("momo", new EnumPropertyHandler(machineState, "motionMode", MotionMode.class));
+		sHandler.register("unit", new EnumPropertyHandler(machineState, "units", Unit.class));
+		sHandler.register("coor", new EnumPropertyHandler(machineState, "coordinateSystem", CoordinateSystem.class));
+		sHandler.register("dist", new EnumPropertyHandler(machineState, "distanceMode", DistanceMode.class));
 
 		parent.register(STATUS, sHandler);
 	}
@@ -324,6 +380,7 @@ public class MachineController implements IController {
 		enqueueCommand(new SingleCharacterCommand(SingleCharacterType.RESUME));
 	}
 
+	@Override
 	public void shutdown() {
 		shutdown = true;
 		if (monitor != null) {
@@ -365,7 +422,7 @@ public class MachineController implements IController {
 				}
 			}
 
-			logger.info("Receive process teminated");
+			logger.info("Receive process terminated");
 		}
 	}
 }

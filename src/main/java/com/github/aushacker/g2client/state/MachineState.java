@@ -19,8 +19,8 @@
 package com.github.aushacker.g2client.state;
 
 import java.math.BigDecimal;
-
-import com.github.aushacker.g2client.protocol.StatValue;
+import java.util.HashMap;
+import java.util.Map;
 
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
@@ -28,16 +28,38 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 
 /**
+ * A big, heavyweight object that contains all of the G2 controller state.
+ *
  * @author Stephen Davies
  * @since March 2019
  */
 public class MachineState {
 
-	public static final int DINPUT_COUNT = 10;
+	public static final int AXIS_COUNT = 9;
 
-	public static final int DOUTPUT_COUNT = 10;
+	public static final int DINPUT_COUNT = 9;
+
+	public static final int DOUTPUT_COUNT = 9;
 
 	public static final int MOTOR_COUNT = 6;
+
+	private Map<Axis,AxisSettings> axisSettings;
+	
+	private SimpleObjectProperty<CoordinateSystem> coordinateSystem;
+
+	/**
+	 * g2 uses 1 based indexing but code using 0 based.
+	 */
+	private DigitalInputSettings[] digitalInputs;
+
+	/**
+	 * g2 uses 1 based indexing but code using 0 based.
+	 */
+	private DigitalOutputSettings[] digitalOutputs;
+
+	private SimpleObjectProperty<DistanceMode> distanceMode;
+
+	private SimpleObjectProperty<DynamicState> dynamicState;
 
 	private SimpleIntegerProperty feedRate;
 
@@ -45,24 +67,19 @@ public class MachineState {
 
 	private SimpleIntegerProperty line;
 
-	/**
-	 * g2 uses 1 based indexing i.e. inputs 1 to 10 but code using 0 based.
-	 */
-	private DigitalInput[] digitalInputs;
+	private SimpleObjectProperty<MotionMode> motionMode;
 
 	/**
 	 * g2 allows for 6 motors but the number present depends on the actual 
 	 * controller build.
 	 * <p>
-	 * g2 uses 1 based indexing i.e. motors 1 to 6 but code using 0 based.
+	 * g2 uses 1 based indexing but code using 0 based.
 	 */
 	private Motor[] motors;
 
-	private SimpleObjectProperty<StatValue> status;
-
 	private SystemState systemState;
 
-	private Unit units;
+	private SimpleObjectProperty<Unit> units;
 
 	private SimpleObjectProperty<BigDecimal> velocity;
 
@@ -73,28 +90,46 @@ public class MachineState {
 	private SimpleObjectProperty<BigDecimal> z;
 
 	public MachineState() {
-		digitalInputs = new DigitalInput[DINPUT_COUNT];
-		for (int i = 0; i < DINPUT_COUNT; i++) {
-			digitalInputs[i] = new DigitalInput();
+		axisSettings = new HashMap<>();
+		for (Axis a : Axis.values()) {
+			axisSettings.put(a, new AxisSettings(a));
 		}
 
+		coordinateSystem = new SimpleObjectProperty<>(CoordinateSystem.G54);
+
+		digitalInputs = new DigitalInputSettings[DINPUT_COUNT];
+		for (int i = 0; i < DINPUT_COUNT; i++) {
+			digitalInputs[i] = new DigitalInputSettings();
+		}
+
+		digitalOutputs = new DigitalOutputSettings[DOUTPUT_COUNT];
+		for (int i = 0; i < DOUTPUT_COUNT; i++) {
+			digitalOutputs[i] = new DigitalOutputSettings();
+		}
+
+		distanceMode = new SimpleObjectProperty<>(DistanceMode.ABSOLUTE);
+		dynamicState = new SimpleObjectProperty<>(DynamicState.INITIALIZING);
 		feedRate = new SimpleIntegerProperty();
 		line = new SimpleIntegerProperty();
+		motionMode = new SimpleObjectProperty<>(MotionMode.TRAVERSE);
 
 		motors = new Motor[MOTOR_COUNT];
 		for (int i = 0; i < MOTOR_COUNT; i++) {
 			motors[i] = new Motor(i + 1);
 		}
 
-		units = Unit.MM;
-		jogIndex = units.getDefaultIndex();
-		status = new SimpleObjectProperty<>(StatValue.INITIALIZING);
 		systemState = new SystemState();
+		units = new SimpleObjectProperty<>(Unit.MM);
+		jogIndex = getUnits().getDefaultIndex();
 		velocity = createBigDecimalWrapper(0);
 		
 		x = createBigDecimalWrapper(0);
 		y = createBigDecimalWrapper(0);
 		z = createBigDecimalWrapper(0);
+	}
+
+	public SimpleObjectProperty<CoordinateSystem> coordinateSystemProperty() {
+		return coordinateSystem;
 	}
 
 	/**
@@ -108,18 +143,47 @@ public class MachineState {
 
 	public void cycleJogIncrement() {
 		int next = jogIndex + 1;
-		if (next > units.getMaxIndex())
+		if (next > getUnits().getMaxIndex())
 			next = 0;
 		
 		setJogIndex(next);
+	}
+
+	public ObjectProperty<DistanceMode> distanceModeProperty() {
+		return distanceMode;
+	}
+
+	public ObjectProperty<DynamicState> dynamicStateProperty() {
+		return dynamicState;
 	}
 
 	public IntegerProperty feedRateProperty() {
 		return feedRate;
 	}
 
-	public DigitalInput getDigitalInput(int index) {
+	public AxisSettings lookupSettings(Axis axis) {
+		return axisSettings.get(axis);
+	}
+
+	public CoordinateSystem getCoordinateSystem() {
+		return coordinateSystem.get();
+	}
+
+	public DistanceMode getDistanceMode() {
+		return distanceMode.get();
+	}
+
+	public DigitalInputSettings getDigitalInput(int index) {
 		return digitalInputs[index];
+	}
+
+	
+	public DigitalOutputSettings getDigitalOutput(int index) {
+		return digitalOutputs[index];
+	}
+
+	public DynamicState getDynamicState() {
+		return dynamicState.get();
 	}
 
 	public int getFeedRate() {
@@ -127,11 +191,15 @@ public class MachineState {
 	}
 
 	public double getJogIncrement() {
-		return units.getIncrement(jogIndex);
+		return getUnits().getIncrement(jogIndex);
 	}
 
 	public int getLine() {
 		return line.get();
+	}
+
+	public MotionMode getMotionMode() {
+		return motionMode.get();
 	}
 
 	public Motor[] getMotors() {
@@ -142,16 +210,12 @@ public class MachineState {
 		return motors[index];
 	}
 
-	public StatValue getStatus() {
-		return status.get();
-	}
-
 	public SystemState getSystemState() {
 		return systemState;
 	}
 
 	public Unit getUnits() {
-		return units;
+		return units.get();
 	}
 
 	public BigDecimal getVelocity() {
@@ -186,6 +250,22 @@ public class MachineState {
 		return line;
 	}
 
+	public ObjectProperty<MotionMode> motionModeProperty() {
+		return motionMode;
+	}
+
+	public void setCoordinateSystem(CoordinateSystem coordinateSystem) {
+		this.coordinateSystem.set(coordinateSystem);
+	}
+
+	public void setDistanceMode(DistanceMode distanceMode) {
+		this.distanceMode.set(distanceMode);
+	}
+
+	public void setDynamicState(DynamicState status) {
+		this.dynamicState.set(status);
+	}
+
 	public void setFeedRate(int feedRate) {
 		this.feedRate.set(feedRate);
 	}
@@ -201,14 +281,12 @@ public class MachineState {
 		this.line.set(line);
 	}
 
-	public void setStatus(StatValue status) {
-		this.status.set(status);
+	public void setMotionMode(MotionMode motionMode) {
+		this.motionMode.set(motionMode);
 	}
 
 	public void setUnits(Unit units) {
-		Unit old = this.units;
-		this.units = units;
-		//TODO pcs.firePropertyChange("units", old, units);
+		this.units.set(units);
 
 		setJogIndex(units.getDefaultIndex());
 	}
@@ -227,10 +305,6 @@ public class MachineState {
 
 	public void setZ(BigDecimal z) {
 		this.z.set(z);
-	}
-
-	public ObjectProperty<StatValue> statusProperty() {
-		return status;
 	}
 
 	public ObjectProperty<BigDecimal> velocityProperty() {

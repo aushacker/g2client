@@ -38,6 +38,7 @@ import javafx.stage.Stage;
  */
 public class AxesPane extends G2Pane<GridPane> {
 
+	private CoordinatePane coordinatePane;
 	private Button btHome;
 	private TextField xPos;
 	private TextField yPos;
@@ -60,6 +61,7 @@ public class AxesPane extends G2Pane<GridPane> {
 
 	@Override
 	protected void createWidgets() {
+		coordinatePane = new CoordinatePane(getTop(), getController(), getPreferences());
 		btHome = new Button("Home\nMachine");
 		btHome.setMaxHeight(Double.MAX_VALUE);
 		xPos = createField();
@@ -101,9 +103,10 @@ public class AxesPane extends G2Pane<GridPane> {
 
 	@Override
 	protected void layoutWidgets() {
-		getPane().add(btHome, 0, 0, 1, 3);
-		getPane().add(xPos, 1, 0);
-		getPane().add(yPos, 1, 1);
-		getPane().add(zPos, 1, 2);
+		getPane().add(coordinatePane.getPane(), 0, 0, 2, 1);
+		getPane().add(btHome, 0, 1, 1, 3);	// home button spanning 3 axes values on LHS
+		getPane().add(xPos, 1, 1);			// x axis pos
+		getPane().add(yPos, 1, 2);			// y axis pos
+		getPane().add(zPos, 1, 3);			// z axis pos
 	}
 }
