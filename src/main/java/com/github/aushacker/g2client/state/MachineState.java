@@ -18,11 +18,13 @@
  */
 package com.github.aushacker.g2client.state;
 
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
 import java.math.BigDecimal;
 
+import com.github.aushacker.g2client.protocol.StatValue;
+
+import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 
 /**
@@ -37,21 +39,11 @@ public class MachineState {
 
 	public static final int MOTOR_COUNT = 6;
 
-	private int feedRate;
-
-	private BigDecimal firmwareBuild;
-
-	private String firmwareBuildString;
-
-	private String firmwareConfig;
-
-	private BigDecimal firmwareVersion;
-
-	private BigDecimal hardwareVersion;
+	private SimpleIntegerProperty feedRate;
 
 	private int jogIndex;
 
-	private int line;
+	private SimpleIntegerProperty line;
 
 	/**
 	 * g2 uses 1 based indexing i.e. inputs 1 to 10 but code using 0 based.
@@ -66,15 +58,13 @@ public class MachineState {
 	 */
 	private Motor[] motors;
 
-	private PropertyChangeSupport pcs;
-
-	private int status;
+	private SimpleObjectProperty<StatValue> status;
 
 	private SystemState systemState;
 
 	private Unit units;
 
-	private BigDecimal velocity;
+	private SimpleObjectProperty<BigDecimal> velocity;
 
 	private SimpleObjectProperty<BigDecimal> x;
 
@@ -88,27 +78,23 @@ public class MachineState {
 			digitalInputs[i] = new DigitalInput();
 		}
 
+		feedRate = new SimpleIntegerProperty();
+		line = new SimpleIntegerProperty();
+
 		motors = new Motor[MOTOR_COUNT];
 		for (int i = 0; i < MOTOR_COUNT; i++) {
 			motors[i] = new Motor(i + 1);
 		}
 
-		pcs = new PropertyChangeSupport(this);
-
 		units = Unit.MM;
 		jogIndex = units.getDefaultIndex();
-
+		status = new SimpleObjectProperty<>(StatValue.INITIALIZING);
 		systemState = new SystemState();
-		velocity = new BigDecimal(0);
+		velocity = createBigDecimalWrapper(0);
 		
 		x = createBigDecimalWrapper(0);
 		y = createBigDecimalWrapper(0);
 		z = createBigDecimalWrapper(0);
-	}
-
-	public void addPropertyChangeListener(PropertyChangeListener listener) {
-		// TODO remove once Swing UI is removed
-		pcs.addPropertyChangeListener(listener);
 	}
 
 	/**
@@ -128,32 +114,16 @@ public class MachineState {
 		setJogIndex(next);
 	}
 
+	public IntegerProperty feedRateProperty() {
+		return feedRate;
+	}
+
 	public DigitalInput getDigitalInput(int index) {
 		return digitalInputs[index];
 	}
 
 	public int getFeedRate() {
-		return feedRate;
-	}
-
-	public BigDecimal getFirmwareBuild() {
-		return firmwareBuild;
-	}
-
-	public String getFirmwareBuildString() {
-		return firmwareBuildString;
-	}
-
-	public String getFirmwareConfig() {
-		return firmwareConfig;
-	}
-
-	public BigDecimal getFirmwareVersion() {
-		return firmwareVersion;
-	}
-
-	public BigDecimal getHardwareVersion() {
-		return hardwareVersion;
+		return feedRate.get();
 	}
 
 	public double getJogIncrement() {
@@ -161,7 +131,7 @@ public class MachineState {
 	}
 
 	public int getLine() {
-		return line;
+		return line.get();
 	}
 
 	public Motor[] getMotors() {
@@ -172,8 +142,8 @@ public class MachineState {
 		return motors[index];
 	}
 
-	public int getStatus() {
-		return status;
+	public StatValue getStatus() {
+		return status.get();
 	}
 
 	public SystemState getSystemState() {
@@ -185,7 +155,7 @@ public class MachineState {
 	}
 
 	public BigDecimal getVelocity() {
-		return velocity;
+		return velocity.get();
 	}
 
 	public BigDecimal getX() {
@@ -212,114 +182,58 @@ public class MachineState {
 		return z;
 	}
 
-	public void removePropertyChangeListener(PropertyChangeListener listener) {
-		pcs.removePropertyChangeListener(listener);
+	public IntegerProperty lineProperty() {
+		return line;
 	}
 
 	public void setFeedRate(int feedRate) {
-		int old = this.feedRate;
-		this.feedRate = feedRate;
-
-		pcs.firePropertyChange("feedRate", old, feedRate);
-	}
-
-	public void setFirmwareBuild(BigDecimal fb) {
-		// TODO remove once Swing UI is removed
-		BigDecimal old = this.firmwareBuild;
-		firmwareBuild = fb;
-
-		pcs.firePropertyChange("firmwareBuild", old, firmwareBuild);
-	}
-
-	public void setFirmwareBuildString(String fbs) {
-		// TODO remove once Swing UI is removed
-		String old = this.firmwareBuildString;
-		firmwareBuildString = fbs;
-
-		pcs.firePropertyChange("firmwareBuildString", old, firmwareBuildString);
-	}
-
-	public void setFirmwareConfig(String fbc) {
-		// TODO remove once Swing UI is removed
-		String old = this.firmwareConfig;
-		firmwareConfig = fbc;
-
-		pcs.firePropertyChange("firmwareConfig", old, firmwareConfig);
-	}
-
-	public void setFirmwareVersion(BigDecimal fv) {
-		// TODO remove once Swing UI is removed
-		BigDecimal old = this.firmwareVersion;
-		firmwareVersion = fv;
-
-		pcs.firePropertyChange("firmwareVersion", old, firmwareVersion);
-	}
-
-	public void setHardwareVersion(BigDecimal hv) {
-		// TODO remove once Swing UI is removed
-		BigDecimal old = hardwareVersion;
-		hardwareVersion = hv;
-
-		pcs.firePropertyChange("hardwareVersion", old, hardwareVersion);
+		this.feedRate.set(feedRate);
 	}
 
 	public void setJogIndex(int jogIndex) {
 		int oldIndex = this.jogIndex;
 		this.jogIndex = jogIndex;
 
-		pcs.firePropertyChange("jogIndex", oldIndex, jogIndex);
+		//TODO pcs.firePropertyChange("jogIndex", oldIndex, jogIndex);
 	}
 
 	public void setLine(int line) {
-		int old = this.line;
-		this.line = line;
-
-		pcs.firePropertyChange("line", old, line);
+		this.line.set(line);
 	}
 
-	public void setStatus(int status) {
-		int old = this.status;
-		this.status = status;
-		
-		pcs.firePropertyChange("status", old, status);
+	public void setStatus(StatValue status) {
+		this.status.set(status);
 	}
 
 	public void setUnits(Unit units) {
 		Unit old = this.units;
 		this.units = units;
-		pcs.firePropertyChange("units", old, units);
+		//TODO pcs.firePropertyChange("units", old, units);
 
 		setJogIndex(units.getDefaultIndex());
 	}
 
 	public void setVelocity(BigDecimal velocity) {
-		BigDecimal old = this.velocity;
-		this.velocity = velocity;
-		
-		pcs.firePropertyChange("velocity", old, velocity);
+		this.velocity.set(velocity);
 	}
 
 	public void setX(BigDecimal x) {
-		// TODO remove once Swing UI is removed
-		BigDecimal old = this.x.get();
 		this.x.set(x);
-		
-		pcs.firePropertyChange("x", old, this.x.get());
 	}
 
 	public void setY(BigDecimal y) {
-		// TODO remove once Swing UI is removed
-		BigDecimal old = this.y.get();
 		this.y.set(y);
-		
-		pcs.firePropertyChange("y", old, this.y.get());
 	}
 
 	public void setZ(BigDecimal z) {
-		// TODO remove once Swing UI is removed
-		BigDecimal old = this.z.get();
 		this.z.set(z);
-		
-		pcs.firePropertyChange("z", old, this.z.get());
+	}
+
+	public ObjectProperty<StatValue> statusProperty() {
+		return status;
+	}
+
+	public ObjectProperty<BigDecimal> velocityProperty() {
+		return velocity;
 	}
 }

@@ -38,6 +38,7 @@ import com.github.aushacker.g2client.protocol.NoOpHandler;
 import com.github.aushacker.g2client.protocol.PropertyHandler;
 import com.github.aushacker.g2client.protocol.SingleCharacterCommand;
 import com.github.aushacker.g2client.protocol.SingleCharacterType;
+import com.github.aushacker.g2client.protocol.StatValue;
 import com.github.aushacker.g2client.state.Axis;
 import com.github.aushacker.g2client.state.DigitalInput;
 import com.github.aushacker.g2client.state.MachineState;
@@ -292,7 +293,7 @@ public class MachineController implements IController {
 		sHandler.register("posx", new PropertyHandler(machineState, "x"));
 		sHandler.register("posy", new PropertyHandler(machineState, "y"));
 		sHandler.register("posz", new PropertyHandler(machineState, "z"));
-		sHandler.register("stat", new PropertyHandler(machineState, "status"));
+		sHandler.register("stat", new EnumPropertyHandler(machineState, "status", StatValue.class));
 		sHandler.register("vel", new PropertyHandler(machineState, "velocity"));
 
 		parent.register(STATUS, sHandler);

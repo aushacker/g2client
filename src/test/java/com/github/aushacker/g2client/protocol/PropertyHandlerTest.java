@@ -32,6 +32,7 @@ import org.junit.Test;
 
 import com.github.aushacker.g2client.state.MachineState;
 import com.github.aushacker.g2client.state.Motor;
+import com.github.aushacker.g2client.state.SystemState;
 
 /**
  * @author Stephen Davies
@@ -53,12 +54,12 @@ public class PropertyHandlerTest {
 
 	@Test
 	public void testStringOperation() {
-		MachineState ms = new MachineState();
-		handler = new PropertyHandler(ms, "firmwareBuildString");
+		SystemState s = new SystemState();
+		handler = new PropertyHandler(s, "firmwareBuildString");
 
-		assertNull(ms.getFirmwareBuildString());
+		assertNull(s.getFirmwareBuildString());
 		handler.handle(create("1.2"));
-		assertEquals("1.2", ms.getFirmwareBuildString());
+		assertEquals("1.2", s.getFirmwareBuildString());
 	}
 
 	@Test

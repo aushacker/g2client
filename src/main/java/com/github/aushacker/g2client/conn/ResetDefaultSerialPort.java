@@ -3,7 +3,7 @@
 
 package com.github.aushacker.g2client.conn;
 
-import com.github.aushacker.g2client.ui.UIPreferences;
+import com.github.aushacker.g2client.jfx.UIPreferences;
 
 /**
  * @author Stephen Davies

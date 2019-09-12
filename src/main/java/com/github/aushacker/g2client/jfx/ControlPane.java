@@ -36,6 +36,8 @@ public class ControlPane extends G2Pane<VBox> {
 
 	private AxesPane axesPane;
 
+	private StatusPane statusPane;
+
 	public ControlPane(Stage top, IController controller, UIPreferences preferences) {
 		super(top, controller, preferences);
 		
@@ -45,6 +47,7 @@ public class ControlPane extends G2Pane<VBox> {
 	@Override
 	protected void createWidgets() {
 		axesPane = new AxesPane(getTop(), getController(), getPreferences());
+		statusPane = new StatusPane(getTop(), getController(), getPreferences());
 	}
 
 	@Override
@@ -55,6 +58,8 @@ public class ControlPane extends G2Pane<VBox> {
 	@Override
 	protected void layoutWidgets() {
 		Node axes = Borders.wrap(axesPane.getPane()).lineBorder().title("Axis Control").color(Color.BLACK).buildAll();
-		getPane().getChildren().addAll(axes);
+		Node status = Borders.wrap(statusPane.getPane()).lineBorder().title("Machine Status").color(Color.BLACK).buildAll();
+
+		getPane().getChildren().addAll(axes, status);
 	}
 }
