@@ -34,40 +34,46 @@ public class DigitalInput {
 
 	private SimpleObjectProperty<Mode> mode;
 
-	public Action getAction() {
-		return action.get();
+	public DigitalInput() {
+		this.action = new SimpleObjectProperty<>();
+		this.function = new SimpleObjectProperty<>();
+		this.mode = new SimpleObjectProperty<>();
 	}
 
-	public ObjectProperty<Action> getActionProperty() {
+	public ObjectProperty<Action> actionProperty() {
 		return action;
+	}
+
+	public ObjectProperty<Function> functionProperty() {
+		return function;
+	}
+
+	public Action getAction() {
+		return action.get();
 	}
 
 	public Function getFunction() {
 		return function.get();
 	}
 
-	public ObjectProperty<Function> getFunctionProperty() {
-		return function;
-	}
-
 	public Mode getMode() {
 		return mode.get();
 	}
 
-	public ObjectProperty<Mode> getModeProperty() {
+	public ObjectProperty<Mode> modeProperty() {
 		return mode;
 	}
 
 	public void setAction(Action a) {
-		action.setValue(a);
+		action.set(a);
 	}
 
 	public void setFunction(Function f) {
-		function.setValue(f);
+		function.set(f);
 	}
 
 	public void setMode(Mode m) {
-		mode.setValue(m);
+		mode.set(m);
 	}
 
 	public enum Mode { 

@@ -83,6 +83,11 @@ public class MachineState {
 	private SimpleObjectProperty<BigDecimal> z;
 
 	public MachineState() {
+		digitalInputs = new DigitalInput[DINPUT_COUNT];
+		for (int i = 0; i < DINPUT_COUNT; i++) {
+			digitalInputs[i] = new DigitalInput();
+		}
+
 		motors = new Motor[MOTOR_COUNT];
 		for (int i = 0; i < MOTOR_COUNT; i++) {
 			motors[i] = new Motor(i + 1);
@@ -123,6 +128,10 @@ public class MachineState {
 		setJogIndex(next);
 	}
 
+	public DigitalInput getDigitalInput(int index) {
+		return digitalInputs[index];
+	}
+
 	public int getFeedRate() {
 		return feedRate;
 	}
@@ -153,6 +162,10 @@ public class MachineState {
 
 	public int getLine() {
 		return line;
+	}
+
+	public Motor[] getMotors() {
+		return motors;
 	}
 
 	public Motor getMotors(int index) {

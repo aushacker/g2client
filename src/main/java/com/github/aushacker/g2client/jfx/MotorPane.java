@@ -20,7 +20,13 @@
 package com.github.aushacker.g2client.jfx;
 
 import com.github.aushacker.g2client.conn.IController;
+import com.github.aushacker.g2client.state.Motor;
 
+import javafx.collections.FXCollections;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
@@ -30,28 +36,53 @@ import javafx.stage.Stage;
  */
 public class MotorPane extends G2Pane<StackPane> {
 
+	private ScrollPane scrollPane;
+
+	private TableView<Motor> table;
+
 	public MotorPane(Stage top, IController controller, UIPreferences preferences) {
 		super(top, controller, preferences);
 		
 		initialize();
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	protected void createWidgets() {
-		// TODO Auto-generated method stub
+		scrollPane = new ScrollPane();
+
+		table = new TableView<>(FXCollections.observableArrayList(getMachineState().getMotors()));
 		
+		TableColumn<Motor,Integer> idCol = new TableColumn<>("ID");
+		idCol.setCellValueFactory(new PropertyValueFactory<Motor,Integer>("id"));
+		
+		TableColumn<Motor,Double> stepAngleCol = new TableColumn<>("Step Angle");
+		stepAngleCol.setCellValueFactory(new PropertyValueFactory<Motor,Double>("stepAngle"));
+		 
+		TableColumn<Motor,Double> perRevCol = new TableColumn<>("Travel/Rev");
+		perRevCol.setCellValueFactory(new PropertyValueFactory<Motor,Double>("travelPerRev"));
+		 
+		TableColumn<Motor,Integer> microstepCol = new TableColumn<>("Microsteps");
+		microstepCol.setCellValueFactory(new PropertyValueFactory<Motor,Integer>("microsteps"));
+		 
+		TableColumn<Motor,Double> stepsUnitCol = new TableColumn<>("Steps/Unit");
+		stepsUnitCol.setCellValueFactory(new PropertyValueFactory<Motor,Double>("stepsPerUnit"));
+		 
+		TableColumn<Motor,Integer> polarityCol = new TableColumn<>("Polarity");
+		polarityCol.setCellValueFactory(new PropertyValueFactory<Motor,Integer>("polarity"));
+		 
+		table.getColumns().addAll(idCol, stepAngleCol, perRevCol, microstepCol, stepsUnitCol, polarityCol);
 	}
 
 	@Override
 	protected void initializePane() {
-		// TODO Auto-generated method stub
-		
+		setPane(new StackPane());
 	}
 
 	@Override
 	protected void layoutWidgets() {
-		// TODO Auto-generated method stub
+		getPane().getChildren().add(scrollPane);
 		
+		scrollPane.setContent(table);
 	}
-
 }

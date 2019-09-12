@@ -33,23 +33,23 @@ public class Motor {
 	 * Motor (groups) are numbered 1 to 6. The number of motors actually available
 	 * depends on the hardware. 
 	 */
-	private SimpleIntegerProperty id;
+	private final SimpleIntegerProperty id;
 
-	private SimpleIntegerProperty axis;
+	private final SimpleIntegerProperty axis;
 
-	private SimpleIntegerProperty microsteps;
+	private final SimpleIntegerProperty microsteps;
 
-	private SimpleIntegerProperty polarity;
+	private final SimpleIntegerProperty polarity;
 
-	private SimpleDoubleProperty powerLevel;
+	private final SimpleDoubleProperty powerLevel;
 
-	private SimpleIntegerProperty powerMode;
+	private final SimpleIntegerProperty powerMode;
 
-	private SimpleDoubleProperty stepAngle;
+	private final SimpleDoubleProperty stepAngle;
 
-	private SimpleDoubleProperty stepsPerUnit;
+	private final SimpleDoubleProperty stepsPerUnit;
 
-	private SimpleDoubleProperty travelPerRev;
+	private final SimpleDoubleProperty travelPerRev;
 
 	public Motor(int id) {
 		this.id = new SimpleIntegerProperty(id);
@@ -63,76 +63,64 @@ public class Motor {
 		this.travelPerRev = new SimpleDoubleProperty();
 	}
 
-	public int getAxis() {
-		return axis.get();
+	public IntegerProperty axisProperty() {
+		return axis;
 	}
 
-	public IntegerProperty getAxisProperty() {
-		return axis;
+	public int getAxis() {
+		return axis.get();
 	}
 
 	public int getId() {
 		return id.get();
 	}
 
-	public IntegerProperty getIdProperty() {
-		return id;
-	}
-
 	public int getMicrosteps() {
 		return microsteps.get();
-	}
-
-	public IntegerProperty getMicrostepsProperty() {
-		return microsteps;
 	}
 
 	public int getPolarity() {
 		return polarity.get();
 	}
 
-	public IntegerProperty getPolarityProperty() {
-		return polarity;
-	}
-
 	public double getPowerLevel() {
 		return powerLevel.get();
-	}
-
-	public DoubleProperty getPowerLevelProperty() {
-		return powerLevel;
 	}
 
 	public int getPowerMode() {
 		return powerMode.get();
 	}
 
-	public IntegerProperty getPowerModeProperty() {
-		return powerMode;
-	}
-
 	public double getStepAngle() {
 		return stepAngle.get();
-	}
-
-	public DoubleProperty getStepAngleProperty() {
-		return stepAngle;
 	}
 
 	public double getStepsPerUnit() {
 		return stepsPerUnit.get();
 	}
 
-	public DoubleProperty getStepsPerUnitProperty() {
-		return stepsPerUnit;
-	}
-
 	public double getTravelPerRev() {
 		return travelPerRev.get();
 	}
 
-	public DoubleProperty getTravelPerRevProperty() {
-		return travelPerRev;
+	public IntegerProperty idProperty() {
+		return id;
+	}
+
+	public IntegerProperty microstepsProperty() {
+		return microsteps;
+	}
+
+	public IntegerProperty polarityProperty() {
+		return polarity;
+	}
+
+	public DoubleProperty powerLevelProperty() {
+		return powerLevel;
+	}
+
+	public IntegerProperty powerModeProperty() {
+		return powerMode;
 	}
 
 	public void setAxis(int axis) {
@@ -165,5 +153,17 @@ public class Motor {
 
 	public void setTravelPerRev(double travelPerRev) {
 		this.travelPerRev.set(travelPerRev);
+	}
+
+	public DoubleProperty stepAngleProperty() {
+		return stepAngle;
+	}
+
+	public DoubleProperty stepsPerUnitProperty() {
+		return stepsPerUnit;
+	}
+
+	public DoubleProperty travelPerRevProperty() {
+		return travelPerRev;
 	}
 }

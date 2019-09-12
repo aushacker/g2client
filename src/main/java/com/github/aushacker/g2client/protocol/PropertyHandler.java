@@ -77,6 +77,18 @@ public class PropertyHandler extends Handler {
 		introspect();
 	}
 
+	public String getName() {
+		return name;
+	}
+
+	public Method getSetter() {
+		return setter;
+	}
+
+	public Object getTarget() {
+		return target;
+	}
+
 	/**
 	 * Use reflection to correctly cast the JsonValue type and invoke the setter.
 	 */

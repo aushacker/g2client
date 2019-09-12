@@ -21,11 +21,14 @@ package com.github.aushacker.g2client.jfx;
 
 import java.io.File;
 
+import org.controlsfx.tools.Borders;
+
 import com.fazecast.jSerialComm.SerialPort;
 import com.github.aushacker.g2client.conn.IController;
 import com.github.aushacker.g2client.conn.OperatingSystem;
 
 import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -33,6 +36,7 @@ import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
+import javafx.scene.paint.Color;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
@@ -56,6 +60,8 @@ public class ConfigPane extends G2Pane<GridPane> {
 
 	private Button btGcodeDir;
 	private Button btSettingsFile;
+
+	private MotorPane motorPane;
 
 	/**
 	 *
@@ -96,6 +102,8 @@ public class ConfigPane extends G2Pane<GridPane> {
 		
 		btGcodeDir = new Button("Edit...");
 		btSettingsFile = new Button("Edit...");
+		
+		motorPane = new MotorPane(getTop(), getController(), getPreferences());
 	}
 
 	private void handleChangedPort() {
@@ -177,6 +185,9 @@ public class ConfigPane extends G2Pane<GridPane> {
 		
 		getPane().add(btGcodeDir, 2, 0);
 		getPane().add(btSettingsFile, 2, 2);
+
+		Node motors = Borders.wrap(motorPane.getPane()).lineBorder().title("Motors").color(Color.BLACK).buildAll();
+		getPane().add(motors, 0, 3, 3, 1);
 	}
 
 	/**

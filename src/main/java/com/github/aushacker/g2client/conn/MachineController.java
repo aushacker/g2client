@@ -32,12 +32,14 @@ import org.slf4j.LoggerFactory;
 
 import com.fazecast.jSerialComm.SerialPort;
 import com.github.aushacker.g2client.protocol.Command;
+import com.github.aushacker.g2client.protocol.EnumPropertyHandler;
 import com.github.aushacker.g2client.protocol.Handler;
 import com.github.aushacker.g2client.protocol.NoOpHandler;
 import com.github.aushacker.g2client.protocol.PropertyHandler;
 import com.github.aushacker.g2client.protocol.SingleCharacterCommand;
 import com.github.aushacker.g2client.protocol.SingleCharacterType;
 import com.github.aushacker.g2client.state.Axis;
+import com.github.aushacker.g2client.state.DigitalInput;
 import com.github.aushacker.g2client.state.MachineState;
 import com.github.aushacker.g2client.state.Motor;
 
@@ -171,6 +173,26 @@ public class MachineController implements IController {
 //		}
 	}
 
+	/**
+	 * Configure handlers for a digital input.
+	 */
+	private void registerDigitalInput(Handler parent, int index) {
+		Handler mHandler = new Handler();
+		DigitalInput di = machineState.getDigitalInput(index);
+		mHandler.register("mo", new EnumPropertyHandler(di, "mode", DigitalInput.Mode.class));
+		mHandler.register("ac", new EnumPropertyHandler(di, "action", DigitalInput.Action.class));
+		mHandler.register("fn", new EnumPropertyHandler(di, "function", DigitalInput.Function.class));
+		
+		// Model indexes are 0 based, Json values are 1 based
+		parent.register("di" + ((char)('1' + index)), mHandler);
+	}
+
+	private void registerDigitalInputs(Handler parent) {
+		for (int i = 0; i < MachineState.DINPUT_COUNT; i++) {
+			registerDigitalInput(parent, i);
+		}
+	}
+
 	public void registerHandlers() {
 		top = new Handler();
 		
@@ -180,6 +202,7 @@ public class MachineController implements IController {
 		registerSystem(response);
 		registerStatusHandler(response);
 		registerMotors(response);
+		registerDigitalInputs(response);
 		top.register(response);
 
 		// Handles values nested under {...,"f":...}
