@@ -51,6 +51,7 @@ import com.github.aushacker.g2client.state.MachineState;
 import com.github.aushacker.g2client.state.Mode;
 import com.github.aushacker.g2client.state.MotionMode;
 import com.github.aushacker.g2client.state.Motor;
+import com.github.aushacker.g2client.state.Offsets;
 import com.github.aushacker.g2client.state.Unit;
 
 /**
@@ -138,15 +139,12 @@ public class MachineController implements IController {
 	}
 
 	@Override
-	public void homeMachine(Axis axis) {
-		enqueue("G28.2 " + axis + "0");
-	}
-
-	@Override
-	public void homeMachine(List<Axis> axes) {
+	public void homeMachine(Axis... axes) {
 		StringBuilder cmd = new StringBuilder("G28.2 ");
 		
-		axes.forEach(axis -> cmd.append("" + axis + "0"));
+		for (int i = 0; i < axes.length; i++) {
+			cmd.append("" + axes[i] + "0");
+		}
 
 		enqueue(cmd.toString());
 	}
@@ -247,6 +245,7 @@ public class MachineController implements IController {
 		registerSystem(response);
 		registerStatusHandler(response);
 		registerMotors(response);
+		registerOffsets(response);
 		registerDigitalInputs(response);
 		registerDigitalOutputs(response);
 		registerAxisSettings(response);
@@ -288,6 +287,25 @@ public class MachineController implements IController {
 		for (int i = 0; i < MachineState.MOTOR_COUNT; i++) {
 			registerMotor(parent, i);
 		}
+	}
+
+	private void registerOffsets(Handler parent) {
+		for (CoordinateSystem cs : CoordinateSystem.values()) {
+			registerOffsets(parent, cs);
+		}
+	}
+
+	private void registerOffsets(Handler parent, CoordinateSystem cs) {
+		Handler oHandler = new Handler();
+		Offsets o = machineState.getOffsets(cs);
+		oHandler.register("a", new PropertyHandler(o, "a"));
+		oHandler.register("b", new PropertyHandler(o, "b"));
+		oHandler.register("c", new PropertyHandler(o, "c"));
+		oHandler.register("x", new PropertyHandler(o, "x"));
+		oHandler.register("y", new PropertyHandler(o, "y"));
+		oHandler.register("z", new PropertyHandler(o, "z"));
+		
+		parent.register(cs.toString().toLowerCase(), oHandler);
 	}
 
 	/**
@@ -390,7 +408,12 @@ public class MachineController implements IController {
 
 	@Override
 	public void zero(Axis axis) {
-		enqueue("G0 " + axis + "0");
+		enqueue(zeroCommand(axis));
+	}
+
+	@Override
+	public String zeroCommand(Axis axis) {
+		return "G10 L20 P" + getMachineState().getCoordinateSystem().getP() + " " + axis + "0";
 	}
 
 	@Override

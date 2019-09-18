@@ -48,9 +48,7 @@ public interface IController {
 
 	void goToZero(List<Axis> axes);
 
-	void homeMachine(Axis axis);
-
-	void homeMachine(List<Axis> axes);
+	void homeMachine(Axis... axes);
 
 	/**
 	 * Instructs the controller to commence jogging. Distances and
@@ -70,13 +68,19 @@ public interface IController {
 	void shutdown();
 
 	/**
-	 * Set the current position to zero in the active fixture offset.
-	 * Overwrites any data that was entered previously, i.e. absolute, 
-	 * not relative.
+	 * Zero out the {@code axis} in the current coordinate system.
 	 *
 	 * @param axis
 	 */
 	void zero(Axis axis);
+
+	/**
+	 * Command to zero the {@code axis} in the current coordinate system.
+	 * Does not issue the command, see {@link IController#zero(Axis)}.
+	 *
+	 * @param axis
+	 */
+	String zeroCommand(Axis axis);
 
 	void zeroMachine(Axis axis);
 }

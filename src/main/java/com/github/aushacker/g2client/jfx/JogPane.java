@@ -19,51 +19,53 @@
 
 package com.github.aushacker.g2client.jfx;
 
-import org.controlsfx.tools.Borders;
-
 import com.github.aushacker.g2client.conn.IController;
 
-import javafx.scene.Node;
-import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
+import javafx.scene.control.Button;
+import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
 /**
  * @author Stephen Davies
- * @since August 2019
+ * @since September 2019
  */
-public class ControlPane extends G2Pane<VBox> {
+public class JogPane extends G2Pane<GridPane> {
 
-	private AxesPane axesPane;
-
-	private JogPane jogPane;
-
-	private StatusPane statusPane;
-
-	public ControlPane(Stage top, IController controller, UIPreferences preferences) {
+	private Button btXpos;
+	
+	private Button btXneg;
+	
+	private Button btYpos;
+	
+	private Button btYneg;
+	
+	public JogPane(Stage top, IController controller, UIPreferences preferences) {
 		super(top, controller, preferences);
-		
+
 		initialize();
 	}
 
 	@Override
 	protected void createWidgets() {
-		axesPane = new AxesPane(getTop(), getController(), getPreferences());
-		jogPane = new JogPane(getTop(), getController(), getPreferences());
-		statusPane = new StatusPane(getTop(), getController(), getPreferences());
+		btXpos = new Button("X+");
+		btXneg = new Button("X-");
+		btYpos = new Button("Y+");
+		btYneg = new Button("Y-");
 	}
 
 	@Override
 	protected void initializePane() {
-		setPane(new VBox());
+		setPane(new GridPane());
+
+		getPane().setHgap(5);
+		getPane().setVgap(5);
 	}
 
 	@Override
 	protected void layoutWidgets() {
-		Node axes = Borders.wrap(axesPane.getPane()).lineBorder().title("Axis Control").color(Color.BLACK).buildAll();
-		Node status = Borders.wrap(statusPane.getPane()).lineBorder().title("Machine Status").color(Color.BLACK).buildAll();
-		Node jog = Borders.wrap(jogPane.getPane()).lineBorder().title("Jog").color(Color.BLACK).buildAll();
-
-		getPane().getChildren().addAll(axes, status, jog);
+		getPane().add(btYpos, 1, 0);
+		getPane().add(btXneg, 0, 1);
+		getPane().add(btXpos, 2, 1);
+		getPane().add(btYneg, 1, 2);
 	}
 }

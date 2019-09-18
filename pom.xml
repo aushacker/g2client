@@ -75,7 +75,7 @@
           </descriptorRefs>
           <archive>
             <manifest>
-              <mainClass>com.github.aushacker.g2client.ui.G2Client</mainClass>
+              <mainClass>com.github.aushacker.g2client.jfx.G2Client</mainClass>
             </manifest>
           </archive>
         </configuration>

@@ -24,5 +24,27 @@ package com.github.aushacker.g2client.state;
  * @since September 2019
  */
 public enum CoordinateSystem {
-	G53, G54, G55, G56, G57, G58, G59;
+	G53(""),
+	G54("1"),
+	G55("2"),
+	G56("3"),
+	G57("4"),
+	G58("5"),
+	G59("6"),
+	G92(""),
+	G28(""),
+	G30("");
+
+	private CoordinateSystem(String p) {
+		this.p = p;
+	}
+
+	/**
+	 * Codes like G10 encode a coordinate system using a numeric value, e.g. P1 = G54.
+	 */
+	private String p;
+
+	public String getP() {
+		return p;
+	}
 }

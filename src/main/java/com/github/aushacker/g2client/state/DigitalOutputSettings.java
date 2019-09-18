@@ -24,7 +24,7 @@ import javafx.beans.property.SimpleObjectProperty;
 
 /**
  * @author Stephen Davies
- * @since October 2018
+ * @since September 2019
  */
 public class DigitalOutputSettings {
 

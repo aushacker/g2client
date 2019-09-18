@@ -76,14 +76,11 @@ public class MockController implements IController {
 	}
 
 	@Override
-	public void homeMachine(Axis axis) {
-		System.out.println("Home machine " + axis);
-	}
-
-	@Override
-	public void homeMachine(List<Axis> axes) {
+	public void homeMachine(Axis... axes) {
 		System.out.print("Home machine ");
-		axes.forEach(axis -> System.out.print("" + axis + " "));
+		for (int i = 0; i < axes.length; i++) {
+			System.out.print("" + axes[i] + " ");
+		}
 		System.out.println();
 	}
 
@@ -119,5 +116,10 @@ public class MockController implements IController {
 	@Override
 	public void zeroMachine(Axis axis) {
 		System.out.println("Zero machine " + axis);
+	}
+
+	@Override
+	public String zeroCommand(Axis axis) {
+		return "G10 L20 P1 " + axis + "0";
 	}
 }

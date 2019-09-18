@@ -77,6 +77,8 @@ public class MachineState {
 	 */
 	private Motor[] motors;
 
+	private Map<CoordinateSystem,Offsets> offsets;
+
 	private SystemState systemState;
 
 	private SimpleObjectProperty<Unit> units;
@@ -116,6 +118,11 @@ public class MachineState {
 		motors = new Motor[MOTOR_COUNT];
 		for (int i = 0; i < MOTOR_COUNT; i++) {
 			motors[i] = new Motor(i + 1);
+		}
+
+		offsets = new HashMap<>();
+		for (CoordinateSystem cs : CoordinateSystem.values()) {
+			offsets.put(cs, new Offsets(cs));
 		}
 
 		systemState = new SystemState();
@@ -210,6 +217,10 @@ public class MachineState {
 		return motors[index];
 	}
 
+	public Offsets getOffsets(CoordinateSystem cs) {
+		return offsets.get(cs);
+	}
+
 	public SystemState getSystemState() {
 		return systemState;
 	}
@@ -226,24 +237,12 @@ public class MachineState {
 		return x.get();
 	}
 
-	public ObjectProperty<BigDecimal> getXProperty() {
-		return x;
-	}
-
 	public BigDecimal getY() {
 		return y.get();
 	}
 
-	public ObjectProperty<BigDecimal> getYProperty() {
-		return y;
-	}
-
 	public BigDecimal getZ() {
 		return z.get();
-	}
-
-	public ObjectProperty<BigDecimal> getZProperty() {
-		return z;
 	}
 
 	public IntegerProperty lineProperty() {
@@ -307,7 +306,23 @@ public class MachineState {
 		this.z.set(z);
 	}
 
+	public ObjectProperty<Unit> unitsProperty() {
+		return units;
+	}
+
 	public ObjectProperty<BigDecimal> velocityProperty() {
 		return velocity;
+	}
+
+	public ObjectProperty<BigDecimal> xProperty() {
+		return x;
+	}
+
+	public ObjectProperty<BigDecimal> yProperty() {
+		return y;
+	}
+
+	public ObjectProperty<BigDecimal> zProperty() {
+		return z;
 	}
 }

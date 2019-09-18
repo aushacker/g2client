@@ -22,6 +22,7 @@ package com.github.aushacker.g2client.jfx;
 import com.github.aushacker.g2client.conn.IController;
 import com.github.aushacker.g2client.state.MachineState;
 
+import javafx.application.Platform;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
@@ -104,6 +105,10 @@ public abstract class G2Pane <T extends Pane> {
 	 * Subclassses must layout their widgets.
 	 */
 	protected abstract void layoutWidgets();	
+
+	protected void runLater(Runnable runnable) {
+		Platform.runLater(runnable);
+	}
 
 	protected void setPane(T pane) {
 		this.pane = pane;
