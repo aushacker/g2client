@@ -46,6 +46,18 @@ public class MockController implements IController {
 	}
 
 	@Override
+	public void coolantOff() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void coolantOn() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
 	public void enqueue(String command) {}
 
 	@Override

@@ -36,6 +36,10 @@ public interface IController {
 
 	boolean connect(SerialPort port);
 
+	void coolantOff();
+
+	void coolantOn();
+
 	void enqueue(String command);
 
 	void feedhold();

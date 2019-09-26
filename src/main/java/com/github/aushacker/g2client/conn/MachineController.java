@@ -100,6 +100,16 @@ public class MachineController implements IController {
 	}
 
 	@Override
+	public void coolantOff() {
+		enqueue("M9");
+	}
+
+	@Override
+	public void coolantOn() {
+		enqueue("M8");
+	}
+
+	@Override
 	public void enqueue(String data) {
 		if (monitor != null) {
 			monitor.enqueue(data);
