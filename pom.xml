@@ -12,7 +12,7 @@
     <fxmisc.richtext.version>0.10.2</fxmisc.richtext.version>
     <json-api.version>1.1</json-api.version>
     <json-impl.version>1.1</json-impl.version>
-    <junit.version>4.12</junit.version>
+    <junit.version>4.13.1</junit.version>
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
