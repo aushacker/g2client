@@ -40,6 +40,8 @@ public class ControlPane extends G2Pane<VBox> {
 
 	private StatusPane statusPane;
 
+	private ToolChangePane toolChangePane;
+
 	public ControlPane(Stage top, IController controller, UIPreferences preferences) {
 		super(top, controller, preferences);
 		
@@ -51,6 +53,7 @@ public class ControlPane extends G2Pane<VBox> {
 		axesPane = new AxesPane(getTop(), getController(), getPreferences());
 		jogPane = new JogPane(getTop(), getController(), getPreferences());
 		statusPane = new StatusPane(getTop(), getController(), getPreferences());
+		toolChangePane = new ToolChangePane(getTop(), getController(), getPreferences());
 	}
 
 	@Override
@@ -63,7 +66,8 @@ public class ControlPane extends G2Pane<VBox> {
 		Node axes = Borders.wrap(axesPane.getPane()).lineBorder().title("Axis Control").color(Color.BLACK).buildAll();
 		Node status = Borders.wrap(statusPane.getPane()).lineBorder().title("Machine Status").color(Color.BLACK).buildAll();
 		Node jog = Borders.wrap(jogPane.getPane()).lineBorder().title("Jog").color(Color.BLACK).buildAll();
+		Node toolChange = Borders.wrap(toolChangePane.getPane()).lineBorder().title("Tool Change").color(Color.BLACK).buildAll();
 
-		getPane().getChildren().addAll(axes, status, jog);
+		getPane().getChildren().addAll(axes, status, jog, toolChange);
 	}
 }
