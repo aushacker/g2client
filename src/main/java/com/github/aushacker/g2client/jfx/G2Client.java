@@ -52,113 +52,113 @@ import javafx.stage.Stage;
  */
 public class G2Client extends Application {
 
-	private Stage mainStage;
+    private Stage mainStage;
 
-	private IController controller;
+    private IController controller;
 
-	private UIPreferences preferences;
+    private UIPreferences preferences;
 
-	private ConfigPane configPane;
+    private ConfigPane configPane;
 
-	private DiagnosticsPane diagnosticsPane;
+    private DiagnosticsPane diagnosticsPane;
 
-	private RunPane runPane;
+    private RunPane runPane;
 
-	public static void main(String[] args) {
-		launch(args);
-	}
+    public static void main(String[] args) {
+        launch(args);
+    }
 
-	private void createChildPanes() {
-		configPane = new ConfigPane(mainStage, controller, preferences);
-		diagnosticsPane = new DiagnosticsPane(mainStage, controller, preferences);
-		runPane = new RunPane(mainStage, controller, preferences);
-	}
+    private void createChildPanes() {
+        configPane = new ConfigPane(mainStage, controller, preferences);
+        diagnosticsPane = new DiagnosticsPane(mainStage, controller, preferences);
+        runPane = new RunPane(mainStage, controller, preferences);
+    }
 
-	/**
-	 * Create the menu bar at the top of the screen.
-	 */
-	private Node createMenuPane() {
-		Menu fileMenu = new Menu("File");
-		
-		MenuItem fOpen = new MenuItem("Open...");
-		fOpen.setOnAction(e -> fileOpen());
+    /**
+     * Create the menu bar at the top of the screen.
+     */
+    private Node createMenuPane() {
+        Menu fileMenu = new Menu("File");
+        
+        MenuItem fOpen = new MenuItem("Open...");
+        fOpen.setOnAction(e -> fileOpen());
 
-		fileMenu.getItems().add(fOpen);
-		
-		MenuBar mb = new MenuBar();
-		mb.getMenus().add(fileMenu);
+        fileMenu.getItems().add(fOpen);
+        
+        MenuBar mb = new MenuBar();
+        mb.getMenus().add(fileMenu);
 
-		return new VBox(mb);
-	}
+        return new VBox(mb);
+    }
 
-	/**
-	 * Layout all of the panels in the main view.
-	 */
-	private TabPane createTabPane() {
-		TabPane tabPane = new TabPane();
-		tabPane.setTabClosingPolicy(TabClosingPolicy.UNAVAILABLE);
+    /**
+     * Layout all of the panels in the main view.
+     */
+    private TabPane createTabPane() {
+        TabPane tabPane = new TabPane();
+        tabPane.setTabClosingPolicy(TabClosingPolicy.UNAVAILABLE);
 
-		Tab tab = new Tab();
-		tab.setText("Run");
-		tab.setContent(runPane.getPane());
-		tabPane.getTabs().add(tab);
+        Tab tab = new Tab();
+        tab.setText("Run");
+        tab.setContent(runPane.getPane());
+        tabPane.getTabs().add(tab);
 
-		tab = new Tab();
-		tab.setText("Config");
-		tab.setContent(configPane.getPane());
-		tabPane.getTabs().add(tab);
+        tab = new Tab();
+        tab.setText("Config");
+        tab.setContent(configPane.getPane());
+        tabPane.getTabs().add(tab);
 
-		tab = new Tab();
-		tab.setText("Diagnostics");
-		tab.setContent(diagnosticsPane.getPane());
-		tabPane.getTabs().add(tab);
+        tab = new Tab();
+        tab.setText("Diagnostics");
+        tab.setContent(diagnosticsPane.getPane());
+        tabPane.getTabs().add(tab);
 
-		return tabPane;
-	}
+        return tabPane;
+    }
 
-	/**
-	 * Handle callback from the File-&gt;Open... menu item.
-	 */
-	private void fileOpen() {
-		FileChooser fileChooser = new FileChooser();
-		
-		fileChooser.setInitialDirectory(new File(preferences.getScriptHome()));
-		fileChooser.setTitle("Open GCode File");
-		fileChooser.getExtensionFilters().addAll(
-				new ExtensionFilter("GCode Files", "*.cnc", "*.gc", "*.gcode", "*.nc"),
-				new ExtensionFilter("All Files", "*.*"));
+    /**
+     * Handle callback from the File-&gt;Open... menu item.
+     */
+    private void fileOpen() {
+        FileChooser fileChooser = new FileChooser();
+        
+        fileChooser.setInitialDirectory(new File(preferences.getScriptHome()));
+        fileChooser.setTitle("Open GCode File");
+        fileChooser.getExtensionFilters().addAll(
+                new ExtensionFilter("GCode Files", "*.cnc", "*.gc", "*.gcode", "*.nc"),
+                new ExtensionFilter("All Files", "*.*"));
 
-		File selectedFile = fileChooser.showOpenDialog(mainStage);
+        File selectedFile = fileChooser.showOpenDialog(mainStage);
 
-		if (selectedFile != null) {
-			runPane.openFile(selectedFile);
-		}
-	}
+        if (selectedFile != null) {
+            runPane.openFile(selectedFile);
+        }
+    }
 
-	public IController getController() {
-		return controller;
-	}
+    public IController getController() {
+        return controller;
+    }
 
-	public UIPreferences getUIPreferences() {
-		return preferences;
-	}
+    public UIPreferences getUIPreferences() {
+        return preferences;
+    }
 
-	@Override
-	public void start(Stage mainStage) throws Exception {
-		this.mainStage = mainStage;
+    @Override
+    public void start(Stage mainStage) throws Exception {
+        this.mainStage = mainStage;
 
-		controller = new MachineController();
-		preferences = new UIPreferences();
-		BorderPane root = new BorderPane();
+        controller = new MachineController();
+        preferences = new UIPreferences();
+        BorderPane root = new BorderPane();
 
-		createChildPanes();
+        createChildPanes();
 
-		root.setTop(createMenuPane());
-		root.setCenter(createTabPane());
+        root.setTop(createMenuPane());
+        root.setCenter(createTabPane());
 
-		Scene scene = new Scene(root, preferences.getWidth(), preferences.getHeight());
-		mainStage.widthProperty().addListener((o, old, nw) -> preferences.setWidth(nw.intValue()));
-		mainStage.heightProperty().addListener((o, old, nw) -> preferences.setHeight(nw.intValue()));
+        Scene scene = new Scene(root, preferences.getWidth(), preferences.getHeight());
+        mainStage.widthProperty().addListener((o, old, nw) -> preferences.setWidth(nw.intValue()));
+        mainStage.heightProperty().addListener((o, old, nw) -> preferences.setHeight(nw.intValue()));
 
         mainStage.setTitle("G2Client - Gcode Runner");
         mainStage.setScene(scene);
@@ -166,54 +166,54 @@ public class G2Client extends Application {
         mainStage.show();
         
         startMachine();
-	}
+    }
 
-	private void startMachine() {
-		// Attempt to find preferred SerialPort
-		String portName = preferences.getPortName();
-		SerialPort port = null;
-		
-		for (SerialPort p : OperatingSystem.current().getFilteredPorts()) {
-			if (p.getSystemPortName().equals(portName)) {
-				port = p;
-				break;
-			}
-		}
+    private void startMachine() {
+        // Attempt to find preferred SerialPort
+        String portName = preferences.getPortName();
+        SerialPort port = null;
+        
+        for (SerialPort p : OperatingSystem.current().getFilteredPorts()) {
+            if (p.getSystemPortName().equals(portName)) {
+                port = p;
+                break;
+            }
+        }
 
-		if (port != null) {
-			// Found
-			if (controller.connect(port)) {
-				// Connected ok, try to play initial script
-				try (BufferedReader in = new BufferedReader(new FileReader(preferences.getInitialScript()))) {
-					String line = in.readLine();
-					while (line != null) {
-						controller.enqueue(line);
-						line = in.readLine();
-					}
-				}
-				catch (Exception e) {
-					new Alert(AlertType.ERROR,
-							"Unable to open initial script - File Not Found",
-							ButtonType.CANCEL).showAndWait();
-				}
-			} else {
-				new Alert(AlertType.ERROR,
-						"Unable to connect with g2 controller, check configuration.",
-						ButtonType.CANCEL).showAndWait();
-			}
-		} else {
-			// not found
-			new Alert(AlertType.ERROR,
-					"Configured serial port not found.",
-					ButtonType.CANCEL).showAndWait();
-		}
-	}
+        if (port != null) {
+            // Found
+            if (controller.connect(port)) {
+                // Connected ok, try to play initial script
+                try (BufferedReader in = new BufferedReader(new FileReader(preferences.getInitialScript()))) {
+                    String line = in.readLine();
+                    while (line != null) {
+                        controller.enqueue(line);
+                        line = in.readLine();
+                    }
+                }
+                catch (Exception e) {
+                    new Alert(AlertType.ERROR,
+                            "Unable to open initial script - File Not Found",
+                            ButtonType.CANCEL).showAndWait();
+                }
+            } else {
+                new Alert(AlertType.ERROR,
+                        "Unable to connect with g2 controller, check configuration.",
+                        ButtonType.CANCEL).showAndWait();
+            }
+        } else {
+            // not found
+            new Alert(AlertType.ERROR,
+                    "Configured serial port not found.",
+                    ButtonType.CANCEL).showAndWait();
+        }
+    }
 
-	/**
-	 * Cleanup application resources.
-	 */
-	@Override
-	public void stop() {
-		controller.shutdown();
-	}
+    /**
+     * Cleanup application resources.
+     */
+    @Override
+    public void stop() {
+        controller.shutdown();
+    }
 }

@@ -33,105 +33,105 @@ import com.github.aushacker.g2client.state.MachineState;
  */
 public class MockController implements IController {
 
-	private MachineState state;
+    private MachineState state;
 
-	public MockController() {
-		state = new MachineState();
-	}
+    public MockController() {
+        state = new MachineState();
+    }
 
-	@Override
-	public boolean connect(SerialPort port) {
-		// TODO Auto-generated method stub
-		return false;
-	}
+    @Override
+    public boolean connect(SerialPort port) {
+        // TODO Auto-generated method stub
+        return false;
+    }
 
-	@Override
-	public void coolantOff() {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    public void coolantOff() {
+        // TODO Auto-generated method stub
+        
+    }
 
-	@Override
-	public void coolantOn() {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    public void coolantOn() {
+        // TODO Auto-generated method stub
+        
+    }
 
-	@Override
-	public void enqueue(String command) {}
+    @Override
+    public void enqueue(String command) {}
 
-	@Override
-	public MachineState getMachineState() {
-		return state;
-	}
+    @Override
+    public MachineState getMachineState() {
+        return state;
+    }
 
-	@Override
-	public void feedhold() {
-		System.out.println("Feedhold");
-	}
+    @Override
+    public void feedhold() {
+        System.out.println("Feedhold");
+    }
 
-	@Override
-	public void flush() {
-		System.out.println("Flush");
-	}
+    @Override
+    public void flush() {
+        System.out.println("Flush");
+    }
 
-	@Override
-	public void goToMachineZero(Axis axis) {
-		System.out.println("Go to machine zero " + axis);
-	}
+    @Override
+    public void goToMachineZero(Axis axis) {
+        System.out.println("Go to machine zero " + axis);
+    }
 
-	@Override
-	public void goToZero(List<Axis> axes) {
-		System.out.print("Go to zero ");
-		axes.forEach(axis -> System.out.print("" + axis + " "));
-		System.out.println();
-	}
+    @Override
+    public void goToZero(List<Axis> axes) {
+        System.out.print("Go to zero ");
+        axes.forEach(axis -> System.out.print("" + axis + " "));
+        System.out.println();
+    }
 
-	@Override
-	public void homeMachine(Axis... axes) {
-		System.out.print("Home machine ");
-		for (int i = 0; i < axes.length; i++) {
-			System.out.print("" + axes[i] + " ");
-		}
-		System.out.println();
-	}
+    @Override
+    public void homeMachine(Axis... axes) {
+        System.out.print("Home machine ");
+        for (int i = 0; i < axes.length; i++) {
+            System.out.print("" + axes[i] + " ");
+        }
+        System.out.println();
+    }
 
-	@Override
-	public void jog(Axis axis, boolean positive) {
-		System.out.println("Jog " + axis + (positive ? "+" : "-") + " " + getMachineState().getJogIncrement());
-	}
+    @Override
+    public void jog(Axis axis, boolean positive) {
+        System.out.println("Jog " + axis + (positive ? "+" : "-") + " " + getMachineState().getJogIncrement());
+    }
 
-	@Override
-	public void killJob() {
-		System.out.println("Kill job");
-	}
+    @Override
+    public void killJob() {
+        System.out.println("Kill job");
+    }
 
-	@Override
-	public void resetLineCounter() {}
+    @Override
+    public void resetLineCounter() {}
 
-	@Override
-	public void resume() {
-		System.out.println("Resume");
-	}
+    @Override
+    public void resume() {
+        System.out.println("Resume");
+    }
 
-	@Override
-	public void shutdown() {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    public void shutdown() {
+        // TODO Auto-generated method stub
+        
+    }
 
-	@Override
-	public void zero(Axis axis) {
-		System.out.println("Zero offset " + axis);
-	}
+    @Override
+    public void zero(Axis axis) {
+        System.out.println("Zero offset " + axis);
+    }
 
-	@Override
-	public void zeroMachine(Axis axis) {
-		System.out.println("Zero machine " + axis);
-	}
+    @Override
+    public void zeroMachine(Axis axis) {
+        System.out.println("Zero machine " + axis);
+    }
 
-	@Override
-	public String zeroCommand(Axis axis) {
-		return "G10 L20 P1 " + axis + "0";
-	}
+    @Override
+    public String zeroCommand(Axis axis) {
+        return "G10 L20 P1 " + axis + "0";
+    }
 }

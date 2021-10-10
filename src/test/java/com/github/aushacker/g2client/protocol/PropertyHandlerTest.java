@@ -40,95 +40,95 @@ import com.github.aushacker.g2client.state.SystemState;
  */
 public class PropertyHandlerTest {
 
-	/**
-	 * Object under test.
-	 */
-	private PropertyHandler handler;
+    /**
+     * Object under test.
+     */
+    private PropertyHandler handler;
 
-	private Motor motor;
+    private Motor motor;
 
-	@Before
-	public void setUp() {
-		motor = new Motor(1);
-	}
+    @Before
+    public void setUp() {
+        motor = new Motor(1);
+    }
 
-	@Test
-	public void testStringOperation() {
-		SystemState s = new SystemState();
-		handler = new PropertyHandler(s, "firmwareBuildString");
+    @Test
+    public void testStringOperation() {
+        SystemState s = new SystemState();
+        handler = new PropertyHandler(s, "firmwareBuildString");
 
-		assertNull(s.getFirmwareBuildString());
-		handler.handle(create("1.2"));
-		assertEquals("1.2", s.getFirmwareBuildString());
-	}
+        assertNull(s.getFirmwareBuildString());
+        handler.handle(create("1.2"));
+        assertEquals("1.2", s.getFirmwareBuildString());
+    }
 
-	@Test
-	public void testIntOperation() {
-		handler = new PropertyHandler(motor, "axis");
+    @Test
+    public void testIntOperation() {
+        handler = new PropertyHandler(motor, "axis");
 
-		assertEquals(0, motor.getAxis());
-		handler.handle(create(2));
-		assertEquals(2, motor.getAxis());
-	}
+        assertEquals(0, motor.getAxis());
+        handler.handle(create(2));
+        assertEquals(2, motor.getAxis());
+    }
 
-	@Test
-	public void testBigDecimalOperation() {
-		MachineState ms = new MachineState();
-		handler = new PropertyHandler(ms, "x");
+    @Test
+    public void testBigDecimalOperation() {
+        MachineState ms = new MachineState();
+        handler = new PropertyHandler(ms, "x");
 
-		assertEquals(new BigDecimal(0), ms.getX());
-		handler.handle(create(new BigDecimal(2)));
-		assertEquals(new BigDecimal(2), ms.getX());
-	}
+        assertEquals(new BigDecimal(0), ms.getX());
+        handler.handle(create(new BigDecimal(2)));
+        assertEquals(new BigDecimal(2), ms.getX());
+    }
 
-	/**
-	 * None of this can ever work when the target is null.
-	 */
-	@Test(expected=NullPointerException.class)
-	public void testNullTarget() {
-		new PropertyHandler(null, "ignored");
-	}
+    /**
+     * None of this can ever work when the target is null.
+     */
+    @Test(expected=NullPointerException.class)
+    public void testNullTarget() {
+        new PropertyHandler(null, "ignored");
+    }
 
-	/**
-	 * Motor.id is a read-only property. Indicate a hard failure.
-	 */
-	@Test(expected=IllegalArgumentException.class)
-	public void testMissingSetter() {
-		new PropertyHandler(motor, "id");
-	}
-	
-	@Test(expected=IllegalArgumentException.class)
-	public void testMissingProperty() {
-		new PropertyHandler(motor, "undefined");
-	}
+    /**
+     * Motor.id is a read-only property. Indicate a hard failure.
+     */
+    @Test(expected=IllegalArgumentException.class)
+    public void testMissingSetter() {
+        new PropertyHandler(motor, "id");
+    }
+    
+    @Test(expected=IllegalArgumentException.class)
+    public void testMissingProperty() {
+        new PropertyHandler(motor, "undefined");
+    }
 
-	/**
-	 * Utility method to create a JsonBigDecimal.
-	 */
-	private JsonValue create(BigDecimal d) {
-		JsonArray a = Json.createArrayBuilder()
-			     .add(d)
-			     .build();
-		return a.get(0);
-	}
+    /**
+     * Utility method to create a JsonBigDecimal.
+     */
+    private JsonValue create(BigDecimal d) {
+        JsonArray a = Json.createArrayBuilder()
+                 .add(d)
+                 .build();
+        return a.get(0);
+    }
 
-	/**
-	 * Utility method to create a JsonInt.
-	 */
-	private JsonValue create(int i) {
-		JsonArray a = Json.createArrayBuilder()
-			     .add(i)
-			     .build();
-		return a.get(0);
-	}
+    /**
+     * Utility method to create a JsonInt.
+     */
+    private JsonValue create(int i) {
+        JsonArray a = Json.createArrayBuilder()
+                 .add(i)
+                 .build();
+        return a.get(0);
+    }
 
-	/**
-	 * Utility method to create a JsonString.
-	 */
-	private JsonValue create(String s) {
-		JsonArray a = Json.createArrayBuilder()
-			     .add(s)
-			     .build();
-		return a.get(0);
-	}
+    /**
+     * Utility method to create a JsonString.
+     */
+    private JsonValue create(String s) {
+        JsonArray a = Json.createArrayBuilder()
+                 .add(s)
+                 .build();
+        return a.get(0);
+    }
 }

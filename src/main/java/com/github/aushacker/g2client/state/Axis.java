@@ -25,5 +25,5 @@ package com.github.aushacker.g2client.state;
  * @since March 2019
  */
 public enum Axis {
-	X, Y, Z, A, B, C, U, V, W;
+    X, Y, Z, A, B, C, U, V, W;
 }

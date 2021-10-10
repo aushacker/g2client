@@ -11,7 +11,7 @@
   </appender>
  
   <logger name="com.github.aushacker.g2client.conn" level="DEBUG" additivity="false">
-   <appender-ref ref="STDOUT" />
+    <appender-ref ref="STDOUT" />
   </logger>
  
   <!-- Strictly speaking, the level attribute is not necessary since -->

@@ -34,40 +34,40 @@ import javafx.stage.Stage;
  */
 public class ControlPane extends G2Pane<VBox> {
 
-	private AxesPane axesPane;
+    private AxesPane axesPane;
 
-	private JogPane jogPane;
+    private JogPane jogPane;
 
-	private StatusPane statusPane;
+    private StatusPane statusPane;
 
-	private ToolChangePane toolChangePane;
+    private ToolChangePane toolChangePane;
 
-	public ControlPane(Stage top, IController controller, UIPreferences preferences) {
-		super(top, controller, preferences);
-		
-		initialize();
-	}
+    public ControlPane(Stage top, IController controller, UIPreferences preferences) {
+        super(top, controller, preferences);
+        
+        initialize();
+    }
 
-	@Override
-	protected void createWidgets() {
-		axesPane = new AxesPane(getTop(), getController(), getPreferences());
-		jogPane = new JogPane(getTop(), getController(), getPreferences());
-		statusPane = new StatusPane(getTop(), getController(), getPreferences());
-		toolChangePane = new ToolChangePane(getTop(), getController(), getPreferences());
-	}
+    @Override
+    protected void createWidgets() {
+        axesPane = new AxesPane(getTop(), getController(), getPreferences());
+        jogPane = new JogPane(getTop(), getController(), getPreferences());
+        statusPane = new StatusPane(getTop(), getController(), getPreferences());
+        toolChangePane = new ToolChangePane(getTop(), getController(), getPreferences());
+    }
 
-	@Override
-	protected void initializePane() {
-		setPane(new VBox());
-	}
+    @Override
+    protected void initializePane() {
+        setPane(new VBox());
+    }
 
-	@Override
-	protected void layoutWidgets() {
-		Node axes = Borders.wrap(axesPane.getPane()).lineBorder().title("Axis Control").color(Color.BLACK).buildAll();
-		Node status = Borders.wrap(statusPane.getPane()).lineBorder().title("Machine Status").color(Color.BLACK).buildAll();
-		Node jog = Borders.wrap(jogPane.getPane()).lineBorder().title("Jog").color(Color.BLACK).buildAll();
-		Node toolChange = Borders.wrap(toolChangePane.getPane()).lineBorder().title("Tool Change").color(Color.BLACK).buildAll();
+    @Override
+    protected void layoutWidgets() {
+        Node axes = Borders.wrap(axesPane.getPane()).lineBorder().title("Axis Control").color(Color.BLACK).buildAll();
+        Node status = Borders.wrap(statusPane.getPane()).lineBorder().title("Machine Status").color(Color.BLACK).buildAll();
+        Node jog = Borders.wrap(jogPane.getPane()).lineBorder().title("Jog").color(Color.BLACK).buildAll();
+        Node toolChange = Borders.wrap(toolChangePane.getPane()).lineBorder().title("Tool Change").color(Color.BLACK).buildAll();
 
-		getPane().getChildren().addAll(axes, status, jog, toolChange);
-	}
+        getPane().getChildren().addAll(axes, status, jog, toolChange);
+    }
 }

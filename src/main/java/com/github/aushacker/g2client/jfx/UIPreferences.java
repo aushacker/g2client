@@ -37,97 +37,97 @@ import javafx.scene.text.Font;
  */
 public class UIPreferences {
 
-	private static final String FONT_NAME = "fontName";
-	private static final String DEFAULT_FONT_NAME = "SansSerif Bold";
+    private static final String FONT_NAME = "fontName";
+    private static final String DEFAULT_FONT_NAME = "SansSerif Bold";
 
-	private static final String HEIGHT = "height";
-	private static final int DEFAULT_HEIGHT = 400;
-	private static final String WIDTH = "width";
-	private static final int DEFAULT_WIDTH = 800;
-	
-	/**
-	 * Directory containing gcode scripts. 
-	 */
-	private static final String SCRIPT_HOME = "scriptHome";
-	private static final String INITIAL_SCRIPT = "initialScript";
+    private static final String HEIGHT = "height";
+    private static final int DEFAULT_HEIGHT = 400;
+    private static final String WIDTH = "width";
+    private static final int DEFAULT_WIDTH = 800;
+    
+    /**
+     * Directory containing gcode scripts. 
+     */
+    private static final String SCRIPT_HOME = "scriptHome";
+    private static final String INITIAL_SCRIPT = "initialScript";
 
-	/**
-	 * SerialPort system name.
-	 */
-	private static final String PORT_NAME = "portName";
+    /**
+     * SerialPort system name.
+     */
+    private static final String PORT_NAME = "portName";
 
-	private static Preferences prefs = Preferences.userNodeForPackage(UIPreferences.class);
-	
-	public Color getDroBackground() {
-		return Color.WHITE;
-	}
+    private static Preferences prefs = Preferences.userNodeForPackage(UIPreferences.class);
+    
+    public Color getDroBackground() {
+        return Color.WHITE;
+    }
 
-	public Color getDroErrorBackground() {
-		return Color.RED;
-	}
+    public Color getDroErrorBackground() {
+        return Color.RED;
+    }
 
-	public Font getDroFont() {
-		String fontName = prefs.get(FONT_NAME, DEFAULT_FONT_NAME);
+    public Font getDroFont() {
+        String fontName = prefs.get(FONT_NAME, DEFAULT_FONT_NAME);
 
-		return new Font(fontName, 30);
-	}
+        return new Font(fontName, 30);
+    }
 
-	public Color getDroForeground() {
-		return Color.BLACK;
-	}
+    public Color getDroForeground() {
+        return Color.BLACK;
+    }
 
-	public int getHeight() {
-		return prefs.getInt(HEIGHT, DEFAULT_HEIGHT);
-	}
+    public int getHeight() {
+        return prefs.getInt(HEIGHT, DEFAULT_HEIGHT);
+    }
 
-	public List<Axis> getHoming() {
-		// Quick circuit is a 2 axis machine
-		return Arrays.asList(Axis.X, Axis.Y);
-	}
+    public List<Axis> getHoming() {
+        // Quick circuit is a 2 axis machine
+        return Arrays.asList(Axis.X, Axis.Y);
+    }
 
-	public String getInitialScript() {
-		return prefs.get(INITIAL_SCRIPT, "");
-	}
+    public String getInitialScript() {
+        return prefs.get(INITIAL_SCRIPT, "");
+    }
 
-	public String getPortName() {
-		return prefs.get(PORT_NAME, "");
-	}
+    public String getPortName() {
+        return prefs.get(PORT_NAME, "");
+    }
 
-	public String getScriptHome() {
-		return prefs.get(SCRIPT_HOME, "");
-	}
+    public String getScriptHome() {
+        return prefs.get(SCRIPT_HOME, "");
+    }
 
-	public int getWidth() {
-		return prefs.getInt(WIDTH, DEFAULT_WIDTH);
-	}
+    public int getWidth() {
+        return prefs.getInt(WIDTH, DEFAULT_WIDTH);
+    }
 
-	public void setHeight(int height) {
-		prefs.putInt(HEIGHT, height);
-	}
+    public void setHeight(int height) {
+        prefs.putInt(HEIGHT, height);
+    }
 
-	public void setInitialScript(String initialScript) {
-		prefs.put(INITIAL_SCRIPT, initialScript);
-		try {
-			prefs.flush();
-		} catch (BackingStoreException e) {
-			e.printStackTrace();
-		}
-	}
+    public void setInitialScript(String initialScript) {
+        prefs.put(INITIAL_SCRIPT, initialScript);
+        try {
+            prefs.flush();
+        } catch (BackingStoreException e) {
+            e.printStackTrace();
+        }
+    }
 
-	public void setPortName(String portName) {
-		prefs.put(PORT_NAME, portName);
-	}
+    public void setPortName(String portName) {
+        prefs.put(PORT_NAME, portName);
+    }
 
-	public void setScriptHome(String scriptHome) {
-		prefs.put(SCRIPT_HOME, scriptHome);
-		try {
-			prefs.flush();
-		} catch (BackingStoreException e) {
-			e.printStackTrace();
-		}
-	}
+    public void setScriptHome(String scriptHome) {
+        prefs.put(SCRIPT_HOME, scriptHome);
+        try {
+            prefs.flush();
+        } catch (BackingStoreException e) {
+            e.printStackTrace();
+        }
+    }
 
-	public void setWidth(int width) {
-		prefs.putInt(WIDTH, width);
-	}
+    public void setWidth(int width) {
+        prefs.putInt(WIDTH, width);
+    }
 }

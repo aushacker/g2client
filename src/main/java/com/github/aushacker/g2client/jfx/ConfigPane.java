@@ -51,157 +51,157 @@ import javafx.util.Callback;
  */
 public class ConfigPane extends G2Pane<GridPane> {
 
-	/**
-	 * Mutable widgets.
-	 */
-	private TextField tfGcodeDir;
-	private TextField tfSettingsFile;
-	private ComboBox<SerialPort>  cbSerialPort;
+    /**
+     * Mutable widgets.
+     */
+    private TextField tfGcodeDir;
+    private TextField tfSettingsFile;
+    private ComboBox<SerialPort>  cbSerialPort;
 
-	private Button btGcodeDir;
-	private Button btSettingsFile;
+    private Button btGcodeDir;
+    private Button btSettingsFile;
 
-	private MotorPane motorPane;
+    private MotorPane motorPane;
 
-	/**
-	 *
-	 */
-	public ConfigPane(Stage top, IController controller, UIPreferences preferences) {
-		super(top, controller, preferences);
-		
-		initialize();
-	}
-	
-	@Override
-	protected void createWidgets() {
-		tfGcodeDir = new TextField(getPreferences().getScriptHome());
-		tfGcodeDir.setPrefColumnCount(40);
-		tfGcodeDir.setEditable(false);
-		
-		tfSettingsFile = new TextField(getPreferences().getInitialScript());
-		tfSettingsFile.setPrefColumnCount(40);
-		tfSettingsFile.setEditable(false);
+    /**
+     *
+     */
+    public ConfigPane(Stage top, IController controller, UIPreferences preferences) {
+        super(top, controller, preferences);
+        
+        initialize();
+    }
+    
+    @Override
+    protected void createWidgets() {
+        tfGcodeDir = new TextField(getPreferences().getScriptHome());
+        tfGcodeDir.setPrefColumnCount(40);
+        tfGcodeDir.setEditable(false);
+        
+        tfSettingsFile = new TextField(getPreferences().getInitialScript());
+        tfSettingsFile.setPrefColumnCount(40);
+        tfSettingsFile.setEditable(false);
 
-		cbSerialPort = new ComboBox<>();
-		// custom cell rendering
-		cbSerialPort.setButtonCell(new SerialPortListCell());
-		cbSerialPort.setCellFactory(new Callback<ListView<SerialPort>, ListCell<SerialPort>>() {
+        cbSerialPort = new ComboBox<>();
+        // custom cell rendering
+        cbSerialPort.setButtonCell(new SerialPortListCell());
+        cbSerialPort.setCellFactory(new Callback<ListView<SerialPort>, ListCell<SerialPort>>() {
             @Override
             public ListCell<SerialPort> call(ListView<SerialPort> p) {
                 return new SerialPortListCell();
             }
         });
-		
-		// Populate the combo and select the preferred port
-		for (SerialPort port : OperatingSystem.current().getFilteredPorts()) {
-			cbSerialPort.getItems().add(port);
-			if (port.getSystemPortName().equals(getPreferences().getPortName())) {
-				cbSerialPort.setValue(port);
-			}
-		}
-		
-		btGcodeDir = new Button("Edit...");
-		btSettingsFile = new Button("Edit...");
-		
-		motorPane = new MotorPane(getTop(), getController(), getPreferences());
-	}
+        
+        // Populate the combo and select the preferred port
+        for (SerialPort port : OperatingSystem.current().getFilteredPorts()) {
+            cbSerialPort.getItems().add(port);
+            if (port.getSystemPortName().equals(getPreferences().getPortName())) {
+                cbSerialPort.setValue(port);
+            }
+        }
+        
+        btGcodeDir = new Button("Edit...");
+        btSettingsFile = new Button("Edit...");
+        
+        motorPane = new MotorPane(getTop(), getController(), getPreferences());
+    }
 
-	private void handleChangedPort() {
-		getPreferences().setPortName(cbSerialPort.getValue() == null ? "" : cbSerialPort.getValue().getSystemPortName());
-	}
+    private void handleChangedPort() {
+        getPreferences().setPortName(cbSerialPort.getValue() == null ? "" : cbSerialPort.getValue().getSystemPortName());
+    }
 
-	/**
-	 * Allows the client to change the gcode script home directory.
-	 */
-	private void handleEditGcodeDir() {
-		DirectoryChooser dialog = new DirectoryChooser();
+    /**
+     * Allows the client to change the gcode script home directory.
+     */
+    private void handleEditGcodeDir() {
+        DirectoryChooser dialog = new DirectoryChooser();
 
-		if (getPreferences().getScriptHome() != null &&
-				new File(getPreferences().getScriptHome()).exists()) {
-			dialog.setInitialDirectory(new File(getPreferences().getScriptHome()));
-		} else {
-			dialog.setInitialDirectory(new File(System.getProperty("user.home")));
-		}
+        if (getPreferences().getScriptHome() != null &&
+                new File(getPreferences().getScriptHome()).exists()) {
+            dialog.setInitialDirectory(new File(getPreferences().getScriptHome()));
+        } else {
+            dialog.setInitialDirectory(new File(System.getProperty("user.home")));
+        }
 
-		dialog.setTitle("GCode Script Directory");
-		
-		File f = dialog.showDialog(getTop());
-		if (f != null) {
-			getPreferences().setScriptHome(f.getAbsolutePath());
-			tfGcodeDir.setText(getPreferences().getScriptHome());
-		}
-	}
+        dialog.setTitle("GCode Script Directory");
+        
+        File f = dialog.showDialog(getTop());
+        if (f != null) {
+            getPreferences().setScriptHome(f.getAbsolutePath());
+            tfGcodeDir.setText(getPreferences().getScriptHome());
+        }
+    }
 
-	/**
-	 * Allows the client to change the gcode script home directory.
-	 */
-	private void handleEditSettingsFile() {
-		FileChooser dialog = new FileChooser();
+    /**
+     * Allows the client to change the gcode script home directory.
+     */
+    private void handleEditSettingsFile() {
+        FileChooser dialog = new FileChooser();
 
-		dialog.setTitle("Settings File");
-		dialog.getExtensionFilters().addAll(
-				new ExtensionFilter("Settings Files", "*.settings"),
-				new ExtensionFilter("All Files", "*.*")
-		);
-		
-		if (getPreferences().getInitialScript() != null) {
-			File f = new File(getPreferences().getInitialScript());
-			if (f.exists() && f.isFile()) {
-				dialog.setInitialDirectory(new File(f.getParent()));
-			}
-		}
-		
-		File f = dialog.showOpenDialog(getTop());
-		if (f != null) {
-			getPreferences().setInitialScript(f.getAbsolutePath());
-			tfSettingsFile.setText(getPreferences().getInitialScript());
-		}
-	}
+        dialog.setTitle("Settings File");
+        dialog.getExtensionFilters().addAll(
+                new ExtensionFilter("Settings Files", "*.settings"),
+                new ExtensionFilter("All Files", "*.*")
+        );
+        
+        if (getPreferences().getInitialScript() != null) {
+            File f = new File(getPreferences().getInitialScript());
+            if (f.exists() && f.isFile()) {
+                dialog.setInitialDirectory(new File(f.getParent()));
+            }
+        }
+        
+        File f = dialog.showOpenDialog(getTop());
+        if (f != null) {
+            getPreferences().setInitialScript(f.getAbsolutePath());
+            tfSettingsFile.setText(getPreferences().getInitialScript());
+        }
+    }
 
-	@Override
-	protected void hookEvents() {
-		btGcodeDir.setOnAction(e -> handleEditGcodeDir());
-		btSettingsFile.setOnAction(e -> handleEditSettingsFile());
-		cbSerialPort.setOnAction(e -> handleChangedPort());
-	}
-	
-	@Override
-	protected void initializePane() {
-		setPane(new GridPane());
-		getPane().setPadding(new Insets(10));
-		getPane().setHgap(10);
-		getPane().setVgap(5);
-	}
+    @Override
+    protected void hookEvents() {
+        btGcodeDir.setOnAction(e -> handleEditGcodeDir());
+        btSettingsFile.setOnAction(e -> handleEditSettingsFile());
+        cbSerialPort.setOnAction(e -> handleChangedPort());
+    }
+    
+    @Override
+    protected void initializePane() {
+        setPane(new GridPane());
+        getPane().setPadding(new Insets(10));
+        getPane().setHgap(10);
+        getPane().setVgap(5);
+    }
 
-	@Override
-	protected void layoutWidgets() {
-		getPane().add(new Label("GCode Directory:"), 0, 0);
-		getPane().add(new Label("Serial Port:"), 0, 1);
-		getPane().add(new Label("Settings File:"), 0, 2);
+    @Override
+    protected void layoutWidgets() {
+        getPane().add(new Label("GCode Directory:"), 0, 0);
+        getPane().add(new Label("Serial Port:"), 0, 1);
+        getPane().add(new Label("Settings File:"), 0, 2);
 
-		getPane().add(tfGcodeDir,  1,  0);
-		getPane().add(cbSerialPort, 1, 1);
-		getPane().add(tfSettingsFile,  1,  2);
-		
-		getPane().add(btGcodeDir, 2, 0);
-		getPane().add(btSettingsFile, 2, 2);
+        getPane().add(tfGcodeDir,  1,  0);
+        getPane().add(cbSerialPort, 1, 1);
+        getPane().add(tfSettingsFile,  1,  2);
+        
+        getPane().add(btGcodeDir, 2, 0);
+        getPane().add(btSettingsFile, 2, 2);
 
-		Node motors = Borders.wrap(motorPane.getPane()).lineBorder().title("Motors").color(Color.BLACK).buildAll();
-		getPane().add(motors, 0, 3, 3, 1);
-	}
+        Node motors = Borders.wrap(motorPane.getPane()).lineBorder().title("Motors").color(Color.BLACK).buildAll();
+        getPane().add(motors, 0, 3, 3, 1);
+    }
 
-	/**
-	 * Custom cell renderer for the SerialPort
-	 */
-	static class SerialPortListCell extends ListCell<SerialPort> {
-		@Override
-		protected void updateItem(SerialPort item, boolean empty) {
-			super.updateItem(item, empty);
-			if (!empty && item != null) {
-				setText(item.getSystemPortName() + " (" + item.getDescriptivePortName() + ")");
-			} else {
-				setText(null);
-			}
-		}
-	}
+    /**
+     * Custom cell renderer for the SerialPort
+     */
+    static class SerialPortListCell extends ListCell<SerialPort> {
+        @Override
+        protected void updateItem(SerialPort item, boolean empty) {
+            super.updateItem(item, empty);
+            if (!empty && item != null) {
+                setText(item.getSystemPortName() + " (" + item.getDescriptivePortName() + ")");
+            } else {
+                setText(null);
+            }
+        }
+    }
 }

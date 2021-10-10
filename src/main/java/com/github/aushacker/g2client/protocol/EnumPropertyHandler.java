@@ -37,51 +37,51 @@ import org.slf4j.LoggerFactory;
  */
 public class EnumPropertyHandler extends PropertyHandler {
 
-	private final Logger logger = LoggerFactory.getLogger(EnumPropertyHandler.class);
+    private final Logger logger = LoggerFactory.getLogger(EnumPropertyHandler.class);
 
-	/**
-	 * Enum type to be mapped into the property.
-	 */
-	private Class<? extends Enum<?>> enumType;
+    /**
+     * Enum type to be mapped into the property.
+     */
+    private Class<? extends Enum<?>> enumType;
 
-	public EnumPropertyHandler(Object target, String name, Class<? extends Enum<?>> enumType) {
-		super (target, name);
-		
-		this.enumType = enumType;
-	}
+    public EnumPropertyHandler(Object target, String name, Class<? extends Enum<?>> enumType) {
+        super (target, name);
+        
+        this.enumType = enumType;
+    }
 
-	/**
-	 * Use reflection to correctly cast the JsonValue type and invoke the setter.
-	 */
-	@Override
-	public void handle(JsonValue value) {
-		try {
-			if (value.getValueType() == ValueType.NUMBER) {
-				int ordinal = ((JsonNumber) value).intValue();
-				getSetter().invoke(getTarget(), lookup(ordinal));
-			} else {
-				logger.warn("Unable to handle property: {} json type: {} value: {}, check target type matches Json value",
-						getName(),
-						value.getValueType(),
-						value);
-			}
-		}
-		catch (IllegalAccessException | InvocationTargetException e) {
-			logger.error("Reflection error for property: {} json type: {} value: {}", getName(), value.getValueType(), value);
-			throw new RuntimeException("Reflection error for property: " + getName(), e);
-		}
-	}
+    /**
+     * Use reflection to correctly cast the JsonValue type and invoke the setter.
+     */
+    @Override
+    public void handle(JsonValue value) {
+        try {
+            if (value.getValueType() == ValueType.NUMBER) {
+                int ordinal = ((JsonNumber) value).intValue();
+                getSetter().invoke(getTarget(), lookup(ordinal));
+            } else {
+                logger.warn("Unable to handle property: {} json type: {} value: {}, check target type matches Json value",
+                        getName(),
+                        value.getValueType(),
+                        value);
+            }
+        }
+        catch (IllegalAccessException | InvocationTargetException e) {
+            logger.error("Reflection error for property: {} json type: {} value: {}", getName(), value.getValueType(), value);
+            throw new RuntimeException("Reflection error for property: " + getName(), e);
+        }
+    }
 
-	/**
-	 * Locate the Enum value based on the supplied {@code ordinal}.
-	 */
-	private Enum<?> lookup(int ordinal) {
-		try {
-			Method m = enumType.getMethod("values", new Class[] {});
-			Enum<?>[] values = (Enum<?>[]) m.invoke(enumType, new Object[] {});
-			return values[ordinal];
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
+    /**
+     * Locate the Enum value based on the supplied {@code ordinal}.
+     */
+    private Enum<?> lookup(int ordinal) {
+        try {
+            Method m = enumType.getMethod("values", new Class[] {});
+            Enum<?>[] values = (Enum<?>[]) m.invoke(enumType, new Object[] {});
+            return values[ordinal];
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

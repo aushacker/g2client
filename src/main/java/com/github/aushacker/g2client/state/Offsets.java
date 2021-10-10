@@ -32,103 +32,103 @@ import javafx.beans.property.SimpleObjectProperty;
  */
 public class Offsets {
 
-	private CoordinateSystem coordSystem;
+    private CoordinateSystem coordSystem;
 
-	private SimpleObjectProperty<BigDecimal> a;
-	private SimpleObjectProperty<BigDecimal> b;
-	private SimpleObjectProperty<BigDecimal> c;
-	private SimpleObjectProperty<BigDecimal> x;
-	private SimpleObjectProperty<BigDecimal> y;
-	private SimpleObjectProperty<BigDecimal> z;
+    private SimpleObjectProperty<BigDecimal> a;
+    private SimpleObjectProperty<BigDecimal> b;
+    private SimpleObjectProperty<BigDecimal> c;
+    private SimpleObjectProperty<BigDecimal> x;
+    private SimpleObjectProperty<BigDecimal> y;
+    private SimpleObjectProperty<BigDecimal> z;
 
-	public Offsets(CoordinateSystem coordSystem) {
-		this.coordSystem = coordSystem;
-		a = createProperty();
-		b = createProperty();
-		c = createProperty();
-		x = createProperty();
-		y = createProperty();
-		z = createProperty();
-	}
+    public Offsets(CoordinateSystem coordSystem) {
+        this.coordSystem = coordSystem;
+        a = createProperty();
+        b = createProperty();
+        c = createProperty();
+        x = createProperty();
+        y = createProperty();
+        z = createProperty();
+    }
 
-	private SimpleObjectProperty<BigDecimal> createProperty() {
-		BigDecimal zero = new BigDecimal(0);
-		return new SimpleObjectProperty<>(zero);
-	}
+    private SimpleObjectProperty<BigDecimal> createProperty() {
+        BigDecimal zero = new BigDecimal(0);
+        return new SimpleObjectProperty<>(zero);
+    }
 
-	public CoordinateSystem getCoordSystem() {
-		return coordSystem;
-	}
+    public CoordinateSystem getCoordSystem() {
+        return coordSystem;
+    }
 
-	public ObjectProperty<BigDecimal> aProperty() {
-		return a;
-	}
+    public ObjectProperty<BigDecimal> aProperty() {
+        return a;
+    }
 
-	public ObjectProperty<BigDecimal> bProperty() {
-		return b;
-	}
+    public ObjectProperty<BigDecimal> bProperty() {
+        return b;
+    }
 
-	public ObjectProperty<BigDecimal> cProperty() {
-		return c;
-	}
+    public ObjectProperty<BigDecimal> cProperty() {
+        return c;
+    }
 
-	public BigDecimal getA() {
-		return a.get();
-	}
+    public BigDecimal getA() {
+        return a.get();
+    }
 
-	public BigDecimal getB() {
-		return b.get();
-	}
+    public BigDecimal getB() {
+        return b.get();
+    }
 
-	public BigDecimal getC() {
-		return c.get();
-	}
+    public BigDecimal getC() {
+        return c.get();
+    }
 
-	public BigDecimal getX() {
-		return x.get();
-	}
+    public BigDecimal getX() {
+        return x.get();
+    }
 
-	public BigDecimal getY() {
-		return y.get();
-	}
+    public BigDecimal getY() {
+        return y.get();
+    }
 
-	public BigDecimal getZ() {
-		return z.get();
-	}
+    public BigDecimal getZ() {
+        return z.get();
+    }
 
-	public void setA(BigDecimal aValue) {
-		a.set(aValue);
-	}
+    public void setA(BigDecimal aValue) {
+        a.set(aValue);
+    }
 
-	public void setB(BigDecimal bValue) {
-		b.set(bValue);
-	}
+    public void setB(BigDecimal bValue) {
+        b.set(bValue);
+    }
 
-	public void setC(BigDecimal cValue) {
-		c.set(cValue);
-	}
+    public void setC(BigDecimal cValue) {
+        c.set(cValue);
+    }
 
-	public void setX(BigDecimal xValue) {
-		x.set(xValue);
-	}
+    public void setX(BigDecimal xValue) {
+        x.set(xValue);
+    }
 
-	public void setY(BigDecimal yValue) {
-		y.set(yValue);
-	}
+    public void setY(BigDecimal yValue) {
+        y.set(yValue);
+    }
 
-	public void setZ(BigDecimal zValue) {
-		z.set(zValue);
-	}
+    public void setZ(BigDecimal zValue) {
+        z.set(zValue);
+    }
 
-	public ObjectProperty<BigDecimal> xProperty() {
-		return x;
-	}
+    public ObjectProperty<BigDecimal> xProperty() {
+        return x;
+    }
 
-	public ObjectProperty<BigDecimal> yProperty() {
-		return y;
-	}
+    public ObjectProperty<BigDecimal> yProperty() {
+        return y;
+    }
 
-	public ObjectProperty<BigDecimal> zProperty() {
-		return z;
-	}
+    public ObjectProperty<BigDecimal> zProperty() {
+        return z;
+    }
 }

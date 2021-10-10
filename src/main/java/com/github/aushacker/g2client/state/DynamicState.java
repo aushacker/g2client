@@ -26,51 +26,51 @@ package com.github.aushacker.g2client.state;
  * @since March 2019
  */
 public enum DynamicState {
-	INITIALIZING(0, "Initializing"),
-	READY(1, "Ready"),
-	ALARM(2, "Alarm"),
-	PROGRAM_STOP(3, "Stop"),
-	PROGRAM_END(4, "End"),
-	RUN(5, "Run"),
-	HOLD(6, "Hold"),
-	PROBE(7, "Probe"),
-	CYCLE(8, "CannedCycle"),
-	HOMING(9, "Homing"),
-	JOG(10, "Jogging"),
-	INTERLOCK(11, "Interlock"),
-	SHUTDOWN(12, "Shutdown"),
-	PANIC(13, "Panic");
-	
-	/**
-	 * Value code in Json data.
-	 */
-	private final int id;
+    INITIALIZING(0, "Initializing"),
+    READY(1, "Ready"),
+    ALARM(2, "Alarm"),
+    PROGRAM_STOP(3, "Stop"),
+    PROGRAM_END(4, "End"),
+    RUN(5, "Run"),
+    HOLD(6, "Hold"),
+    PROBE(7, "Probe"),
+    CYCLE(8, "CannedCycle"),
+    HOMING(9, "Homing"),
+    JOG(10, "Jogging"),
+    INTERLOCK(11, "Interlock"),
+    SHUTDOWN(12, "Shutdown"),
+    PANIC(13, "Panic");
+    
+    /**
+     * Value code in Json data.
+     */
+    private final int id;
 
-	private final String description; 
-	
-	private DynamicState(int id, String description) {
-		this.id = id;
-		this.description = description;
-	}
+    private final String description; 
+    
+    private DynamicState(int id, String description) {
+        this.id = id;
+        this.description = description;
+    }
 
-	public String getDescription() {
-		return description;
-	}
+    public String getDescription() {
+        return description;
+    }
 
-	public int getId() {
-		return id;
-	}
+    public int getId() {
+        return id;
+    }
 
-	private static final DynamicState[] byIds;
-	
-	static {
-		byIds = new DynamicState[DynamicState.values().length];
-		for (DynamicState v : DynamicState.values()) {
-			byIds[v.getId()] = v;
-		}
-	}
+    private static final DynamicState[] byIds;
+    
+    static {
+        byIds = new DynamicState[DynamicState.values().length];
+        for (DynamicState v : DynamicState.values()) {
+            byIds[v.getId()] = v;
+        }
+    }
 
-	public static DynamicState lookupId(int id) {
-		return byIds[id];
-	}
+    public static DynamicState lookupId(int id) {
+        return byIds[id];
+    }
 }

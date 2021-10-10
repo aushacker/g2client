@@ -26,38 +26,38 @@ import java.io.PrintStream;
  */
 public class SingleCharacterCommand extends Command {
 
-	private SingleCharacterType type;
-	
-	public SingleCharacterCommand(SingleCharacterType type) {
-		this.type = type;
-	}
+    private SingleCharacterType type;
+    
+    public SingleCharacterCommand(SingleCharacterType type) {
+        this.type = type;
+    }
 
-	@Override
-	public int compareTo(Command other) {
-		if (other instanceof DataCommand) {
-			return -1;
-		} else {
-			return getId() - other.getId();
-		}
-	}
+    @Override
+    public int compareTo(Command other) {
+        if (other instanceof DataCommand) {
+            return -1;
+        } else {
+            return getId() - other.getId();
+        }
+    }
 
-	public int getPriority() {
-		return type.getPriority();
-	}
+    public int getPriority() {
+        return type.getPriority();
+    }
 
-	@Override
-	public boolean isControl() {
-		return true;
-	}
+    @Override
+    public boolean isControl() {
+        return true;
+    }
 
-	@Override
-	public void printOn(PrintStream out) {
-		out.write(type.getCommand());
-		out.flush();
-	}
+    @Override
+    public void printOn(PrintStream out) {
+        out.write(type.getCommand());
+        out.flush();
+    }
 
-	@Override
-	public String toString() {
-		return type.toString();
-	}
+    @Override
+    public String toString() {
+        return type.toString();
+    }
 }

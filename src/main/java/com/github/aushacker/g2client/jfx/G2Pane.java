@@ -34,83 +34,83 @@ import javafx.stage.Stage;
  */
 public abstract class G2Pane <T extends Pane> {
 
-	/**
-	 * Top level view object for the subclass.
-	 */
-	private T pane;
+    /**
+     * Top level view object for the subclass.
+     */
+    private T pane;
 
-	/**
-	 * Allow access to the top-level so that controls like Dialogs
-	 * can operate modally.
-	 */
-	private Stage top;
-	
-	private IController controller;
-	
-	private UIPreferences preferences;
-	
-	public G2Pane(Stage top, IController controller, UIPreferences preferences) {
-		this.top = top;
-		this.controller = controller;
-		this.preferences = preferences;
-	}
-	
-	protected void initialize() {
-		initializePane();
-		createWidgets();
-		layoutWidgets();
-		hookEvents();
-	}
+    /**
+     * Allow access to the top-level so that controls like Dialogs
+     * can operate modally.
+     */
+    private Stage top;
+    
+    private IController controller;
+    
+    private UIPreferences preferences;
+    
+    public G2Pane(Stage top, IController controller, UIPreferences preferences) {
+        this.top = top;
+        this.controller = controller;
+        this.preferences = preferences;
+    }
+    
+    protected void initialize() {
+        initializePane();
+        createWidgets();
+        layoutWidgets();
+        hookEvents();
+    }
 
-	/**
-	 * Subclassses must create their widgets.
-	 */
-	protected abstract void createWidgets();	
+    /**
+     * Subclassses must create their widgets.
+     */
+    protected abstract void createWidgets();	
 
-	protected IController getController() {
-		return controller;
-	}
+    protected IController getController() {
+        return controller;
+    }
 
-	/**
-	 * Convenience method.
-	 */
-	protected MachineState getMachineState() {
-		return controller.getMachineState();
-	}
+    /**
+     * Convenience method.
+     */
+    protected MachineState getMachineState() {
+        return controller.getMachineState();
+    }
 
-	public T getPane() {
-		return pane;
-	}
+    public T getPane() {
+        return pane;
+    }
 
-	protected UIPreferences getPreferences() {
-		return preferences;
-	}
+    protected UIPreferences getPreferences() {
+        return preferences;
+    }
 
-	protected Stage getTop() {
-		return top;
-	}
+    protected Stage getTop() {
+        return top;
+    }
 
-	/**
-	 * Subclasses may not have any UI event they wish to respond to.
-	 * Thus they MAY override.
-	 */
-	protected void hookEvents() {}
+    /**
+     * Subclasses may not have any UI event they wish to respond to.
+     * Thus they MAY override.
+     */
+    protected void hookEvents() {}
 
-	/**
-	 * Subclassses must initialize their pane.
-	 */
-	protected abstract void initializePane();
-	
-	/**
-	 * Subclassses must layout their widgets.
-	 */
-	protected abstract void layoutWidgets();	
+    /**
+     * Subclassses must initialize their pane.
+     */
+    protected abstract void initializePane();
+    
+    /**
+     * Subclassses must layout their widgets.
+     */
+    protected abstract void layoutWidgets();	
 
-	protected void runLater(Runnable runnable) {
-		Platform.runLater(runnable);
-	}
+    protected void runLater(Runnable runnable) {
+        Platform.runLater(runnable);
+    }
 
-	protected void setPane(T pane) {
-		this.pane = pane;
-	}
+    protected void setPane(T pane) {
+        this.pane = pane;
+    }
 }

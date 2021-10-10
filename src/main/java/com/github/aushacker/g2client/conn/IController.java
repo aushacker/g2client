@@ -34,57 +34,57 @@ import com.github.aushacker.g2client.state.MachineState;
  */
 public interface IController {
 
-	boolean connect(SerialPort port);
+    boolean connect(SerialPort port);
 
-	void coolantOff();
+    void coolantOff();
 
-	void coolantOn();
+    void coolantOn();
 
-	void enqueue(String command);
+    void enqueue(String command);
 
-	void feedhold();
+    void feedhold();
 
-	void flush();
+    void flush();
 
-	MachineState getMachineState();
+    MachineState getMachineState();
 
-	void goToMachineZero(Axis axis);
+    void goToMachineZero(Axis axis);
 
-	void goToZero(List<Axis> axes);
+    void goToZero(List<Axis> axes);
 
-	void homeMachine(Axis... axes);
+    void homeMachine(Axis... axes);
 
-	/**
-	 * Instructs the controller to commence jogging. Distances and
-	 * mode are to be taken from the MachineState.
-	 * 
-	 * @param axis Axis to jog
-	 * @param positive when true jog in the positive direction
-	 */
-	void jog(Axis axis, boolean positive);
+    /**
+     * Instructs the controller to commence jogging. Distances and
+     * mode are to be taken from the MachineState.
+     * 
+     * @param axis Axis to jog
+     * @param positive when true jog in the positive direction
+     */
+    void jog(Axis axis, boolean positive);
 
-	void killJob();
+    void killJob();
 
-	void resetLineCounter();
+    void resetLineCounter();
 
-	void resume();
+    void resume();
 
-	void shutdown();
+    void shutdown();
 
-	/**
-	 * Zero out the {@code axis} in the current coordinate system.
-	 *
-	 * @param axis
-	 */
-	void zero(Axis axis);
+    /**
+     * Zero out the {@code axis} in the current coordinate system.
+     *
+     * @param axis
+     */
+    void zero(Axis axis);
 
-	/**
-	 * Command to zero the {@code axis} in the current coordinate system.
-	 * Does not issue the command, see {@link IController#zero(Axis)}.
-	 *
-	 * @param axis
-	 */
-	String zeroCommand(Axis axis);
+    /**
+     * Command to zero the {@code axis} in the current coordinate system.
+     * Does not issue the command, see {@link IController#zero(Axis)}.
+     *
+     * @param axis
+     */
+    String zeroCommand(Axis axis);
 
-	void zeroMachine(Axis axis);
+    void zeroMachine(Axis axis);
 }

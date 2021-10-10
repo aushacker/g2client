@@ -25,27 +25,27 @@ package com.github.aushacker.g2client.protocol;
  * @since October 2018
  */
 public enum SingleCharacterType {
-	FEEDHOLD('!'),
-	RESUME('~'),
-	QUEUE_FLUSH('%'),
-	KILL_JOB((char) 4),
-	RESET((char) 24);
-	
-	private char command;
+    FEEDHOLD('!'),
+    RESUME('~'),
+    QUEUE_FLUSH('%'),
+    KILL_JOB((char) 4),
+    RESET((char) 24);
+    
+    private char command;
 
-	private SingleCharacterType(char command) {
-		this.command = command;
-	}
+    private SingleCharacterType(char command) {
+        this.command = command;
+    }
 
-	public Command asCommand() {
-		return new SingleCharacterCommand(this);
-	}
+    public Command asCommand() {
+        return new SingleCharacterCommand(this);
+    }
 
-	public char getCommand() {
-		return command;
-	}
+    public char getCommand() {
+        return command;
+    }
 
-	public int getPriority() {
-		return 0;
-	}
+    public int getPriority() {
+        return 0;
+    }
 }

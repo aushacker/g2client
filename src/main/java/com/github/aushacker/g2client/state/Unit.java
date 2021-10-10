@@ -27,32 +27,32 @@ package com.github.aushacker.g2client.state;
  */
 public enum Unit {
 
-	INCH(new double[] { 0.0001, 0.001, 0.01, 0.1, 1.0 }, "in"),
-	
-	MM(new double[]{ 0.001, 0.01, 0.1, 1.0, 10.0 }, "mm");
+    INCH(new double[] { 0.0001, 0.001, 0.01, 0.1, 1.0 }, "in"),
+    
+    MM(new double[]{ 0.001, 0.01, 0.1, 1.0, 10.0 }, "mm");
 
-	private double[] jogIncrements;
+    private double[] jogIncrements;
 
-	private String shortDesc;
+    private String shortDesc;
 
-	private Unit(double[] jogIncrements, String shortDesc) {
-		this.jogIncrements = jogIncrements;
-		this.shortDesc = shortDesc;
-	}
+    private Unit(double[] jogIncrements, String shortDesc) {
+        this.jogIncrements = jogIncrements;
+        this.shortDesc = shortDesc;
+    }
 
-	public int getDefaultIndex() {
-		return 3;
-	}
+    public int getDefaultIndex() {
+        return 3;
+    }
 
-	public double getIncrement(int index) {
-		return jogIncrements[index];
-	}
+    public double getIncrement(int index) {
+        return jogIncrements[index];
+    }
 
-	public int getMaxIndex() {
-		return jogIncrements.length - 1;
-	}
+    public int getMaxIndex() {
+        return jogIncrements.length - 1;
+    }
 
-	public String getShortDesc() {
-		return shortDesc;
-	}
+    public String getShortDesc() {
+        return shortDesc;
+    }
 }

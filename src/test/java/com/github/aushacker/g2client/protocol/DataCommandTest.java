@@ -31,28 +31,28 @@ import org.junit.Test;
  */
 public class DataCommandTest {
 
-	/**
-	 * Object under test.
-	 */
-	private DataCommand cmd;
-	
-	@Before
-	public void setUp() {
-		cmd = new DataCommand("G0 X10 Y20");
-	}
+    /**
+     * Object under test.
+     */
+    private DataCommand cmd;
+    
+    @Before
+    public void setUp() {
+        cmd = new DataCommand("G0 X10 Y20");
+    }
 
-	@Test
-	public void testEquals() {
-		assertFalse(cmd.equals(null));
-		assertFalse(cmd.equals("abc"));
-		assertTrue(cmd.equals(cmd));
-		DataCommand other = new DataCommand("G0 X10 Y20");
-		assertFalse(cmd.equals(other));
-		assertFalse(other.equals(cmd));
-	}
+    @Test
+    public void testEquals() {
+        assertFalse(cmd.equals(null));
+        assertFalse(cmd.equals("abc"));
+        assertTrue(cmd.equals(cmd));
+        DataCommand other = new DataCommand("G0 X10 Y20");
+        assertFalse(cmd.equals(other));
+        assertFalse(other.equals(cmd));
+    }
 
-	@Test
-	public void testToString() {
-		assertEquals("G0 X10 Y20", cmd.toString());
-	}
+    @Test
+    public void testToString() {
+        assertEquals("G0 X10 Y20", cmd.toString());
+    }
 }

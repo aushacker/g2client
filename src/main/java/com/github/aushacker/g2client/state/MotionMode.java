@@ -26,6 +26,6 @@ package com.github.aushacker.g2client.state;
  * @since September 2019
  */
 public enum MotionMode {
-	TRAVERSE, STRAIGHT, CW_ARC, CCW_ARC,
-	UNDEFINED // currently undocumented;
+    TRAVERSE, STRAIGHT, CW_ARC, CCW_ARC,
+    UNDEFINED // currently undocumented;
 }
