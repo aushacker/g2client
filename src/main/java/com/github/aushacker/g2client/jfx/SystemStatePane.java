@@ -36,107 +36,107 @@ import javafx.stage.Stage;
  */
 public class SystemStatePane extends G2Pane<GridPane> {
 
-	/**
-	 * Underlying model.
-	 */
-	private SystemState state;
+    /**
+     * Underlying model.
+     */
+    private SystemState state;
 
-	/**
-	 * Mutable widgets.
-	 */
-	private TextField tfFirmwareBuild;
-	private TextField tfFirmwareBuildString;
-	private TextField tfFirmwareConfig;
-	private TextField tfFirmwareVersion;
-	private TextField tfHardwareVersion;
-	
-	/**
-	 */
-	public SystemStatePane(Stage top, IController controller, UIPreferences preferences) {
-		super(top, controller, preferences);
-		
-		this.state = getMachineState().getSystemState();
-		initialize();
-		populateText();
-	}
-	
-	/**
-	 * Utility method.
-	 */
-	private TextField createTextField(String text) {
-		TextField result = new TextField(text);
-		result.setEditable(false);
-		
-		return result;
-	}
+    /**
+     * Mutable widgets.
+     */
+    private TextField tfFirmwareBuild;
+    private TextField tfFirmwareBuildString;
+    private TextField tfFirmwareConfig;
+    private TextField tfFirmwareVersion;
+    private TextField tfHardwareVersion;
+    
+    /**
+     */
+    public SystemStatePane(Stage top, IController controller, UIPreferences preferences) {
+        super(top, controller, preferences);
+        
+        this.state = getMachineState().getSystemState();
+        initialize();
+        populateText();
+    }
+    
+    /**
+     * Utility method.
+     */
+    private TextField createTextField(String text) {
+        TextField result = new TextField(text);
+        result.setEditable(false);
+        
+        return result;
+    }
 
-	/**
-	 * Create the mutable widgets.
-	 */
-	@Override
-	protected void createWidgets() {
-		tfFirmwareBuild = createTextField("");
-		tfFirmwareBuildString = createTextField("");
-		tfFirmwareConfig = createTextField("");
-		tfFirmwareVersion = createTextField("");
-		tfHardwareVersion = createTextField("");
-	}
+    /**
+     * Create the mutable widgets.
+     */
+    @Override
+    protected void createWidgets() {
+        tfFirmwareBuild = createTextField("");
+        tfFirmwareBuildString = createTextField("");
+        tfFirmwareConfig = createTextField("");
+        tfFirmwareVersion = createTextField("");
+        tfHardwareVersion = createTextField("");
+    }
 
-	/**
-	 * Observe the model for property changes.
-	 */
-	@Override
-	protected void hookEvents() {
-		state.firmwareBuildProperty().addListener(
-				(obj, oldValue, newValue) -> tfFirmwareBuild.setText(newValue.toString())); 
+    /**
+     * Observe the model for property changes.
+     */
+    @Override
+    protected void hookEvents() {
+        state.firmwareBuildProperty().addListener(
+                (obj, oldValue, newValue) -> tfFirmwareBuild.setText(newValue.toString())); 
 
-		state.firmwareBuildStringProperty().addListener(
-				(obj, oldValue, newValue) -> tfFirmwareBuildString.setText(newValue)); 
+        state.firmwareBuildStringProperty().addListener(
+                (obj, oldValue, newValue) -> tfFirmwareBuildString.setText(newValue)); 
 
-		state.firmwareConfigProperty().addListener(
-				(obj, oldValue, newValue) -> tfFirmwareConfig.setText(newValue)); 
+        state.firmwareConfigProperty().addListener(
+                (obj, oldValue, newValue) -> tfFirmwareConfig.setText(newValue)); 
 
-		state.firmwareVersionProperty().addListener(
-				(obj, oldValue, newValue) -> tfFirmwareVersion.setText(newValue.toString())); 
+        state.firmwareVersionProperty().addListener(
+                (obj, oldValue, newValue) -> tfFirmwareVersion.setText(newValue.toString())); 
 
-		state.hardwareVersionProperty().addListener(
-				(obj, oldValue, newValue) -> tfHardwareVersion.setText(newValue.toString())); 
-	}
+        state.hardwareVersionProperty().addListener(
+                (obj, oldValue, newValue) -> tfHardwareVersion.setText(newValue.toString())); 
+    }
 
-	@Override
-	protected void initializePane() {
-		setPane(new GridPane());
-		getPane().setHgap(10);
-		getPane().setVgap(5);
-	}
+    @Override
+    protected void initializePane() {
+        setPane(new GridPane());
+        getPane().setHgap(10);
+        getPane().setVgap(5);
+    }
 
-	/**
-	 * Organize the widgets within the grid.
-	 */
-	@Override
-	protected void layoutWidgets() {
-		getPane().add(new Label("Firmware Build:"), 0, 0);
-		getPane().add(new Label("Firmware Build String:"), 0, 1);
-		getPane().add(new Label("Firmware Config:"), 0, 2);
-		getPane().add(new Label("Firmware Version:"), 0, 3);
-		getPane().add(new Label("Hardware Version:"), 0, 4);
-	
-		getPane().add(tfFirmwareBuild,  1,  0);
-		getPane().add(tfFirmwareBuildString,  1,  1);
-		getPane().add(tfFirmwareConfig,  1,  2);
-		getPane().add(tfFirmwareVersion,  1,  3);
-		getPane().add(tfHardwareVersion,  1,  4);
-	}
+    /**
+     * Organize the widgets within the grid.
+     */
+    @Override
+    protected void layoutWidgets() {
+        getPane().add(new Label("Firmware Build:"), 0, 0);
+        getPane().add(new Label("Firmware Build String:"), 0, 1);
+        getPane().add(new Label("Firmware Config:"), 0, 2);
+        getPane().add(new Label("Firmware Version:"), 0, 3);
+        getPane().add(new Label("Hardware Version:"), 0, 4);
+    
+        getPane().add(tfFirmwareBuild,  1,  0);
+        getPane().add(tfFirmwareBuildString,  1,  1);
+        getPane().add(tfFirmwareConfig,  1,  2);
+        getPane().add(tfFirmwareVersion,  1,  3);
+        getPane().add(tfHardwareVersion,  1,  4);
+    }
 
-	/**
-	 * Due to a timing issue with the superclass constructor was need to delay
-	 * the field initialisation.
-	 */
-	private void populateText() {
-		tfFirmwareBuild.setText(Double.toString(state.getFirmwareBuild()));
-		tfFirmwareBuildString.setText(state.getFirmwareBuildString());
-		tfFirmwareConfig.setText(state.getFirmwareConfig());
-		tfFirmwareVersion.setText(Double.toString(state.getFirmwareVersion()));
-		tfHardwareVersion.setText(Double.toString(state.getHardwareVersion()));
-	}
+    /**
+     * Due to a timing issue with the superclass constructor was need to delay
+     * the field initialisation.
+     */
+    private void populateText() {
+        tfFirmwareBuild.setText(Double.toString(state.getFirmwareBuild()));
+        tfFirmwareBuildString.setText(state.getFirmwareBuildString());
+        tfFirmwareConfig.setText(state.getFirmwareConfig());
+        tfFirmwareVersion.setText(Double.toString(state.getFirmwareVersion()));
+        tfHardwareVersion.setText(Double.toString(state.getHardwareVersion()));
+    }
 }

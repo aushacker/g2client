@@ -34,97 +34,97 @@ import javafx.stage.Stage;
  */
 public class StatusPane extends G2Pane<GridPane> {
 
-	private Button btFeedhold;
-	private Button btFlush;
-	private Button btKill;
-	private Button btResume;
+    private Button btFeedhold;
+    private Button btFlush;
+    private Button btKill;
+    private Button btResume;
 
-	private TextField tfFeedrate;
-	private TextField tfLine;
-	private TextField tfStatus;
-	private TextField tfVelocity;
+    private TextField tfFeedrate;
+    private TextField tfLine;
+    private TextField tfStatus;
+    private TextField tfVelocity;
 
-	public StatusPane(Stage top, IController controller, UIPreferences preferences) {
-		super(top, controller, preferences);
+    public StatusPane(Stage top, IController controller, UIPreferences preferences) {
+        super(top, controller, preferences);
 
-		initialize();
-	}
+        initialize();
+    }
 
-	private TextField createTextField(String text) {
-		TextField tf = new TextField(text);
-		tf.setEditable(false);
-		tf.setPrefColumnCount(8);
+    private TextField createTextField(String text) {
+        TextField tf = new TextField(text);
+        tf.setEditable(false);
+        tf.setPrefColumnCount(8);
 
-		return tf;
-	}
+        return tf;
+    }
 
-	@Override
-	protected void createWidgets() {
-		btFeedhold = new Button("Feedhold");
-		btFlush = new Button("Flush Q");
-		btKill = new Button("Kill");
-		btResume = new Button("Resume");
+    @Override
+    protected void createWidgets() {
+        btFeedhold = new Button("Feedhold");
+        btFlush = new Button("Flush Q");
+        btKill = new Button("Kill");
+        btResume = new Button("Resume");
 
-		tfFeedrate = createTextField(getFeedrate());
-		tfLine = createTextField(getLine());
-		tfStatus = createTextField(getStatus());
-		tfVelocity = createTextField(getVelocity());
-	}
+        tfFeedrate = createTextField(getFeedrate());
+        tfLine = createTextField(getLine());
+        tfStatus = createTextField(getStatus());
+        tfVelocity = createTextField(getVelocity());
+    }
 
-	private String getFeedrate() {
-		return Integer.toString(getMachineState().getFeedRate());
-	}
+    private String getFeedrate() {
+        return Integer.toString(getMachineState().getFeedRate());
+    }
 
-	private String getLine() {
-		return Integer.toString(getMachineState().getLine());
-	}
+    private String getLine() {
+        return Integer.toString(getMachineState().getLine());
+    }
 
-	private String getStatus() {
-		return getMachineState().getDynamicState().toString();
-	}
+    private String getStatus() {
+        return getMachineState().getDynamicState().toString();
+    }
 
-	private String getVelocity() {
-		return getMachineState().getVelocity().toPlainString();
-	}
+    private String getVelocity() {
+        return getMachineState().getVelocity().toPlainString();
+    }
 
-	@Override
-	protected void hookEvents() {
-		btFeedhold.setOnAction(e -> getController().feedhold());
-		btFlush.setOnAction(e -> getController().flush());
-		btKill.setOnAction(e -> getController().killJob());
-		btResume.setOnAction(e -> getController().resume());
-		
-		getMachineState().feedRateProperty().addListener(
-				e -> tfFeedrate.setText(getFeedrate()));
-		getMachineState().lineProperty().addListener(
-				e -> tfLine.setText(getLine()));
-		getMachineState().dynamicStateProperty().addListener(
-				e -> tfStatus.setText(getStatus()));
-		getMachineState().velocityProperty().addListener(
-				e -> tfVelocity.setText(getVelocity()));
-	}
+    @Override
+    protected void hookEvents() {
+        btFeedhold.setOnAction(e -> getController().feedhold());
+        btFlush.setOnAction(e -> getController().flush());
+        btKill.setOnAction(e -> getController().killJob());
+        btResume.setOnAction(e -> getController().resume());
+        
+        getMachineState().feedRateProperty().addListener(
+                e -> tfFeedrate.setText(getFeedrate()));
+        getMachineState().lineProperty().addListener(
+                e -> tfLine.setText(getLine()));
+        getMachineState().dynamicStateProperty().addListener(
+                e -> tfStatus.setText(getStatus()));
+        getMachineState().velocityProperty().addListener(
+                e -> tfVelocity.setText(getVelocity()));
+    }
 
-	@Override
-	protected void initializePane() {
-		setPane(new GridPane());
-		
-		getPane().setHgap(5);
-		getPane().setVgap(5);
-	}
+    @Override
+    protected void initializePane() {
+        setPane(new GridPane());
+        
+        getPane().setHgap(5);
+        getPane().setVgap(5);
+    }
 
-	@Override
-	protected void layoutWidgets() {
-		FlowPane buttons = new FlowPane(5, 5);
-		buttons.getChildren().addAll(btFeedhold, btResume, btFlush, btKill);
-		
-		getPane().add(buttons, 0, 0, 4, 1);
-		getPane().add(new Label("Velocity:"), 0, 1);
-		getPane().add(tfVelocity, 1, 1);
-		getPane().add(new Label("Feed Rate:"), 2, 1);
-		getPane().add(tfFeedrate, 3, 1);
-		getPane().add(new Label("Line:"), 0, 2);
-		getPane().add(tfLine, 1, 2);
-		getPane().add(new Label("Status:"), 2, 2);
-		getPane().add(tfStatus, 3, 2);
-	}
+    @Override
+    protected void layoutWidgets() {
+        FlowPane buttons = new FlowPane(5, 5);
+        buttons.getChildren().addAll(btFeedhold, btResume, btFlush, btKill);
+        
+        getPane().add(buttons, 0, 0, 4, 1);
+        getPane().add(new Label("Velocity:"), 0, 1);
+        getPane().add(tfVelocity, 1, 1);
+        getPane().add(new Label("Feed Rate:"), 2, 1);
+        getPane().add(tfFeedrate, 3, 1);
+        getPane().add(new Label("Line:"), 0, 2);
+        getPane().add(tfLine, 1, 2);
+        getPane().add(new Label("Status:"), 2, 2);
+        getPane().add(tfStatus, 3, 2);
+    }
 }

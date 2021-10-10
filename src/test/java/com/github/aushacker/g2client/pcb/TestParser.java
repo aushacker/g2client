@@ -34,11 +34,11 @@ import com.github.aushacker.g2client.pcb.Parser;
  */
 public class TestParser {
 
-	@Test
-	public void test() throws Exception {
-		Excellon result = Parser.parse(new FileReader("data/WhiteNoise.txt"));
-		
-		assertEquals(Excellon.Units.INCH, result.getUnits());
-		assertEquals(3, result.getToolCount());
-	}
+    @Test
+    public void test() throws Exception {
+        Excellon result = Parser.parse(new FileReader("data/WhiteNoise.txt"));
+        
+        assertEquals(Excellon.Units.INCH, result.getUnits());
+        assertEquals(3, result.getToolCount());
+    }
 }

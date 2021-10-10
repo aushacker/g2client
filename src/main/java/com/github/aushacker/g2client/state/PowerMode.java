@@ -23,5 +23,5 @@ package com.github.aushacker.g2client.state;
  * @since March 2019
  */
 public enum PowerMode {
-	DISABLED, ALWAYS, IN_CYCLE, WHEN_MOVING;
+    DISABLED, ALWAYS, IN_CYCLE, WHEN_MOVING;
 }

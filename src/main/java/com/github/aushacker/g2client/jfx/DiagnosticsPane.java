@@ -35,30 +35,30 @@ import javafx.stage.Stage;
  */
 public class DiagnosticsPane extends G2Pane<GridPane> {
 
-	private SystemStatePane statePane;
+    private SystemStatePane statePane;
 
-	public DiagnosticsPane(Stage top, IController controller, UIPreferences preferences) {
-		super(top, controller, preferences);
-		
-		initialize();
-	}
+    public DiagnosticsPane(Stage top, IController controller, UIPreferences preferences) {
+        super(top, controller, preferences);
+        
+        initialize();
+    }
 
-	@Override
-	protected void createWidgets() {
-		statePane = new SystemStatePane(getTop(), getController(), getPreferences());
-	}
+    @Override
+    protected void createWidgets() {
+        statePane = new SystemStatePane(getTop(), getController(), getPreferences());
+    }
 
-	@Override
-	protected void initializePane() {
-		setPane(new GridPane());
-		getPane().setPadding(new Insets(10));
-		getPane().setHgap(10);
-		getPane().setVgap(10);
-	}
+    @Override
+    protected void initializePane() {
+        setPane(new GridPane());
+        getPane().setPadding(new Insets(10));
+        getPane().setHgap(10);
+        getPane().setVgap(10);
+    }
 
-	@Override
-	protected void layoutWidgets() {
-		Node state = Borders.wrap(statePane.getPane()).lineBorder().title("Firmware/Hardware Settings").color(Color.BLACK).buildAll();
-		getPane().add(state, 0, 0);
-	}
+    @Override
+    protected void layoutWidgets() {
+        Node state = Borders.wrap(statePane.getPane()).lineBorder().title("Firmware/Hardware Settings").color(Color.BLACK).buildAll();
+        getPane().add(state, 0, 0);
+    }
 }

@@ -26,5 +26,5 @@ package com.github.aushacker.g2client.state;
  * @since September 2019
  */
 public enum HomingDirection {
-	NEGATIVE, POSITIVE;
+    NEGATIVE, POSITIVE;
 }

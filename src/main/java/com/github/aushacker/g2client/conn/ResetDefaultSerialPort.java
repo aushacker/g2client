@@ -11,10 +11,10 @@ import com.github.aushacker.g2client.jfx.UIPreferences;
  */
 public class ResetDefaultSerialPort {
 
-	public static void main(String[] args) {
-		UIPreferences prefs = new UIPreferences();
-		
-		prefs.setPortName(OperatingSystem.current().getFilteredPorts().get(0).getSystemPortName());
-	}
+    public static void main(String[] args) {
+        UIPreferences prefs = new UIPreferences();
+        
+        prefs.setPortName(OperatingSystem.current().getFilteredPorts().get(0).getSystemPortName());
+    }
 
 }

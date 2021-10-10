@@ -29,13 +29,13 @@ import org.junit.Test;
  */
 public class UnitTest {
 
-	@Test
-	public void testMMDefaultValue() {
-		assertEquals(1.0, Unit.MM.getIncrement(Unit.MM.getDefaultIndex()), 0.000001);
-	}
+    @Test
+    public void testMMDefaultValue() {
+        assertEquals(1.0, Unit.MM.getIncrement(Unit.MM.getDefaultIndex()), 0.000001);
+    }
 
-	@Test
-	public void testMMMaxIndex() {
-		assertEquals(4, Unit.MM.getMaxIndex());
-	}
+    @Test
+    public void testMMMaxIndex() {
+        assertEquals(4, Unit.MM.getMaxIndex());
+    }
 }

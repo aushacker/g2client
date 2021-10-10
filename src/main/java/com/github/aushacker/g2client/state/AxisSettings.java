@@ -34,262 +34,262 @@ import javafx.beans.property.SimpleObjectProperty;
  */
 public class AxisSettings {
 
-	private Axis axis;
+    private Axis axis;
 
-	/**
-	 * Sets maximum feed rate for the axis.
-	 */
-	private SimpleDoubleProperty feedrate;
+    /**
+     * Sets maximum feed rate for the axis.
+     */
+    private SimpleDoubleProperty feedrate;
 
-	/**
-	 * 0=search-towards-negative, 1=search-torwards-positive.
-	 */
-	private SimpleObjectProperty<HomingDirection> homingDirection;
+    /**
+     * 0=search-towards-negative, 1=search-torwards-positive.
+     */
+    private SimpleObjectProperty<HomingDirection> homingDirection;
 
-	/**
-	 * Switch (input) to use for homing this axis.
-	 */
-	private SimpleIntegerProperty homingInput;
+    /**
+     * Switch (input) to use for homing this axis.
+     */
+    private SimpleIntegerProperty homingInput;
 
-	/**
-	 * Jerk used during homing operations.
-	 */
-	private SimpleDoubleProperty jerkHigh;
+    /**
+     * Jerk used during homing operations.
+     */
+    private SimpleDoubleProperty jerkHigh;
 
-	/**
-	 * Main parameter for acceleration management.
-	 */
-	private SimpleDoubleProperty jerkMax;
+    /**
+     * Main parameter for acceleration management.
+     */
+    private SimpleDoubleProperty jerkMax;
 
-	/**
-	 * Maximum distance to back off switch during latch phase (drive off switch).
-	 */
-	private SimpleDoubleProperty latchBackoff;
+    /**
+     * Maximum distance to back off switch during latch phase (drive off switch).
+     */
+    private SimpleDoubleProperty latchBackoff;
 
-	/**
-	 * Homing speed during latch phase (drive off switch).
-	 */
-	private SimpleDoubleProperty latchVelocity;
+    /**
+     * Homing speed during latch phase (drive off switch).
+     */
+    private SimpleDoubleProperty latchVelocity;
 
-	/**
-	 * Normally {xam:1} "normal". See details for setting.
-	 */
-	private SimpleObjectProperty<AxisMode> mode;
+    /**
+     * Normally {xam:1} "normal". See details for setting.
+     */
+    private SimpleObjectProperty<AxisMode> mode;
 
-	/**
-	 * Artificial radius to convert linear values to degrees. ABC axes only.
-	 */
-	private SimpleDoubleProperty radius;
+    /**
+     * Artificial radius to convert linear values to degrees. ABC axes only.
+     */
+    private SimpleDoubleProperty radius;
 
-	/**
-	 * Homing speed during search phase (drive to switch).
-	 */
-	private SimpleDoubleProperty searchVelocity;
+    /**
+     * Homing speed during search phase (drive to switch).
+     */
+    private SimpleDoubleProperty searchVelocity;
 
-	/**
-	 * Minimum travel in absolute coordinates. Used by homing and soft limits.
-	 */
-	private SimpleDoubleProperty travelMin;
+    /**
+     * Minimum travel in absolute coordinates. Used by homing and soft limits.
+     */
+    private SimpleDoubleProperty travelMin;
 
-	/**
-	 * Maximum travel in absolute coordinates. Used by homing and soft limits.
-	 */
-	private SimpleDoubleProperty travelMax;
+    /**
+     * Maximum travel in absolute coordinates. Used by homing and soft limits.
+     */
+    private SimpleDoubleProperty travelMax;
 
-	/**
-	 * Max velocity for axis, aka "traverse rate" or "seek".
-	 */
-	private SimpleDoubleProperty velocityMax;
+    /**
+     * Max velocity for axis, aka "traverse rate" or "seek".
+     */
+    private SimpleDoubleProperty velocityMax;
 
-	/**
-	 * Offset from switch for zero in absolute coordinates.
-	 */
-	private SimpleDoubleProperty zeroBackoff;
+    /**
+     * Offset from switch for zero in absolute coordinates.
+     */
+    private SimpleDoubleProperty zeroBackoff;
 
-	public AxisSettings(Axis axis) {
-		this.axis = axis;
+    public AxisSettings(Axis axis) {
+        this.axis = axis;
 
-		feedrate = new SimpleDoubleProperty();
-		homingDirection = new SimpleObjectProperty<>(HomingDirection.NEGATIVE);
-		homingInput = new SimpleIntegerProperty();
-		jerkHigh = new SimpleDoubleProperty();
-		jerkMax = new SimpleDoubleProperty();
-		latchBackoff= new SimpleDoubleProperty();
-		latchVelocity= new SimpleDoubleProperty();
-		mode = new SimpleObjectProperty<>(AxisMode.DISABLE);
-		radius = new SimpleDoubleProperty();
-		searchVelocity= new SimpleDoubleProperty();
-		travelMin = new SimpleDoubleProperty();
-		travelMax = new SimpleDoubleProperty();
-		velocityMax = new SimpleDoubleProperty();
-		zeroBackoff= new SimpleDoubleProperty();
-	}
+        feedrate = new SimpleDoubleProperty();
+        homingDirection = new SimpleObjectProperty<>(HomingDirection.NEGATIVE);
+        homingInput = new SimpleIntegerProperty();
+        jerkHigh = new SimpleDoubleProperty();
+        jerkMax = new SimpleDoubleProperty();
+        latchBackoff= new SimpleDoubleProperty();
+        latchVelocity= new SimpleDoubleProperty();
+        mode = new SimpleObjectProperty<>(AxisMode.DISABLE);
+        radius = new SimpleDoubleProperty();
+        searchVelocity= new SimpleDoubleProperty();
+        travelMin = new SimpleDoubleProperty();
+        travelMax = new SimpleDoubleProperty();
+        velocityMax = new SimpleDoubleProperty();
+        zeroBackoff= new SimpleDoubleProperty();
+    }
 
-	public DoubleProperty feedrateProperty() {
-		return feedrate;
-	}
+    public DoubleProperty feedrateProperty() {
+        return feedrate;
+    }
 
-	public Axis getAxis() {
-		return axis;
-	}
+    public Axis getAxis() {
+        return axis;
+    }
 
-	public double getFeedrate() {
-		return feedrate.get();
-	}
+    public double getFeedrate() {
+        return feedrate.get();
+    }
 
-	public HomingDirection getHomingDirection() {
-		return homingDirection.get();
-	}
+    public HomingDirection getHomingDirection() {
+        return homingDirection.get();
+    }
 
-	public int getHomingInput() {
-		return homingInput.get();
-	}
+    public int getHomingInput() {
+        return homingInput.get();
+    }
 
-	public double getJerkHigh() {
-		return jerkHigh.get();
-	}
+    public double getJerkHigh() {
+        return jerkHigh.get();
+    }
 
-	public double getJerkMax() {
-		return jerkMax.get();
-	}
+    public double getJerkMax() {
+        return jerkMax.get();
+    }
 
-	public double getLatchBackoff() {
-		return latchBackoff.get();
-	}
+    public double getLatchBackoff() {
+        return latchBackoff.get();
+    }
 
-	public double getLatchVelocity() {
-		return latchVelocity.get();
-	}
+    public double getLatchVelocity() {
+        return latchVelocity.get();
+    }
 
-	public AxisMode getMode() {
-		return mode.get();
-	}
+    public AxisMode getMode() {
+        return mode.get();
+    }
 
-	public double getRadius() {
-		return radius.get();
-	}
+    public double getRadius() {
+        return radius.get();
+    }
 
-	public double getSearchVelocity() {
-		return searchVelocity.get();
-	}
+    public double getSearchVelocity() {
+        return searchVelocity.get();
+    }
 
-	public double getTravelMax() {
-		return travelMax.get();
-	}
+    public double getTravelMax() {
+        return travelMax.get();
+    }
 
-	public double getTravelMin() {
-		return travelMin.get();
-	}
+    public double getTravelMin() {
+        return travelMin.get();
+    }
 
-	public double getVelocityMax() {
-		return velocityMax.get();
-	}
+    public double getVelocityMax() {
+        return velocityMax.get();
+    }
 
-	public double getZeroBackoff() {
-		return zeroBackoff.get();
-	}
+    public double getZeroBackoff() {
+        return zeroBackoff.get();
+    }
 
-	public ObjectProperty<HomingDirection> homingDirectionProperty() {
-		return homingDirection;
-	}
+    public ObjectProperty<HomingDirection> homingDirectionProperty() {
+        return homingDirection;
+    }
 
-	public IntegerProperty homingInputProperty() {
-		return homingInput;
-	}
+    public IntegerProperty homingInputProperty() {
+        return homingInput;
+    }
 
-	public DoubleProperty jerkHighProperty() {
-		return jerkHigh;
-	}
+    public DoubleProperty jerkHighProperty() {
+        return jerkHigh;
+    }
 
-	public DoubleProperty latchBackoffProperty() {
-		return latchBackoff;
-	}
+    public DoubleProperty latchBackoffProperty() {
+        return latchBackoff;
+    }
 
-	public DoubleProperty latchVelocityProperty() {
-		return latchVelocity;
-	}
+    public DoubleProperty latchVelocityProperty() {
+        return latchVelocity;
+    }
 
-	public ObjectProperty<AxisMode> modeProperty() {
-		return mode;
-	}
+    public ObjectProperty<AxisMode> modeProperty() {
+        return mode;
+    }
 
-	public DoubleProperty radiusProperty() {
-		return radius;
-	}
+    public DoubleProperty radiusProperty() {
+        return radius;
+    }
 
-	public DoubleProperty searchVelocityProperty() {
-		return searchVelocity;
-	}
+    public DoubleProperty searchVelocityProperty() {
+        return searchVelocity;
+    }
 
-	public void setFeedrate(double feedrate) {
-		this.feedrate.set(feedrate);
-	}
+    public void setFeedrate(double feedrate) {
+        this.feedrate.set(feedrate);
+    }
 
-	public void setHomingDirection(HomingDirection homingDirection) {
-		this.homingDirection.set(homingDirection);
-	}
+    public void setHomingDirection(HomingDirection homingDirection) {
+        this.homingDirection.set(homingDirection);
+    }
 
-	public void setHomingInput(int homingInput) {
-		this.homingInput.set(homingInput);
-	}
+    public void setHomingInput(int homingInput) {
+        this.homingInput.set(homingInput);
+    }
 
-	public void setJerkHigh(double jerkHigh) {
-		this.jerkHigh.set(jerkHigh);
-	}
+    public void setJerkHigh(double jerkHigh) {
+        this.jerkHigh.set(jerkHigh);
+    }
 
-	public void setJerkMax(double jerkMax) {
-		this.jerkMax.set(jerkMax);
-	}
+    public void setJerkMax(double jerkMax) {
+        this.jerkMax.set(jerkMax);
+    }
 
-	public void setLatchBackoff(double latchBackoff) {
-		this.latchBackoff.set(latchBackoff);
-	}
+    public void setLatchBackoff(double latchBackoff) {
+        this.latchBackoff.set(latchBackoff);
+    }
 
-	public void setLatchVelocity(double latchVelocity) {
-		this.latchVelocity.set(latchVelocity);
-	}
+    public void setLatchVelocity(double latchVelocity) {
+        this.latchVelocity.set(latchVelocity);
+    }
 
-	public void setMode(AxisMode mode) {
-		this.mode.set(mode);
-	}
+    public void setMode(AxisMode mode) {
+        this.mode.set(mode);
+    }
 
-	public void setRadius(double radius) {
-		this.radius.set(radius);
-	}
+    public void setRadius(double radius) {
+        this.radius.set(radius);
+    }
 
-	public void setSearchVelocity(double searchVelocity) {
-		this.searchVelocity.set(searchVelocity);
-	}
+    public void setSearchVelocity(double searchVelocity) {
+        this.searchVelocity.set(searchVelocity);
+    }
 
-	public void setTravelMax(double travelMax) {
-		this.travelMax.set(travelMax);
-	}
+    public void setTravelMax(double travelMax) {
+        this.travelMax.set(travelMax);
+    }
 
-	public void setTravelMin(double travelMin) {
-		this.travelMin.set(travelMin);
-	}
+    public void setTravelMin(double travelMin) {
+        this.travelMin.set(travelMin);
+    }
 
-	public void setVelocityMax(double velocityMax) {
-		this.velocityMax.set(velocityMax);
-	}
+    public void setVelocityMax(double velocityMax) {
+        this.velocityMax.set(velocityMax);
+    }
 
-	public void setZeroBackoff(double zeroBackoff) {
-		this.zeroBackoff.set(zeroBackoff);
-	}
+    public void setZeroBackoff(double zeroBackoff) {
+        this.zeroBackoff.set(zeroBackoff);
+    }
 
-	public DoubleProperty travelMaxProperty() {
-		return travelMax;
-	}
+    public DoubleProperty travelMaxProperty() {
+        return travelMax;
+    }
 
-	public DoubleProperty travelMinProperty() {
-		return travelMin;
-	}
+    public DoubleProperty travelMinProperty() {
+        return travelMin;
+    }
 
-	public DoubleProperty velocityMaxProperty() {
-		return velocityMax;
-	}
+    public DoubleProperty velocityMaxProperty() {
+        return velocityMax;
+    }
 
-	public DoubleProperty zeroBackoffProperty() {
-		return zeroBackoff;
-	}
+    public DoubleProperty zeroBackoffProperty() {
+        return zeroBackoff;
+    }
 }

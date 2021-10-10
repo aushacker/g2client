@@ -41,50 +41,50 @@ import org.slf4j.LoggerFactory;
  */
 public class Handler {
 
-	/**
-	 * Make it easier to debug what can be complex behaviour.
-	 */
-	private static final Logger logger = LoggerFactory.getLogger(Handler.class);
+    /**
+     * Make it easier to debug what can be complex behaviour.
+     */
+    private static final Logger logger = LoggerFactory.getLogger(Handler.class);
 
-	/**
-	 * Json structure name. Special case for top level handler,
-	 * this field will be null.
-	 */
-	private String name;
+    /**
+     * Json structure name. Special case for top level handler,
+     * this field will be null.
+     */
+    private String name;
 
-	/**
-	 * Maps the Json field name to the appropriate Handler.
-	 */
-	private Map<String,Handler> handlers;
+    /**
+     * Maps the Json field name to the appropriate Handler.
+     */
+    private Map<String,Handler> handlers;
 
-	public Handler() {
-		this(null);
-	}
+    public Handler() {
+        this(null);
+    }
 
-	public Handler(String name) {
-		this.name = name;
-		this.handlers = new HashMap<>();
-	}
+    public Handler(String name) {
+        this.name = name;
+        this.handlers = new HashMap<>();
+    }
 
-	public void handle(JsonValue v) {
-		if (v.getValueType() == ValueType.OBJECT) {
-			JsonObject o = (JsonObject) v;
-			for (String key : o.keySet()) {
-				if (handlers.containsKey(key)) {
-					JsonValue child = o.get(key);
-					handlers.get(key).handle(child);
-				} else {
-					logger.error("No registered handler for json key: {}", key);
-				}
-			}
-		}
-	}
+    public void handle(JsonValue v) {
+        if (v.getValueType() == ValueType.OBJECT) {
+            JsonObject o = (JsonObject) v;
+            for (String key : o.keySet()) {
+                if (handlers.containsKey(key)) {
+                    JsonValue child = o.get(key);
+                    handlers.get(key).handle(child);
+                } else {
+                    logger.error("No registered handler for json key: {}", key);
+                }
+            }
+        }
+    }
 
-	public void register(Handler handler) {
-		register(handler.name, handler);
-	}
+    public void register(Handler handler) {
+        register(handler.name, handler);
+    }
 
-	public void register(String key, Handler handler) {
-		handlers.put(key, handler);
-	}
+    public void register(String key, Handler handler) {
+        handlers.put(key, handler);
+    }
 }

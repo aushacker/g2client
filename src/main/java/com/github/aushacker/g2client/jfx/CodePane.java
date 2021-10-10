@@ -39,76 +39,76 @@ import javafx.stage.Stage;
  */
 public class CodePane extends G2Pane<BorderPane> {
 
-	private Button btPlay;
+    private Button btPlay;
 
-	private CodeArea codeArea;
+    private CodeArea codeArea;
 
-	public CodePane(Stage top, IController controller, UIPreferences preferences) {
-		super(top, controller, preferences);
-		
-		initialize();
-	}
+    public CodePane(Stage top, IController controller, UIPreferences preferences) {
+        super(top, controller, preferences);
+        
+        initialize();
+    }
 
-	@Override
-	protected void createWidgets() {
-		btPlay = new Button("Play");
-		codeArea = new CodeArea("");
+    @Override
+    protected void createWidgets() {
+        btPlay = new Button("Play");
+        codeArea = new CodeArea("");
 
-		// add line numbers to the left of area
-		codeArea.setParagraphGraphicFactory(LineNumberFactory.get(codeArea));
-		//codeArea.setEditable(false);
-	}
+        // add line numbers to the left of area
+        codeArea.setParagraphGraphicFactory(LineNumberFactory.get(codeArea));
+        //codeArea.setEditable(false);
+    }
 
-	@Override
-	protected void hookEvents() {
-		btPlay.setOnAction(e -> play());
-	}
+    @Override
+    protected void hookEvents() {
+        btPlay.setOnAction(e -> play());
+    }
 
-	@Override
-	protected void initializePane() {
-		setPane(new BorderPane());
-	}
+    @Override
+    protected void initializePane() {
+        setPane(new BorderPane());
+    }
 
-	@Override
-	protected void layoutWidgets() {
-		HBox buttons = new HBox();
-		buttons.getChildren().add(btPlay);
-		
-		getPane().setTop(buttons);
-		getPane().setCenter(codeArea);
-	}
+    @Override
+    protected void layoutWidgets() {
+        HBox buttons = new HBox();
+        buttons.getChildren().add(btPlay);
+        
+        getPane().setTop(buttons);
+        getPane().setCenter(codeArea);
+    }
 
-	/**
-	 * Dumps the contents of a file into the code pane. Hopefully this is
-	 * actually a gcode file.
-	 */
-	public void openFile(File gcode) {
-		try (BufferedReader in = new BufferedReader(new FileReader(gcode))) {
-			StringBuilder sb = new StringBuilder();
-			String line = in.readLine();
+    /**
+     * Dumps the contents of a file into the code pane. Hopefully this is
+     * actually a gcode file.
+     */
+    public void openFile(File gcode) {
+        try (BufferedReader in = new BufferedReader(new FileReader(gcode))) {
+            StringBuilder sb = new StringBuilder();
+            String line = in.readLine();
 
-			while (line != null) {
-				sb.append(line);
-				sb.append("\n");
-				line = in.readLine();
-			}
+            while (line != null) {
+                sb.append(line);
+                sb.append("\n");
+                line = in.readLine();
+            }
 
-			codeArea.replaceText(sb.toString());
-			codeArea.moveTo(0, 0);
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+            codeArea.replaceText(sb.toString());
+            codeArea.moveTo(0, 0);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
-	private void play() {
-		codeArea.moveTo(0, 0);
-		getController().resetLineCounter();
-		
-		String[] lines = codeArea.getText().split("\\n");
-		for (int i = 0; i < lines.length; i++) {
-			String c = "N" + (i + 1) + " " + lines[i];
-			getController().enqueue(c);
-		}
-	}
+    private void play() {
+        codeArea.moveTo(0, 0);
+        getController().resetLineCounter();
+        
+        String[] lines = codeArea.getText().split("\\n");
+        for (int i = 0; i < lines.length; i++) {
+            String c = "N" + (i + 1) + " " + lines[i];
+            getController().enqueue(c);
+        }
+    }
 }

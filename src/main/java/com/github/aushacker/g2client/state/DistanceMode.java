@@ -24,5 +24,5 @@ package com.github.aushacker.g2client.state;
  * @since 2019
  */
 public enum DistanceMode {
-	ABSOLUTE, INCREMENTAL;
+    ABSOLUTE, INCREMENTAL;
 }

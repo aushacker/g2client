@@ -20,11 +20,11 @@
 package com.github.aushacker.g2client.state;
 
 /**
- * JSON attribuute 'am' in axis object.
+ * JSON attribute 'am' in axis object.
  *
  * @author Stephen Davies
  * @since September 2019
  */
 public enum AxisMode {
-	DISABLE, STANDARD, INHIBITED, RADIUS;
+    DISABLE, STANDARD, INHIBITED, RADIUS;
 }

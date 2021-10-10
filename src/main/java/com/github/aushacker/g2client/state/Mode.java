@@ -26,7 +26,7 @@ package com.github.aushacker.g2client.state;
  * @since September 2019
  */
 public enum Mode {
-	ACTIVE_LOW,
-	ACTIVE_HIGH,
-	DISABLED;
+    ACTIVE_LOW,
+    ACTIVE_HIGH,
+    DISABLED;
 }

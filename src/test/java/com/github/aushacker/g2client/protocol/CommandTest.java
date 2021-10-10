@@ -33,88 +33,88 @@ import org.junit.Test;
  */
 public class CommandTest {
 
-	private Command c1;
-	private Command c2;
-	private Command c3;
-	private Command c4;
-	
-	@Before
-	public void setUp() {
-		c1 = new DataCommand("G21");
-		c2 = SingleCharacterType.RESET.asCommand();
-		c3 = new DataCommand("G17");
-		c4 = SingleCharacterType.FEEDHOLD.asCommand();
-	}
+    private Command c1;
+    private Command c2;
+    private Command c3;
+    private Command c4;
+    
+    @Before
+    public void setUp() {
+        c1 = new DataCommand("G21");
+        c2 = SingleCharacterType.RESET.asCommand();
+        c3 = new DataCommand("G17");
+        c4 = SingleCharacterType.FEEDHOLD.asCommand();
+    }
 
-	/**
-	 * Commands must have a unique sequence number based on their creation order.
-	 */
-	@Test
-	public void testCreationSequence() {
-		assertTrue(c1.getId() < c2.getId());
-	}
+    /**
+     * Commands must have a unique sequence number based on their creation order.
+     */
+    @Test
+    public void testCreationSequence() {
+        assertTrue(c1.getId() < c2.getId());
+    }
 
-	/**
-	 * compareTo should return 0 when compared to itself.
-	 */
-	@Test
-	public void testCompareToSame() {
-		assertEquals(0, c1.compareTo(c1));
-	}
+    /**
+     * compareTo should return 0 when compared to itself.
+     */
+    @Test
+    public void testCompareToSame() {
+        assertEquals(0, c1.compareTo(c1));
+    }
 
-	/**
-	 * As c1 is a DataCommand it should compare greater than c2 and c4 but less than
-	 * c3 (created earlier).
-	 */
-	@Test
-	public void testCompareToC1() {
-		assertTrue(c1.compareTo(c2) > 0);
-		assertTrue(c1.compareTo(c4) > 0);
-		assertTrue(c1.compareTo(c3) < 0);
-	}
+    /**
+     * As c1 is a DataCommand it should compare greater than c2 and c4 but less than
+     * c3 (created earlier).
+     */
+    @Test
+    public void testCompareToC1() {
+        assertTrue(c1.compareTo(c2) > 0);
+        assertTrue(c1.compareTo(c4) > 0);
+        assertTrue(c1.compareTo(c3) < 0);
+    }
 
-	/**
-	 * As c2 is a control Command it should compare less than all other commands.
-	 */
-	@Test
-	public void testCompareToC2() {
-		assertTrue(c2.compareTo(c1) < 0);
-		assertTrue(c2.compareTo(c3) < 0);
-		assertTrue(c2.compareTo(c4) < 0);
-	}
+    /**
+     * As c2 is a control Command it should compare less than all other commands.
+     */
+    @Test
+    public void testCompareToC2() {
+        assertTrue(c2.compareTo(c1) < 0);
+        assertTrue(c2.compareTo(c3) < 0);
+        assertTrue(c2.compareTo(c4) < 0);
+    }
 
-	/**
-	 * c3 is a DataCommand created after c1. It should compare higher than all other commands.
-	 */
-	@Test
-	public void testCompareToC3() {
-		assertTrue(c3.compareTo(c1) > 0);
-		assertTrue(c3.compareTo(c2) > 0);
-		assertTrue(c3.compareTo(c4) > 0);
-	}
+    /**
+     * c3 is a DataCommand created after c1. It should compare higher than all other commands.
+     */
+    @Test
+    public void testCompareToC3() {
+        assertTrue(c3.compareTo(c1) > 0);
+        assertTrue(c3.compareTo(c2) > 0);
+        assertTrue(c3.compareTo(c4) > 0);
+    }
 
-	/**
-	 * c4 is the second control Command. It should compare lower than all except c2.
-	 */
-	@Test
-	public void testCompareToC4() {
-		assertTrue(c4.compareTo(c1) < 0);
-		assertTrue(c4.compareTo(c2) > 0);
-		assertTrue(c4.compareTo(c3) < 0);
-	}
+    /**
+     * c4 is the second control Command. It should compare lower than all except c2.
+     */
+    @Test
+    public void testCompareToC4() {
+        assertTrue(c4.compareTo(c1) < 0);
+        assertTrue(c4.compareTo(c2) > 0);
+        assertTrue(c4.compareTo(c3) < 0);
+    }
 
-	@Test
-	public void testQueuePriority() {
-		PriorityBlockingQueue<Command> q = new PriorityBlockingQueue<>();
+    @Test
+    public void testQueuePriority() {
+        PriorityBlockingQueue<Command> q = new PriorityBlockingQueue<>();
 
-		q.add(c3);
-		q.add(c1);
-		q.add(c4);
-		q.add(c2);
+        q.add(c3);
+        q.add(c1);
+        q.add(c4);
+        q.add(c2);
 
-		assertSame(c2, q.poll());
-		assertSame(c4, q.poll());
-		assertSame(c1, q.poll());
-		assertSame(c3, q.poll());
-	}
+        assertSame(c2, q.poll());
+        assertSame(c4, q.poll());
+        assertSame(c1, q.poll());
+        assertSame(c3, q.poll());
+    }
 }

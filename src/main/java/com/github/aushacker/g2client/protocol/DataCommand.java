@@ -26,42 +26,42 @@ import java.io.PrintStream;
  */
 public class DataCommand extends Command {
 
-	private String data;
+    private String data;
 
-	public DataCommand(String data) {
-		this.data = data;
-	}
+    public DataCommand(String data) {
+        this.data = data;
+    }
 
-	@Override
-	public int compareTo(Command other) {
-		if (other instanceof DataCommand) {
-			return getId() - other.getId();
-		} else {
-			return +1;
-		}
-	}
+    @Override
+    public int compareTo(Command other) {
+        if (other instanceof DataCommand) {
+            return getId() - other.getId();
+        } else {
+            return +1;
+        }
+    }
 
-	public String getData() {
-		return data;
-	}
+    public String getData() {
+        return data;
+    }
 
-	public int getPriority() {
-		return 1;
-	}
+    public int getPriority() {
+        return 1;
+    }
 
-	@Override
-	public boolean isControl() {
-		return false;
-	}
+    @Override
+    public boolean isControl() {
+        return false;
+    }
 
-	@Override
-	public void printOn(PrintStream out) {
-		out.println(data);
-		out.flush();
-	}
+    @Override
+    public void printOn(PrintStream out) {
+        out.println(data);
+        out.flush();
+    }
 
-	@Override
-	public String toString() {
-		return data;
-	}
+    @Override
+    public String toString() {
+        return data;
+    }
 }

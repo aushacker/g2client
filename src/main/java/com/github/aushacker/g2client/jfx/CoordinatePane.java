@@ -39,50 +39,50 @@ import javafx.stage.Stage;
  */
 public class CoordinatePane extends G2Pane<HBox> {
 
-	private Map<CoordinateSystem,Label> labelMap;
-	private List<Label> labels;
+    private Map<CoordinateSystem,Label> labelMap;
+    private List<Label> labels;
 
-	public CoordinatePane(Stage top, IController controller, UIPreferences preferences) {
-		super(top, controller, preferences);
+    public CoordinatePane(Stage top, IController controller, UIPreferences preferences) {
+        super(top, controller, preferences);
 
-		labelMap = new HashMap<>();
-		labels = new ArrayList<>();
+        labelMap = new HashMap<>();
+        labels = new ArrayList<>();
 
-		initialize();
-	}
+        initialize();
+    }
 
-	@Override
-	protected void createWidgets() {
-		for (CoordinateSystem cs : CoordinateSystem.values()) {
-			Label l = new Label(cs.name());
-			l.setVisible(false);
+    @Override
+    protected void createWidgets() {
+        for (CoordinateSystem cs : CoordinateSystem.values()) {
+            Label l = new Label(cs.name());
+            l.setVisible(false);
 
-			labelMap.put(cs, l);
-			labels.add(l);
-		}
-		
-		labelMap.get(CoordinateSystem.G54).setVisible(true);
-	}
+            labelMap.put(cs, l);
+            labels.add(l);
+        }
+        
+        labelMap.get(CoordinateSystem.G54).setVisible(true);
+    }
 
-	private void displayCoordSystem() {
-		labels.forEach(l -> l.setVisible(false));
-	
-		labelMap.get(getMachineState().getCoordinateSystem()).setVisible(true);
-	}
+    private void displayCoordSystem() {
+        labels.forEach(l -> l.setVisible(false));
+    
+        labelMap.get(getMachineState().getCoordinateSystem()).setVisible(true);
+    }
 
-	@Override
-	protected void hookEvents() {
-		getMachineState().coordinateSystemProperty().addListener(
-				e -> displayCoordSystem());
-	}
+    @Override
+    protected void hookEvents() {
+        getMachineState().coordinateSystemProperty().addListener(
+                e -> displayCoordSystem());
+    }
 
-	@Override
-	protected void initializePane() {
-		setPane(new HBox());
-	}
+    @Override
+    protected void initializePane() {
+        setPane(new HBox());
+    }
 
-	@Override
-	protected void layoutWidgets() {
-		getPane().getChildren().addAll(labels);
-	}
+    @Override
+    protected void layoutWidgets() {
+        getPane().getChildren().addAll(labels);
+    }
 }

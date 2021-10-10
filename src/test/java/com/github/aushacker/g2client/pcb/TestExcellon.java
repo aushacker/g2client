@@ -32,50 +32,50 @@ import org.junit.Test;
  */
 public class TestExcellon {
 
-	/**
-	 * Object under test.
-	 */
-	private Excellon excellon;
-	
-	@Before
-	public void setUp() {
-		excellon = new Excellon();
-	}
-	
-	@Test
-	public void testInchLeadingZero() {
-		Excellon.Units units = Excellon.Units.INCH;
-		
-		assertEquals(new BigDecimal("7.0"), units.toDecimal("07"));
-		assertEquals(new BigDecimal("7.5"), units.toDecimal("075"));
-		assertEquals(new BigDecimal("0.75"), units.toDecimal("0075"));
-		assertEquals(new BigDecimal("0.075"), units.toDecimal("00075"));
-		assertEquals(new BigDecimal("0.0075"), units.toDecimal("000075"));
-	}
-	
-	@Test
-	public void testInchTrailingZero() {
-		Excellon.Units units = Excellon.Units.INCH;
-		
-		assertEquals(new BigDecimal("0.075"), units.toDecimal("750"));
-		assertEquals(new BigDecimal("0.75"), units.toDecimal("7500"));
-		assertEquals(new BigDecimal("7.5"), units.toDecimal("75000"));
-		assertEquals(new BigDecimal("75"), units.toDecimal("750000"));
-	}
-	
-	@Test
-	public void testInchDecimal() {
-		Excellon.Units units = Excellon.Units.INCH;
-		
-		assertEquals(new BigDecimal("75"), units.toDecimal("75.0"));
-		assertEquals(new BigDecimal("7.5"), units.toDecimal("7.5"));
-		assertEquals(new BigDecimal("0.75"), units.toDecimal(".75"));
-		assertEquals(new BigDecimal("0.075"), units.toDecimal(".075"));
-		assertEquals(new BigDecimal("0.0075"), units.toDecimal(".0075"));
-	}
+    /**
+     * Object under test.
+     */
+    private Excellon excellon;
+    
+    @Before
+    public void setUp() {
+        excellon = new Excellon();
+    }
+    
+    @Test
+    public void testInchLeadingZero() {
+        Excellon.Units units = Excellon.Units.INCH;
+        
+        assertEquals(new BigDecimal("7.0"), units.toDecimal("07"));
+        assertEquals(new BigDecimal("7.5"), units.toDecimal("075"));
+        assertEquals(new BigDecimal("0.75"), units.toDecimal("0075"));
+        assertEquals(new BigDecimal("0.075"), units.toDecimal("00075"));
+        assertEquals(new BigDecimal("0.0075"), units.toDecimal("000075"));
+    }
+    
+    @Test
+    public void testInchTrailingZero() {
+        Excellon.Units units = Excellon.Units.INCH;
+        
+        assertEquals(new BigDecimal("0.075"), units.toDecimal("750"));
+        assertEquals(new BigDecimal("0.75"), units.toDecimal("7500"));
+        assertEquals(new BigDecimal("7.5"), units.toDecimal("75000"));
+        assertEquals(new BigDecimal("75"), units.toDecimal("750000"));
+    }
+    
+    @Test
+    public void testInchDecimal() {
+        Excellon.Units units = Excellon.Units.INCH;
+        
+        assertEquals(new BigDecimal("75"), units.toDecimal("75.0"));
+        assertEquals(new BigDecimal("7.5"), units.toDecimal("7.5"));
+        assertEquals(new BigDecimal("0.75"), units.toDecimal(".75"));
+        assertEquals(new BigDecimal("0.075"), units.toDecimal(".075"));
+        assertEquals(new BigDecimal("0.0075"), units.toDecimal(".0075"));
+    }
 
-	@Test
-	public void testIsPoint() {
-		
-	}
+    @Test
+    public void testIsPoint() {
+        
+    }
 }

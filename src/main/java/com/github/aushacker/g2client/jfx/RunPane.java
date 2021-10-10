@@ -32,42 +32,42 @@ import javafx.stage.Stage;
  */
 public class RunPane extends G2Pane<BorderPane> {
 
-	/**
-	 * GCode content
-	 */
-	private CodePane codePane;
-	
-	/**
-	 * DRO etc.
-	 */
-	private ControlPane controlPane;
+    /**
+     * GCode content
+     */
+    private CodePane codePane;
+    
+    /**
+     * DRO etc.
+     */
+    private ControlPane controlPane;
 
-	public RunPane(Stage top, IController controller, UIPreferences preferences) {
-		super(top, controller, preferences);
-		
-		initialize();
-	}
+    public RunPane(Stage top, IController controller, UIPreferences preferences) {
+        super(top, controller, preferences);
+        
+        initialize();
+    }
 
-	@Override
-	protected void createWidgets() {
-		codePane = new CodePane(getTop(), getController(), getPreferences());
-		controlPane = new ControlPane(getTop(), getController(), getPreferences());
-	}
+    @Override
+    protected void createWidgets() {
+        codePane = new CodePane(getTop(), getController(), getPreferences());
+        controlPane = new ControlPane(getTop(), getController(), getPreferences());
+    }
 
-	@Override
-	protected void initializePane() {
-		setPane(new BorderPane());
-	}
+    @Override
+    protected void initializePane() {
+        setPane(new BorderPane());
+    }
 
-	@Override
-	protected void layoutWidgets() {
+    @Override
+    protected void layoutWidgets() {
 //		getPane().setTop(new VBox(new TitledPane("T1", new Button("B1"))));
 //		add(codePanel, BorderLayout.CENTER);
-		getPane().setCenter(codePane.getPane());
-		getPane().setRight(controlPane.getPane());
-	}
+        getPane().setCenter(codePane.getPane());
+        getPane().setRight(controlPane.getPane());
+    }
 
-	public void openFile(File file) {
-		codePane.openFile(file);
-	}
+    public void openFile(File file) {
+        codePane.openFile(file);
+    }
 }

@@ -28,24 +28,24 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public abstract class Command implements Comparable<Command> {
 
-	private static final AtomicInteger seq = new AtomicInteger(0);
+    private static final AtomicInteger seq = new AtomicInteger(0);
 
-	private final int id;
-	
-	protected Command() {
-		id = seq.getAndIncrement();
-	}
+    private final int id;
+    
+    protected Command() {
+        id = seq.getAndIncrement();
+    }
 
-	public int getId() {
-		return id;
-	}
+    public int getId() {
+        return id;
+    }
 
-	@Override
-	public int hashCode() {
-		return id;
-	}
-	
-	public abstract boolean isControl();
+    @Override
+    public int hashCode() {
+        return id;
+    }
+    
+    public abstract boolean isControl();
 
-	public abstract void printOn(PrintStream out);
+    public abstract void printOn(PrintStream out);
 }

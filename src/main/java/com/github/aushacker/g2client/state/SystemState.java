@@ -31,81 +31,81 @@ import javafx.beans.property.StringProperty;
  */
 public class SystemState {
 
-	private DoubleProperty firmwareBuild;
+    private DoubleProperty firmwareBuild;
 
-	private StringProperty firmwareBuildString;
+    private StringProperty firmwareBuildString;
 
-	private StringProperty firmwareConfig;
+    private StringProperty firmwareConfig;
 
-	private DoubleProperty firmwareVersion;
+    private DoubleProperty firmwareVersion;
 
-	private DoubleProperty hardwareVersion;
+    private DoubleProperty hardwareVersion;
 
-	public SystemState() {
-		firmwareBuild = new SimpleDoubleProperty();
-		firmwareBuildString = new SimpleStringProperty();
-		firmwareConfig = new SimpleStringProperty();
-		firmwareVersion = new SimpleDoubleProperty();
-		hardwareVersion = new SimpleDoubleProperty();
-	}
+    public SystemState() {
+        firmwareBuild = new SimpleDoubleProperty();
+        firmwareBuildString = new SimpleStringProperty();
+        firmwareConfig = new SimpleStringProperty();
+        firmwareVersion = new SimpleDoubleProperty();
+        hardwareVersion = new SimpleDoubleProperty();
+    }
 
-	public DoubleProperty firmwareBuildProperty() {
-		return firmwareBuild;
-	}
+    public DoubleProperty firmwareBuildProperty() {
+        return firmwareBuild;
+    }
 
-	public StringProperty firmwareBuildStringProperty() {
-		return firmwareBuildString;
-	}
+    public StringProperty firmwareBuildStringProperty() {
+        return firmwareBuildString;
+    }
 
-	public StringProperty firmwareConfigProperty() {
-		return firmwareConfig;
-	}
+    public StringProperty firmwareConfigProperty() {
+        return firmwareConfig;
+    }
 
-	public DoubleProperty firmwareVersionProperty() {
-		return firmwareVersion;
-	}
+    public DoubleProperty firmwareVersionProperty() {
+        return firmwareVersion;
+    }
 
-	public double getFirmwareBuild() {
-		return firmwareBuild.get();
-	}
+    public double getFirmwareBuild() {
+        return firmwareBuild.get();
+    }
 
-	public String getFirmwareBuildString() {
-		return firmwareBuildString.get();
-	}
+    public String getFirmwareBuildString() {
+        return firmwareBuildString.get();
+    }
 
-	public String getFirmwareConfig() {
-		return firmwareConfig.get();
-	}
+    public String getFirmwareConfig() {
+        return firmwareConfig.get();
+    }
 
-	public double getFirmwareVersion() {
-		return firmwareVersion.get();
-	}
+    public double getFirmwareVersion() {
+        return firmwareVersion.get();
+    }
 
-	public double getHardwareVersion() {
-		return hardwareVersion.get();
-	}
+    public double getHardwareVersion() {
+        return hardwareVersion.get();
+    }
 
-	public DoubleProperty hardwareVersionProperty() {
-		return hardwareVersion;
-	}
+    public DoubleProperty hardwareVersionProperty() {
+        return hardwareVersion;
+    }
 
-	public void setFirmwareBuild(double fb) {
-		firmwareBuild.set(fb);
-	}
+    public void setFirmwareBuild(double fb) {
+        firmwareBuild.set(fb);
+    }
 
-	public void setFirmwareBuildString(String fbs) {
-		firmwareBuildString.set(fbs);
-	}
+    public void setFirmwareBuildString(String fbs) {
+        firmwareBuildString.set(fbs);
+    }
 
-	public void setFirmwareConfig(String fbc) {
-		firmwareConfig.set(fbc);
-	}
+    public void setFirmwareConfig(String fbc) {
+        firmwareConfig.set(fbc);
+    }
 
-	public void setFirmwareVersion(double fv) {
-		firmwareVersion.set(fv);
-	}
+    public void setFirmwareVersion(double fv) {
+        firmwareVersion.set(fv);
+    }
 
-	public void setHardwareVersion(double hv) {
-		hardwareVersion.set(hv);
-	}
+    public void setHardwareVersion(double hv) {
+        hardwareVersion.set(hv);
+    }
 }

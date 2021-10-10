@@ -31,49 +31,49 @@ import com.fazecast.jSerialComm.SerialPort;
  * @author Stephen Davies
  */
 public enum OperatingSystem {
-	MACOS() {
-		@Override
-		protected List<SerialPort> filter(SerialPort[] ports) {
-			ArrayList<SerialPort> result = new ArrayList<SerialPort>();
-			
-			for (SerialPort port : ports) {
-				if (port.getSystemPortName().startsWith("cu.u")) {
-					result.add(port);
-				}
-			}
-			return result;
-		}
-	},
-	WINDOWS {
-		@Override
-		protected List<SerialPort> filter(SerialPort[] ports) {
-			ArrayList<SerialPort> result = new ArrayList<SerialPort>();
-			
-			for (SerialPort port : ports) {
-				if (port.getSystemPortName().startsWith("COM")) {
-					result.add(port);
-				}
-			}
-			return result;
-		}
-	};
+    MACOS() {
+        @Override
+        protected List<SerialPort> filter(SerialPort[] ports) {
+            ArrayList<SerialPort> result = new ArrayList<SerialPort>();
+            
+            for (SerialPort port : ports) {
+                if (port.getSystemPortName().startsWith("cu.u")) {
+                    result.add(port);
+                }
+            }
+            return result;
+        }
+    },
+    WINDOWS {
+        @Override
+        protected List<SerialPort> filter(SerialPort[] ports) {
+            ArrayList<SerialPort> result = new ArrayList<SerialPort>();
+            
+            for (SerialPort port : ports) {
+                if (port.getSystemPortName().startsWith("COM")) {
+                    result.add(port);
+                }
+            }
+            return result;
+        }
+    };
 
-	protected abstract List<SerialPort> filter(SerialPort[] ports);
-	
-	public List<SerialPort> getFilteredPorts() {
-		return filter(SerialPort.getCommPorts());
-	}
+    protected abstract List<SerialPort> filter(SerialPort[] ports);
+    
+    public List<SerialPort> getFilteredPorts() {
+        return filter(SerialPort.getCommPorts());
+    }
 
-	public static OperatingSystem current() {
+    public static OperatingSystem current() {
 
-		String os = System.getProperty("os.name").toLowerCase();
-		
-		if (os.indexOf("mac") >= 0) {
-			return MACOS;
-		} else if (os.indexOf("win") >= 0) {
-			return WINDOWS;
-		} else {
-			throw new IllegalArgumentException();
-		}
-	}
+        String os = System.getProperty("os.name").toLowerCase();
+        
+        if (os.indexOf("mac") >= 0) {
+            return MACOS;
+        } else if (os.indexOf("win") >= 0) {
+            return WINDOWS;
+        } else {
+            throw new IllegalArgumentException();
+        }
+    }
 }

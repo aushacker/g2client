@@ -31,58 +31,58 @@ import javafx.stage.Stage;
  */
 public class JogPane extends G2Pane<GridPane> {
 
-	private Button btXpos;
-	private Button btXneg;
-	private Button btYpos;
-	private Button btYneg;
-	private Button btZpos;
-	private Button btZneg;
-	
-	private Button btCoolOff;
-	private Button btCoolOn;
-	
-	public JogPane(Stage top, IController controller, UIPreferences preferences) {
-		super(top, controller, preferences);
+    private Button btXpos;
+    private Button btXneg;
+    private Button btYpos;
+    private Button btYneg;
+    private Button btZpos;
+    private Button btZneg;
+    
+    private Button btCoolOff;
+    private Button btCoolOn;
+    
+    public JogPane(Stage top, IController controller, UIPreferences preferences) {
+        super(top, controller, preferences);
 
-		initialize();
-	}
+        initialize();
+    }
 
-	@Override
-	protected void createWidgets() {
-		btXpos = new Button("X+");
-		btXneg = new Button("X-");
-		btYpos = new Button("Y+");
-		btYneg = new Button("Y-");
-		btZpos = new Button("Z+");
-		btZneg = new Button("Z-");
+    @Override
+    protected void createWidgets() {
+        btXpos = new Button("X+");
+        btXneg = new Button("X-");
+        btYpos = new Button("Y+");
+        btYneg = new Button("Y-");
+        btZpos = new Button("Z+");
+        btZneg = new Button("Z-");
 
-		btCoolOff = new Button("Cool Off");
-		btCoolOn = new Button("Cool On");
-	}
+        btCoolOff = new Button("Cool Off");
+        btCoolOn = new Button("Cool On");
+    }
 
-	@Override
-	protected void hookEvents() {
-		btCoolOff.setOnAction(e -> getController().coolantOff());
-		btCoolOn.setOnAction(e -> getController().coolantOn());
-	}
+    @Override
+    protected void hookEvents() {
+        btCoolOff.setOnAction(e -> getController().coolantOff());
+        btCoolOn.setOnAction(e -> getController().coolantOn());
+    }
 
-	@Override
-	protected void initializePane() {
-		setPane(new GridPane());
+    @Override
+    protected void initializePane() {
+        setPane(new GridPane());
 
-		getPane().setHgap(5);
-		getPane().setVgap(5);
-	}
+        getPane().setHgap(5);
+        getPane().setVgap(5);
+    }
 
-	@Override
-	protected void layoutWidgets() {
-		getPane().add(btYpos, 1, 0);
-		getPane().add(btZpos, 3, 0);
-		getPane().add(btCoolOff, 4, 0);
-		getPane().add(btXneg, 0, 1);
-		getPane().add(btXpos, 2, 1);
-		getPane().add(btYneg, 1, 2);
-		getPane().add(btZneg, 3, 2);
-		getPane().add(btCoolOn, 4, 2);
-	}
+    @Override
+    protected void layoutWidgets() {
+        getPane().add(btYpos, 1, 0);
+        getPane().add(btZpos, 3, 0);
+        getPane().add(btCoolOff, 4, 0);
+        getPane().add(btXneg, 0, 1);
+        getPane().add(btXpos, 2, 1);
+        getPane().add(btYneg, 1, 2);
+        getPane().add(btZneg, 3, 2);
+        getPane().add(btCoolOn, 4, 2);
+    }
 }

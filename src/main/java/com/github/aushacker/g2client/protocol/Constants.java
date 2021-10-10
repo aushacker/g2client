@@ -24,24 +24,24 @@ package com.github.aushacker.g2client.protocol;
  */
 public class Constants {
 
-	private Constants() {} // Prevent instantiation
+    private Constants() {} // Prevent instantiation
 
-	/**
-	 * G2 boards with Marlin enabled take a while to get past the STK500 bootloader.
-	 */
-	public static final int BOARD_RESET_TIME = 2500;
+    /**
+     * G2 boards with Marlin enabled take a while to get past the STK500 bootloader.
+     */
+    public static final int BOARD_RESET_TIME = 2500;
 
-	public static final int NUL = 0;	// ASCII NUL character
-	public static final int ENQ = 5;	// ASCII ESC character
-	public static final int LF = 10;	// ASCII LF character
+    public static final int NUL = 0;	// ASCII NUL character
+    public static final int ENQ = 5;	// ASCII ESC character
+    public static final int LF = 10;	// ASCII LF character
 
-	/**
-	 * G2 responses have one of the following as the top-level Json value
-	 * in the response object.
-	 */
-	public static final String ACKNOWLEDGEMENT = "ack";
-	public static final String FOOTER = "f";
-	public static final String RESPONSE = "r";
-	public static final String STATUS = "sr";
-	public static final String SYSTEM = "sys";	
+    /**
+     * G2 responses have one of the following as the top-level Json value
+     * in the response object.
+     */
+    public static final String ACKNOWLEDGEMENT = "ack";
+    public static final String FOOTER = "f";
+    public static final String RESPONSE = "r";
+    public static final String STATUS = "sr";
+    public static final String SYSTEM = "sys";	
 }

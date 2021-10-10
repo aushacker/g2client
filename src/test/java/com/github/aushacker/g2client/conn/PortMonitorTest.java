@@ -26,34 +26,34 @@ import java.util.concurrent.LinkedBlockingQueue;
  */
 public class PortMonitorTest {
 
-	public static void main(String[] args) {
-		PortMonitor monitor = new PortMonitor(OperatingSystem.current().getFilteredPorts().get(0),
-				new LinkedBlockingQueue<>());
+    public static void main(String[] args) {
+        PortMonitor monitor = new PortMonitor(OperatingSystem.current().getFilteredPorts().get(0),
+                new LinkedBlockingQueue<>());
 
-		try {
-			if (monitor.start()) {
-				monitor.enqueue("{\"1\":n}");
-				monitor.enqueue("{\"2\":n}");
-				monitor.enqueue("{\"3\":n}");
-				monitor.enqueue("{\"4\":n}");
-				monitor.enqueue("{\"5\":n}");
-				monitor.enqueue("{\"xam\":1}");
-				monitor.enqueue("{\"yam\":1}");
-				monitor.enqueue("{\"di1\":{\"mo\":0,\"ac\":2,\"fn\":1}}");
-				monitor.enqueue("{\"di2\":{\"mo\":0,\"ac\":2,\"fn\":1}}");
-				monitor.enqueue("{\"di3\":{\"mo\":0,\"ac\":2,\"fn\":1}}");
-				monitor.enqueue("{\"di4\":{\"mo\":0,\"ac\":2,\"fn\":1}}");
-				monitor.enqueue("G0 X20 Y20");
-				monitor.enqueue("G0 X0 Y0");
-				Thread.sleep(1000);
-				//Thread.sleep(10000);
+        try {
+            if (monitor.start()) {
+                monitor.enqueue("{\"1\":n}");
+                monitor.enqueue("{\"2\":n}");
+                monitor.enqueue("{\"3\":n}");
+                monitor.enqueue("{\"4\":n}");
+                monitor.enqueue("{\"5\":n}");
+                monitor.enqueue("{\"xam\":1}");
+                monitor.enqueue("{\"yam\":1}");
+                monitor.enqueue("{\"di1\":{\"mo\":0,\"ac\":2,\"fn\":1}}");
+                monitor.enqueue("{\"di2\":{\"mo\":0,\"ac\":2,\"fn\":1}}");
+                monitor.enqueue("{\"di3\":{\"mo\":0,\"ac\":2,\"fn\":1}}");
+                monitor.enqueue("{\"di4\":{\"mo\":0,\"ac\":2,\"fn\":1}}");
+                monitor.enqueue("G0 X20 Y20");
+                monitor.enqueue("G0 X0 Y0");
+                Thread.sleep(1000);
+                //Thread.sleep(10000);
 
-				monitor.shutdown();
-			}
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+                monitor.shutdown();
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
-	}
+    }
 
 }
